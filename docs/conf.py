@@ -9,6 +9,7 @@ import sys
 from datetime import datetime
 from importlib.metadata import metadata
 from pathlib import Path
+import sphinx_autosummary_accessors
 
 HERE = Path(__file__).parent
 sys.path.insert(0, str(HERE / "extensions"))
@@ -30,7 +31,7 @@ repository_url = urls["Source"]
 release = info["Version"]
 
 bibtex_bibfiles = ["references.bib"]
-templates_path = ["_templates"]
+templates_path = ["_templates", sphinx_autosummary_accessors.templates_path]
 nitpicky = True  # Warn about broken links
 needs_sphinx = "4.0"
 
