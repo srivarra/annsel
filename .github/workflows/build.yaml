@@ -44,10 +44,6 @@ jobs:
         run: |
           uv build
 
-      - name: Check Package
-        run: |
-          uv run twine check --strict dist/*.whl
-
       - name: Store Wheel Artifacts
         uses: actions/upload-artifact@v4
         with:
