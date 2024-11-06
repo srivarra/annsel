@@ -30,6 +30,7 @@ dependencies = [
   "session-info",
 ]
 optional-dependencies.dev = [
+  "esbonio>=0.16.5",
   "pre-commit",
   "scanpy>=1.10.3",
   "twine>=5.1.1",
