@@ -55,6 +55,8 @@ optional-dependencies.doc = [
 optional-dependencies.test = [
   "coverage",
   "pytest",
+  "pytest-cov>=6",
+  "pytest-xdist>=3.6.1",
 ]
 # https://docs.pypi.org/project_metadata/#project-urls
 urls.Documentation = "https://annsel.readthedocs.io/"
