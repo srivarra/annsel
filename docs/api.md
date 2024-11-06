@@ -4,7 +4,6 @@
 
 ```{eval-rst}
 .. module:: annsel.tl
-.. currentmodule:: annsel
 
 .. autosummary::
     :toctree: generated/
