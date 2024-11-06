@@ -30,14 +30,15 @@ dependencies = [
   "session-info",
 ]
 optional-dependencies.dev = [
+  "esbonio>=0.16.5",
   "pre-commit",
   "scanpy>=1.10.3",
-  "twine>=5.1.1",
 ]
 optional-dependencies.doc = [
   "docutils>=0.21.2",
   "ipykernel",
   "ipython",
+  "matplotlib>=3.9.2",
   "myst-nb>=1.1.2",
   "pandas",
   "scanpydoc>=0.14.1",
@@ -55,6 +56,8 @@ optional-dependencies.doc = [
 optional-dependencies.test = [
   "coverage",
   "pytest",
+  "pytest-cov>=6",
+  "pytest-xdist>=3.6.1",
 ]
 # https://docs.pypi.org/project_metadata/#project-urls
 urls.Documentation = "https://annsel.readthedocs.io/"

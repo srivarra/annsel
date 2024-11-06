@@ -1,7 +1,7 @@
 from importlib.metadata import version
 
-from . import pl, pp, tl
+from .tl import AnnselAccessor
 
-__all__ = ["pl", "pp", "tl"]
+__all__ = ["AnnselAccessor"]
 
 __version__ = version("annsel")
