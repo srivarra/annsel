@@ -1,0 +1,30 @@
+{
+  "template": "https://github.com/scverse/cookiecutter-scverse",
+  "commit": "67879607ef256cf2dc2bb3c7ddbd615d8606f238",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "project_name": "annsel",
+      "package_name": "annsel",
+      "project_description": "A Narwhals powered DataFrame-style selection, filtering and indexing operations on AnnData Objects.",
+      "author_full_name": "Sricharan Reddy Varra",
+      "author_email": "srivarra@stanford.edu",
+      "github_user": "srivarra",
+      "github_repo": "annsel",
+      "license": "MIT License",
+      "ide_integration": true,
+      "_copy_without_render": [
+        ".github/workflows/build.yaml",
+        ".github/workflows/test.yaml",
+        "docs/_templates/autosummary/**.rst"
+      ],
+      "_render_devdocs": false,
+      "_jinja2_env_vars": {
+        "lstrip_blocks": true,
+        "trim_blocks": true
+      },
+      "_template": "https://github.com/scverse/cookiecutter-scverse"
+    }
+  },
+  "directory": null
+}
