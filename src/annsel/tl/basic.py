@@ -15,8 +15,8 @@ from ._utils import (
 )
 
 
-@register_anndata_accessor("sel")
-class SelectionAccessor:
+@register_anndata_accessor("an")
+class AnnselAccessor:
     """An extension for AnnData."""
 
     def __init__(self, adata: ad.AnnData):
