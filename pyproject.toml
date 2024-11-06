@@ -38,6 +38,7 @@ optional-dependencies.doc = [
   "docutils>=0.21.2",
   "ipykernel",
   "ipython",
+  "matplotlib>=3.9.2",
   "myst-nb>=1.1.2",
   "pandas",
   "scanpydoc>=0.14.1",
