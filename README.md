@@ -55,7 +55,7 @@ See the [changelog][changelog].
 
 ## Contact
 
-For questions and help requests, you can reach out in the [scverse discourse][scverse-discourse].
+For questions and help requests, you can reach out in the [scverse discourse][scverse-discourse] or the [discussions] tab.
 If you found a bug, please use the [issue tracker][issue-tracker].
 
 ## Citation
@@ -76,3 +76,4 @@ If you found a bug, please use the [issue tracker][issue-tracker].
 [link-license]: https://opensource.org/licenses/MIT
 [link-hatch]: https://github.com/pypa/hatch
 [link-narwhals]: https://github.com/narwhals-dev/narwhals
+[link-disucssions]: https://github.com/srivarra/annsel/discussions
