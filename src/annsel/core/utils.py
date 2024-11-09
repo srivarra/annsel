@@ -1,9 +1,9 @@
 from collections.abc import Iterable
+from dataclasses import dataclass
 from typing import Literal
 
 import anndata as ad
 import pandas as pd
-from attr import dataclass
 from narwhals.typing import IntoExpr
 from scipy import sparse
 
