@@ -58,17 +58,18 @@ def _register_accessor(name, cls):
     return decorator
 
 
-def register_anndata_accessor(name):
-    """Register a custom accessor on anndata.AnnData objects.
+def register_anndata_accessor(name: str):
+    """Register a custom accessor on :class:`~anndata.AnnData` objects.
 
     Parameters
     ----------
-    name : str
+    name
         Name under which the accessor should be registered. A warning is issued
         if this name conflicts with a preexisting attribute.
 
     See Also
     --------
-    register_dataset_accessor
+    xarray.register_dataset_accessor
+    xarray.register_dataarray_accessor
     """
     return _register_accessor(name, ad.AnnData)

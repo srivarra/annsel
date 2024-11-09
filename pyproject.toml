@@ -25,9 +25,10 @@ classifiers = [
 dependencies = [
   "anndata",
   "more-itertools>=10.5",
-  "narwhals>=1.13.2",
+  "narwhals>=1.13.3",
   # for debug logging (referenced from the issue template)
   "session-info",
+  "zarr>=2.18.3",
 ]
 optional-dependencies.dev = [
   "esbonio>=0.16.5",
@@ -52,6 +53,10 @@ optional-dependencies.doc = [
   "sphinx-tabs",
   "sphinxcontrib-bibtex>=2.6.3",
   "sphinxext-opengraph",
+]
+optional-dependencies.nb = [
+  "jupyterlab>=4.3",
+  "marimo>=0.9.16",
 ]
 optional-dependencies.test = [
   "coverage",
