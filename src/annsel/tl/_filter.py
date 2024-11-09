@@ -1,10 +1,10 @@
 from collections.abc import Iterable
+from dataclasses import dataclass
 from typing import Literal
 
 import anndata as ad
 import narwhals as nw
 import pandas as pd
-from attr import dataclass
 from narwhals.typing import IntoDataFrame, IntoExpr
 
 from annsel.core.utils import _extract_X
