@@ -11,5 +11,5 @@ changelog.md
 contributing.md
 references.md
 
-notebooks/example
+notebooks/All of Annsel
 ```

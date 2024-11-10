@@ -31,6 +31,8 @@ select = [
   "NPY",    # NumPy-specific rules
   "PD",     # Pandas code
   "PTH",    # pathlib
+  "R",      # Refactor
+  "PT",     # Pytest
 ]
 ignore = [
   "B008", # Errors from function calls in argument defaults. These are fine when the result is immutable.
