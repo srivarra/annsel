@@ -1,21 +1,12 @@
 from collections.abc import Callable, Iterable
-from functools import reduce
-from operator import and_
 from typing import Any, TypeVar
 
 import anndata as ad
-import pandas as pd
 from narwhals.typing import IntoExpr
 
 from annsel.core.extensions import register_anndata_accessor
-from annsel.core.utils import _map_predicates
 from annsel.tl._filter import (
-    FilteredXIndicies,
-    _filter_adata_by_obs,
-    _filter_adata_by_obs_names,
-    _filter_adata_by_var,
-    _filter_adata_by_var_names,
-    _filter_adata_by_X,
+    FilterAnnData,
 )
 
 T = TypeVar("T")
@@ -31,7 +22,7 @@ class AnnselAccessor:
     def filter(
         self,
         *predicates: IntoExpr | Iterable[IntoExpr],
-        copy: bool = True,
+        copy: bool = False,
         layer: str | None = None,
         keep_sparse: bool = True,
     ) -> ad.AnnData:
@@ -41,6 +32,13 @@ class AnnselAccessor:
         ----------
         predicates
             The predicates to filter the AnnData object by.
+        copy, optional
+            Whether to return a copy of the AnnData object, or return a view of the original.
+            Defaults to `False`, which returns a view.
+        layer, optional
+            The layer to filter the AnnData object by.
+        keep_sparse, optional
+            Whether to keep the sparse matrix.
 
         Returns
         -------
@@ -63,42 +61,8 @@ class AnnselAccessor:
             varm: 'PCs'
             obsp: 'distances', 'connectivities'
         """
-        grouped_predicates = _map_predicates(*predicates)
-
-        if len(var_predicates := grouped_predicates.var) > 0:
-            filtered_var_idx = _filter_adata_by_var(self._obj, *var_predicates)
-        else:
-            filtered_var_idx = self._obj.var_names
-
-        if len(var_names_predicates := grouped_predicates.var_names) > 0:
-            filtered_var_names = _filter_adata_by_var_names(self._obj, *var_names_predicates)
-        else:
-            filtered_var_names = self._obj.var_names
-
-        if len(obs_predicates := grouped_predicates.obs) > 0:
-            filtered_obs_idx = _filter_adata_by_obs(self._obj, *obs_predicates)
-        else:
-            filtered_obs_idx = self._obj.obs_names
-
-        if len(obs_names_predicates := grouped_predicates.obs_names) > 0:
-            filtered_obs_names = _filter_adata_by_obs_names(self._obj, *obs_names_predicates)
-        else:
-            filtered_obs_names = self._obj.obs_names
-
-        if len(x_predicates := grouped_predicates.x) > 0:
-            filtered_x_indices: FilteredXIndicies = _filter_adata_by_X(
-                self._obj, *x_predicates, layer=layer, keep_sparse=keep_sparse
-            )
-        else:
-            filtered_x_indices = FilteredXIndicies(self._obj.obs_names, self._obj.var_names)
-
-        final_obs_idx = pd.Series(
-            list(reduce(and_, [set(filtered_obs_idx), set(filtered_x_indices.obs), set(filtered_obs_names)]))
-        )
-
-        final_var_idx = pd.Series(
-            list(reduce(and_, [set(filtered_var_idx), set(filtered_x_indices.var), set(filtered_var_names)]))
-        )
+        filter_adata = FilterAnnData(self._obj, *predicates)
+        final_obs_idx, final_var_idx = filter_adata(layer=layer, keep_sparse=keep_sparse)
 
         filtered_adata = self._obj[final_obs_idx, final_var_idx]
         if copy:

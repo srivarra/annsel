@@ -2,11 +2,12 @@
 
 <div align="center">
 
-|            |                                                                                                                                                           |
-| :--------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| **Status** | [![Build][badge-build]][link-build] [![Tests][badge-test]][link-test] [![Documentation][badge-docs]][link-docs] [![codecov][badge-codecov]][link-codecov] |
-|  **Meta**  |     [![Hatch project][badge-hatch]][link-hatch] [![Ruff][badge-ruff]][link-ruff] [![uv][badge-uv]][link-uv] [![License][badge-license]][link-license]     |
-|            |                                                                                                                                                           |
+|             |                                                                                                                                                           |
+| :---------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| **Status**  | [![Build][badge-build]][link-build] [![Tests][badge-test]][link-test] [![Documentation][badge-docs]][link-docs] [![codecov][badge-codecov]][link-codecov] |
+|  **Meta**   |     [![Hatch project][badge-hatch]][link-hatch] [![Ruff][badge-ruff]][link-ruff] [![uv][badge-uv]][link-uv] [![License][badge-license]][link-license]     |
+| **Package** |                                       [![PyPI][badge-pypi]][link-pypi] [![PyPI][badge-python-versions]][link-pypi]                                        |
+|             |                                                                                                                                                           |
 
 </div>
 
@@ -18,11 +19,10 @@
 [badge-uv]: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json
 [badge-license]: https://img.shields.io/badge/License-MIT-yellow.svg
 [badge-hatch]: https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg
+[badge-pypi]: https://img.shields.io/pypi/v/annsel.svg?logo=pypi&label=PyPI&logoColor=gold
+[badge-python-versions]: https://img.shields.io/pypi/pyversions/annsel.svg?logo=python&label=Python&logoColor=gold
 
 `annsel` brings familiar DataFrame-style operations to [`AnnData`](https://anndata.readthedocs.io/en/latest/) objects, making filtering and selection intuitive and straightforward. Built on the [narwhals][link-narwhals] library, it provides a seamless interface for manipulating complex biological datasets stored in `AnnData` format.
-
-> [!WARNING]
-> This is a very early work in progress, there is set-in-stone API and breaking changes are likely to occur.
 
 ## Getting started
 

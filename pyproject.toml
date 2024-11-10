@@ -23,16 +23,22 @@ classifiers = [
   "Programming Language :: Python :: 3.13",
 ]
 dependencies = [
-  "anndata",
+  "anndata[dask]",
+  "kerchunk>=0.2.6",
   "more-itertools>=10.5",
   "narwhals>=1.13.3",
+  "pooch>=1.8.2",
   # for debug logging (referenced from the issue template)
   "session-info",
+  "tqdm>=4.67",
+  "universal-pathlib>=0.2.5",
+  "xxhash>=3.5",
   "zarr>=2.18.3",
 ]
 optional-dependencies.dev = [
   "esbonio>=0.16.5",
   "pre-commit",
+  "pytest-sugar>=1",
   "scanpy>=1.10.3",
 ]
 optional-dependencies.doc = [
@@ -56,13 +62,15 @@ optional-dependencies.doc = [
 ]
 optional-dependencies.nb = [
   "jupyterlab>=4.3",
-  "marimo>=0.9.16",
+  "marimo>=0.9.17",
 ]
 optional-dependencies.test = [
   "coverage",
   "pytest",
   "pytest-cov>=6",
+  "pytest-rich>=0.1.1",
   "pytest-xdist>=3.6.1",
+  "scanpy>=1.10.3",
 ]
 # https://docs.pypi.org/project_metadata/#project-urls
 urls.Documentation = "https://annsel.readthedocs.io/"

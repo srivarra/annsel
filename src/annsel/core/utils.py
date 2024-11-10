@@ -1,5 +1,7 @@
 from collections.abc import Iterable
 from dataclasses import dataclass
+from functools import reduce
+from operator import and_
 from typing import Literal
 
 import anndata as ad
@@ -16,19 +18,21 @@ def _extract_X(
     keep_sparse: bool = True,
     sparse_method: Literal["csr", "csc"] | None = None,
 ) -> pd.DataFrame:
-    match (keep_sparse, sparse.issparse(adata.layers[layer]), sparse_method):
+    match (keep_sparse, sparse.issparse(adata.layers[layer] if layer else adata.X), sparse_method):
         case (True, True, _):
             _X = adata.layers[layer]
             return pd.DataFrame.sparse.from_spmatrix(data=_X, columns=adata.var_names, index=adata.obs_names)
-        case (True, False, sparse_method):
+        case (True, False, "csr"):
             # Conver to sparse csr
-            if sparse_method == "csr":
-                _X = sparse.csr_matrix(adata.layers[layer])
-            elif sparse_method == "csc":
-                _X = sparse.csc_matrix(adata.layers[layer])
-            else:
-                raise ValueError(f"Invalid sparse_method: {sparse_method}")
+            _X = adata.layers[layer] if layer else adata.X
+            _X = sparse.csr_matrix(_X)
             return pd.DataFrame.sparse.from_spmatrix(data=_X, columns=adata.var_names, index=adata.obs_names)
+        case (True, False, "csc"):
+            _X = sparse.csc_matrix(_X)
+            return pd.DataFrame.sparse.from_spmatrix(data=_X, columns=adata.var_names, index=adata.obs_names)
+        case (False, _, _):
+            _X = adata.layers[layer] if layer else adata.X
+            return pd.DataFrame(data=_X, columns=adata.var_names, index=adata.obs_names)
         case _:
             return adata.to_df(layer=layer)
 
@@ -75,13 +79,8 @@ def _map_predicates(
     )
 
 
-# @nw.narwhalify
-# def _compare_indices(first: IntoDataFrameT, second: IntoDataFrameT) -> IntoSeriesT:
-#     return first & second
-
-
-# def _fold_compare(*indices: pd.DataFrame) -> pd.Series:
-#     start = indices[0]
-#     for i in indices[1:]:
-#         start = _compare_indices(start, i)
-#     return start
+def _get_final_indices(
+    obj_names: pd.Index,
+    *idx: pd.Index,
+) -> pd.Index:
+    return obj_names.intersection(pd.Index(list(reduce(and_, map(set, *idx)))))
