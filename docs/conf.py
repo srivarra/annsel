@@ -65,7 +65,6 @@ extensions = [
     "sphinx.ext.linkcode",
     "sphinx.ext.mathjax",
     "sphinx_autosummary_accessors",
-    "nbsphinx",
 ]
 
 autosummary_generate = True
