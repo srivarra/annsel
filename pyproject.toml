@@ -39,7 +39,6 @@ optional-dependencies.dev = [
   "esbonio>=0.16.5",
   "pre-commit",
   "pytest-sugar>=1",
-  "scanpy>=1.10.3",
 ]
 optional-dependencies.doc = [
   "docutils>=0.21.2",
@@ -68,9 +67,7 @@ optional-dependencies.test = [
   "coverage",
   "pytest",
   "pytest-cov>=6",
-  "pytest-rich>=0.1.1",
   "pytest-xdist>=3.6.1",
-  "scanpy>=1.10.3",
 ]
 # https://docs.pypi.org/project_metadata/#project-urls
 urls.Documentation = "https://annsel.readthedocs.io/"
@@ -82,6 +79,10 @@ testpaths = [ "tests" ]
 xfail_strict = true
 addopts = [
   "--import-mode=importlib", # allow using test files with same name
+]
+filterwarnings = [
+  "ignore::pytest.PytestUnknownMarkWarning",
+  "ignore::coverage.exceptions.CoverageWarning",
 ]
 
 [tool.coverage.run]
