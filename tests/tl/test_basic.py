@@ -5,7 +5,7 @@ import pytest
 import annsel as an
 
 
-class TestFilter:
+class TestFilterAnnData:
     def test_filter_var_names(self, lbm_dataset: ad.AnnData):
         adata = lbm_dataset.an.filter(an.var_names().str.starts_with("ENSG0000018"))
         verify_adata = lbm_dataset[:, lbm_dataset.var_names.str.startswith("ENSG0000018")]
@@ -30,7 +30,7 @@ class TestFilter:
 
         ath.assert_adata_equal(adata, verify_adata)
 
-    @pytest.mark.xfail(reason="Issues with spare X")
+    @pytest.mark.xfail(reason="Issues with sparse X")
     def test_filter_X(self, lbm_dataset: ad.AnnData):
         adata = lbm_dataset.an.filter(an.x(["HES4"]) >= 1)
         verify_adata = lbm_dataset[lbm_dataset[:, "HES4"].X >= 1, :]

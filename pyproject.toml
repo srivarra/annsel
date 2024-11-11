@@ -21,8 +21,7 @@ classifiers = [
   "Programming Language :: Python :: 3.13",
 ]
 dependencies = [
-  "anndata[dask]",
-  "kerchunk>=0.2.6",
+  "anndata",
   "more-itertools>=10.5",
   "narwhals>=1.13.3",
   "pooch>=1.8.2",
@@ -31,7 +30,6 @@ dependencies = [
   "tqdm>=4.67",
   "universal-pathlib>=0.2.5",
   "xxhash>=3.5",
-  "zarr>=2.18.3",
 ]
 optional-dependencies.dev = [ "esbonio>=0.16.5", "pre-commit" ]
 optional-dependencies.doc = [
@@ -41,6 +39,7 @@ optional-dependencies.doc = [
   "matplotlib>=3.9.2",
   "myst-nb>=1.1.2",
   "pandas",
+  "scanpy>=1.10.3",
   "scanpydoc>=0.14.1",
   # Until pybtex >0.23.0 releases: https://bitbucket.org/pybtex-devs/pybtex/issues/169/
   "setuptools",
