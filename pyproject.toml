@@ -73,12 +73,17 @@ addopts = [
 ]
 filterwarnings = [
   "ignore::pytest.PytestUnknownMarkWarning",
-  "ignore::coverage.exceptions.CoverageWarning",
+  "ignore::coverage.exceptions.CoverageWarning:",
 ]
 
 [tool.coverage.run]
 source = [ "annsel" ]
 omit = [ "**/test_*.py" ]
+concurrency = [ "multiprocessing" ]
+parallel = true
+
+[tool.coverage.report]
+exclude_also = [ "raise NotImplementedError", "@(abc\\.)?abstractmethod" ]
 
 [tool.cruft]
 skip = [

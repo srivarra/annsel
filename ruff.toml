@@ -24,14 +24,14 @@ select = [
   "E",      # Error detected by Pycodestyle
   "F",      # Errors detected by Pyflakes
   "I",      # isort
-  "RUF100", # Report unused noqa directives
+  "RUF",    # Ruff-specific rules
   "TID",    # flake8-tidy-imports
   "UP",     # pyupgrade
   "W",      # Warning detected by Pycodestyle
   "NPY",    # NumPy-specific rules
   "PD",     # Pandas code
   "PTH",    # pathlib
-  "R",      # Refactor
+  # "R",      # Refactor
   "PT",     # Pytest
 ]
 ignore = [
@@ -48,6 +48,7 @@ ignore = [
   "E501", # line too long -> we accept long comment lines; formatter gets rid of long code lines
   "E731", # Do not assign a lambda expression, use a def -> lambda expression assignments are convenient
   "E741", # allow I, O, l as variable names -> I is the identity matrix
+  "RUF002" # Allow ambiguous characters in docstrings
 ]
 per-file-ignores."*/__init__.py" = ["F401"]
 per-file-ignores."docs/*" = ["I"]

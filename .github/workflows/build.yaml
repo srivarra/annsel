@@ -1,6 +1,10 @@
 name: Build distribution 📦
 
 on:
+  workflow_run:
+    workflows: ["Changelog ⛰️"]
+    types:
+      - completed
   push:
     branches: [main]
   pull_request:

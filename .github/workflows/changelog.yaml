@@ -32,7 +32,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Generate a changelog
+      - name: Generate the changelog
         uses: orhun/git-cliff-action@v4
         id: git-cliff
         with:
@@ -44,3 +44,10 @@ jobs:
 
       - name: Print the changelog
         run: cat "${{ steps.git-cliff.outputs.changelog }}"
+      - name: Commit the Changelog
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: CHANGELOG.md
+          default_author: changelog-workflow
+          message: "chore: update changelog"
+          committer_name: github-actions[bot]
