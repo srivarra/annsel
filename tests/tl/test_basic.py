@@ -1,6 +1,7 @@
 import anndata as ad
 import anndata.tests.helpers as ath
 import pytest
+from scipy import sparse
 
 import annsel as an
 
@@ -30,10 +31,57 @@ class TestFilterAnnData:
 
         ath.assert_adata_equal(adata, verify_adata)
 
-    def test_filter_X(self, lbm_dataset: ad.AnnData):
+    def test_filter_X_sparse(self, lbm_dataset: ad.AnnData):
+        """Test filtering X with sparse matrix (default case)."""
         adata = lbm_dataset.an.filter(an.x(["ENSG00000206560"]) >= 1)
         verify_adata = lbm_dataset[lbm_dataset[:, "ENSG00000206560"].X >= 1, :]
+        ath.assert_adata_equal(adata, verify_adata)
 
+    def test_filter_X_dense(self, lbm_dataset: ad.AnnData):
+        """Test filtering X with dense matrix."""
+        # Convert to dense
+        dense_adata = lbm_dataset.copy()
+        dense_adata.X = dense_adata.X.toarray()
+
+        adata = dense_adata.an.filter(an.x(["ENSG00000206560"]) >= 1)
+        verify_adata = dense_adata[dense_adata[:, "ENSG00000206560"].X >= 1, :]
+        ath.assert_adata_equal(adata, verify_adata)
+
+    def test_filter_X_force_csr(self, lbm_dataset: ad.AnnData):
+        """Test filtering X with forced CSR format."""
+        dense_adata = lbm_dataset.copy()
+        dense_adata.X = dense_adata.X.toarray()
+
+        adata = lbm_dataset.an.filter(an.x(["ENSG00000206560"]) >= 1, keep_sparse=True, sparse_method="csr")
+        verify_adata = dense_adata[lbm_dataset[:, "ENSG00000206560"].X >= 1, :]
+        ath.assert_adata_equal(adata, verify_adata)
+        assert sparse.isspmatrix_csr(adata.X)
+
+    def test_filter_X_force_csc(self, lbm_dataset: ad.AnnData):
+        """Test filtering X with forced CSC format."""
+        # Convert to dense first to test conversion
+        dense_adata = lbm_dataset.copy()
+        dense_adata.X = dense_adata.X.toarray()
+
+        adata = dense_adata.an.filter(an.x(["ENSG00000206560"]) >= 1, keep_sparse=True, sparse_method="csc")
+        verify_adata = dense_adata[dense_adata[:, "ENSG00000206560"].X >= 1, :]
+        ath.assert_adata_equal(adata, verify_adata)
+        assert sparse.isspmatrix_csc(adata.X)
+
+    def test_filter_X_no_sparsity(self, lbm_dataset: ad.AnnData):
+        """Test filtering X with sparsity disabled."""
+        adata = lbm_dataset.an.filter(an.x(["ENSG00000206560"]) >= 1, keep_sparse=False)
+        verify_adata = lbm_dataset[lbm_dataset[:, "ENSG00000206560"].X >= 1, :]
+        ath.assert_adata_equal(adata, verify_adata)
+        assert not sparse.issparse(adata.X)
+
+    def test_filter_X_layer(self, lbm_dataset: ad.AnnData):
+        """Test filtering X from a specific layer."""
+        # Add a test layer
+        lbm_dataset.layers["test"] = lbm_dataset.X.copy()
+
+        adata = lbm_dataset.an.filter(an.x(["ENSG00000206560"]) >= 1, layer="test")
+        verify_adata = lbm_dataset[lbm_dataset[:, "ENSG00000206560"].layers["test"] >= 1, :]
         ath.assert_adata_equal(adata, verify_adata)
 
 

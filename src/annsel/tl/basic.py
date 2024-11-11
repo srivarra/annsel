@@ -1,13 +1,11 @@
 from collections.abc import Callable, Iterable
-from typing import Any, TypeVar
+from typing import Any, Literal, TypeVar
 
 import anndata as ad
 
 from annsel.core.extensions import register_anndata_accessor
-
-# from narwhals import Expr, Series
-# from narwhals.typing import IntoExpr
 from annsel.core.typing import IntoExpr
+from annsel.core.utils import _handle_sparse_method
 from annsel.tl._filter import (
     FilterAnnData,
 )
@@ -27,6 +25,7 @@ class AnnselAccessor:
         *predicates: IntoExpr | Iterable[IntoExpr],
         layer: str | None = None,
         keep_sparse: bool = True,
+        sparse_method: Literal["csr", "csc"] | None = None,
         copy: bool = False,
     ) -> ad.AnnData:
         """Filters the AnnData object by the given predicates.
@@ -39,6 +38,8 @@ class AnnselAccessor:
             The layer to filter the AnnData object by.
         keep_sparse
             Whether to keep the sparse matrix.
+        sparse_method
+            Convert X to a sparse array if desired. `"csr"` and `"csc"` are supported.
         copy
             Whether to return a copy of the AnnData object, or return a view of the original.
             Defaults to `False`, which returns a view.
@@ -65,9 +66,11 @@ class AnnselAccessor:
             obsp: 'distances', 'connectivities'
         """
         filter_adata = FilterAnnData(self._obj, *predicates)
-        final_obs_idx, final_var_idx = filter_adata(layer=layer, keep_sparse=keep_sparse)
+        final_obs_idx, final_var_idx = filter_adata(layer=layer, keep_sparse=keep_sparse, sparse_method=sparse_method)
 
         filtered_adata = self._obj[final_obs_idx, final_var_idx]
+
+        filtered_adata = _handle_sparse_method(filtered_adata, sparse_method)
         if copy:
             return filtered_adata.copy()
         return filtered_adata
