@@ -20,7 +20,7 @@ def _extract_X(
 ) -> pd.DataFrame:
     match (keep_sparse, sparse.issparse(adata.layers[layer] if layer else adata.X), sparse_method):
         case (True, True, _):
-            _X = adata.layers[layer]
+            _X = adata.layers[layer] if layer else adata.X
             return pd.DataFrame.sparse.from_spmatrix(data=_X, columns=adata.var_names, index=adata.obs_names)
         case (True, False, "csr"):
             # Conver to sparse csr
