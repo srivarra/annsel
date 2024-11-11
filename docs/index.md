@@ -1,5 +1,5 @@
-```{include} ../README.md
-
+```{include} ./landing.md
+:end-before: '## Citation'
 ```
 
 ```{toctree}
