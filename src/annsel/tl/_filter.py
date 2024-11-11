@@ -7,7 +7,7 @@ import pandas as pd
 from narwhals.typing import IntoDataFrame, IntoExpr
 
 from annsel.core.methods import NarwhalsMethod, predicate_guard
-from annsel.core.types import XIndicies
+from annsel.core.typing import XIndicies
 from annsel.core.utils import _extract_X, _get_final_indices, _map_predicates
 
 

@@ -7,7 +7,7 @@ import anndata as ad
 import pandas as pd
 from narwhals.typing import IntoExpr
 
-from annsel.core.types import XIndicies
+from annsel.core.typing import XIndicies
 from annsel.core.utils import GroupedPredicates, _map_predicates
 
 T = TypeVar("T")

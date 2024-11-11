@@ -6,10 +6,10 @@
 :hidden: true
 :maxdepth: 1
 
-api.md
+api/index.md
 changelog.md
 contributing.md
 references.md
 
-notebooks/All of Annsel
+notebooks/all_of_annsel
 ```

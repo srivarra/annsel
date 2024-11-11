@@ -49,7 +49,7 @@ def leukemic_bone_marrow_dataset() -> ad.AnnData:
     -----
     View the dataset at `CxG`_.
 
-    Citation: :cite:b:`triana_single-cell_2021`
+    Citation: :cite:p:`triana_single-cell_2021`
 
     Download Size: 25.7 MB
 

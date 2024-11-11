@@ -2,9 +2,12 @@ from collections.abc import Callable, Iterable
 from typing import Any, TypeVar
 
 import anndata as ad
-from narwhals.typing import IntoExpr
 
 from annsel.core.extensions import register_anndata_accessor
+
+# from narwhals import Expr, Series
+# from narwhals.typing import IntoExpr
+from annsel.core.typing import IntoExpr
 from annsel.tl._filter import (
     FilterAnnData,
 )
