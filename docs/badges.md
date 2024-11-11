@@ -1,5 +1,3 @@
-# annsel
-
 <div align="center">
 
 |             |                                                                                                                                                           |
@@ -21,70 +19,6 @@
 [badge-hatch]: https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg
 [badge-pypi]: https://img.shields.io/pypi/v/annsel.svg?logo=pypi&label=PyPI&logoColor=gold
 [badge-python-versions]: https://img.shields.io/pypi/pyversions/annsel.svg?logo=python&label=Python&logoColor=gold
-
-`annsel` brings familiar DataFrame-style operations to [`AnnData`](https://anndata.readthedocs.io/en/latest/) objects, making filtering and selection intuitive and straightforward. Built on the [narwhals][link-narwhals] library, it provides a seamless interface for manipulating complex biological datasets stored in `AnnData` format.
-
-<!-- done -->
-
-> [!WARNING]
-> This package is still early in development, and there is no guarantee of API stability or backwards compatibility.
-
-## Getting started
-
-Please refer to the [documentation][link-docs],
-in particular, the [API documentation][link-api].
-
-## Installation
-
-You need to have Python 3.10 or newer installed on your system. If you don't have
-Python installed, we recommend installing [uv][link-uv].
-There are several alternative options to install `annsel`:
-
-2.  Install the most recent release:
-
-    With `pip`:
-
-    ```zsh
-    pip install annsel
-    ```
-
-    With `uv`:
-
-    ```zsh
-    uv add annsel
-    ```
-
-3.  Install the latest development version:
-
-        With `pip`:
-
-        ```zsh
-        pip install git+https://github.com/srivarra/annsel.git@main
-        ```
-
-        With `uv`:
-
-        ```zsh
-        uv add git+https://github.com/srivarra/annsel
-        ```
-
-    <!-- done2 -->
-
-## Release notes
-
-See the [changelog][changelog].
-
-## Contact
-
-For questions and help requests, you can reach out in the [scverse discourse][scverse-discourse] or the [discussions][link-disucssions] tab.
-If you found a bug, please use the [issue tracker][issue-tracker].
-
-## Citation
-
-> t.b.a
-
-<!-- done3 -->
-
 [scverse-discourse]: https://discourse.scverse.org/
 [issue-tracker]: https://github.com/srivarra/annsel/issues
 [changelog]: https://annsel.readthedocs.io/latest/changelog.html

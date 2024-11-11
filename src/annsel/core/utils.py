@@ -18,23 +18,22 @@ def _extract_X(
     keep_sparse: bool = True,
     sparse_method: Literal["csr", "csc"] | None = None,
 ) -> pd.DataFrame:
-    match (keep_sparse, sparse.issparse(adata.layers[layer] if layer else adata.X), sparse_method):
-        case (True, True, _):
-            _X = adata.layers[layer]
-            return pd.DataFrame.sparse.from_spmatrix(data=_X, columns=adata.var_names, index=adata.obs_names)
-        case (True, False, "csr"):
-            # Conver to sparse csr
-            _X = adata.layers[layer] if layer else adata.X
-            _X = sparse.csr_matrix(_X)
-            return pd.DataFrame.sparse.from_spmatrix(data=_X, columns=adata.var_names, index=adata.obs_names)
-        case (True, False, "csc"):
-            _X = sparse.csc_matrix(_X)
-            return pd.DataFrame.sparse.from_spmatrix(data=_X, columns=adata.var_names, index=adata.obs_names)
+    X = adata.layers[layer] if layer else adata.X
+    match (keep_sparse, sparse.issparse(X), sparse_method):
+        case (True, True, None):
+            return pd.DataFrame.sparse.from_spmatrix(data=X, columns=adata.var_names, index=adata.obs_names)
+        case (True, _, "csr"):
+            return pd.DataFrame.sparse.from_spmatrix(
+                data=sparse.csr_matrix(X), columns=adata.var_names, index=adata.obs_names
+            )
+        case (True, _, "csc"):
+            return pd.DataFrame.sparse.from_spmatrix(
+                data=sparse.csc_matrix(X), columns=adata.var_names, index=adata.obs_names
+            )
         case (False, _, _):
-            _X = adata.layers[layer] if layer else adata.X
-            return pd.DataFrame(data=_X, columns=adata.var_names, index=adata.obs_names)
+            return pd.DataFrame(data=X.toarray(), columns=adata.var_names, index=adata.obs_names)
         case _:
-            return adata.to_df(layer=layer)
+            return pd.DataFrame(data=X, columns=adata.var_names, index=adata.obs_names)
 
 
 @dataclass
@@ -84,3 +83,24 @@ def _get_final_indices(
     *idx: pd.Index,
 ) -> pd.Index:
     return obj_names.intersection(pd.Index(list(reduce(and_, map(set, *idx)))))
+
+
+def _handle_sparse_method(adata: ad.AnnData, sparse_method: Literal["csr", "csc"] | None) -> ad.AnnData:
+    if sparse_method == "csc":
+        _X = sparse.csc_matrix(adata.X)
+    if sparse_method == "csr":
+        _X = sparse.csr_matrix(adata.X)
+    elif sparse_method is None:
+        _X = adata.X.toarray() if sparse.issparse(adata.X) else adata.X
+    return ad.AnnData(
+        X=_X,
+        obs=adata.obs,
+        var=adata.var,
+        obsm=adata.obsm,
+        varm=adata.varm,
+        obsp=adata.obsp,
+        varp=adata.varp,
+        layers=adata.layers,
+        raw=adata.raw,
+        uns=adata.uns,
+    )

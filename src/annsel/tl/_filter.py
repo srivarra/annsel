@@ -7,7 +7,7 @@ import pandas as pd
 from narwhals.typing import IntoDataFrame, IntoExpr
 
 from annsel.core.methods import NarwhalsMethod, predicate_guard
-from annsel.core.types import XIndicies
+from annsel.core.typing import XIndicies
 from annsel.core.utils import _extract_X, _get_final_indices, _map_predicates
 
 
@@ -67,8 +67,12 @@ class FilterAnnData(NarwhalsMethod):
         return _filter_adata_by_obs_names(self._adata, *self._predicates.obs_names)
 
     @predicate_guard("x")
-    def _run_x_predicates(self, layer: str | None = None, keep_sparse: bool = True) -> XIndicies:
-        return _filter_adata_by_X(self._adata, *self._predicates.x, layer=layer, keep_sparse=keep_sparse)
+    def _run_x_predicates(
+        self, layer: str | None = None, keep_sparse: bool = True, sparse_method: Literal["csr", "csc"] | None = None
+    ) -> XIndicies:
+        return _filter_adata_by_X(
+            self._adata, *self._predicates.x, layer=layer, keep_sparse=keep_sparse, sparse_method=sparse_method
+        )
 
     def _finalize_indices_obs(self, *idx: pd.Index) -> pd.Index:
         return _get_final_indices(self._adata.obs_names, *idx)
@@ -76,7 +80,12 @@ class FilterAnnData(NarwhalsMethod):
     def _finalize_indices_var(self, *idx: pd.Index) -> pd.Index:
         return _get_final_indices(self._adata.var_names, *idx)
 
-    def __call__(self, layer: str | None = None, keep_sparse: bool = True) -> tuple[pd.Index, pd.Index]:
+    def __call__(
+        self,
+        layer: str | None = None,
+        keep_sparse: bool = True,
+        sparse_method: Literal["csr", "csc"] | None = None,
+    ) -> tuple[pd.Index, pd.Index]:
         obs_indices = []
         var_indices = []
 
@@ -89,7 +98,7 @@ class FilterAnnData(NarwhalsMethod):
             obs_indices.append(obs_idx)
         if (obs_names_idx := self._run_obs_names_predicates()) is not None:
             obs_indices.append(obs_names_idx)
-        if x_indices := self._run_x_predicates(layer=layer, keep_sparse=keep_sparse):
+        if x_indices := self._run_x_predicates(layer=layer, keep_sparse=keep_sparse, sparse_method=sparse_method):
             obs_indices.append(x_indices.obs)
             var_indices.append(x_indices.var)
 
