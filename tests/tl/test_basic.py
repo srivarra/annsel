@@ -30,10 +30,9 @@ class TestFilterAnnData:
 
         ath.assert_adata_equal(adata, verify_adata)
 
-    @pytest.mark.xfail(reason="Issues with sparse X")
     def test_filter_X(self, lbm_dataset: ad.AnnData):
-        adata = lbm_dataset.an.filter(an.x(["HES4"]) >= 1)
-        verify_adata = lbm_dataset[lbm_dataset[:, "HES4"].X >= 1, :]
+        adata = lbm_dataset.an.filter(an.x(["ENSG00000206560"]) >= 1)
+        verify_adata = lbm_dataset[lbm_dataset[:, "ENSG00000206560"].X >= 1, :]
 
         ath.assert_adata_equal(adata, verify_adata)
 
