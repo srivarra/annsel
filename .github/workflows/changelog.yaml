@@ -46,10 +46,10 @@ jobs:
         run: cat "${{ steps.git-cliff.outputs.changelog }}"
       - name: Commit the Changelog
         run: |
-          git checkout <branch>
+          git checkout ${{ github.head_ref || github.ref_name }}
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           set +e
           git add CHANGELOG.md
           git commit -m "Update changelog"
-          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git <branch>
+          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${{github.repository}}.git <branch>
