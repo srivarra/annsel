@@ -25,9 +25,9 @@ class AnnselAccessor:
     def filter(
         self,
         *predicates: IntoExpr | Iterable[IntoExpr],
-        copy: bool = False,
         layer: str | None = None,
         keep_sparse: bool = True,
+        copy: bool = False,
     ) -> ad.AnnData:
         """Filters the AnnData object by the given predicates.
 
@@ -35,13 +35,13 @@ class AnnselAccessor:
         ----------
         predicates
             The predicates to filter the AnnData object by.
-        copy, optional
+        layer
+            The layer to filter the AnnData object by.
+        keep_sparse
+            Whether to keep the sparse matrix.
+        copy
             Whether to return a copy of the AnnData object, or return a view of the original.
             Defaults to `False`, which returns a view.
-        layer, optional
-            The layer to filter the AnnData object by.
-        keep_sparse, optional
-            Whether to keep the sparse matrix.
 
         Returns
         -------
@@ -77,7 +77,7 @@ class AnnselAccessor:
 
         Parameters
         ----------
-        copy, optional
+        copy
             _description_, by default True
 
         Returns
