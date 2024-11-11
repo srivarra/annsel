@@ -33,7 +33,7 @@ dependencies = [
   "xxhash>=3.5",
   "zarr>=2.18.3",
 ]
-optional-dependencies.dev = [ "esbonio>=0.16.5", "pre-commit", "pytest-sugar>=1" ]
+optional-dependencies.dev = [ "esbonio>=0.16.5", "pre-commit" ]
 optional-dependencies.doc = [
   "docutils>=0.21.2",
   "ipykernel",

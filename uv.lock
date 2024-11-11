@@ -72,8 +72,6 @@ dependencies = [
 dev = [
     { name = "esbonio" },
     { name = "pre-commit" },
-    { name = "pytest-sugar" },
-    { name = "sphinx-design" },
 ]
 doc = [
     { name = "docutils" },
@@ -89,6 +87,7 @@ doc = [
     { name = "sphinx-autosummary-accessors" },
     { name = "sphinx-book-theme" },
     { name = "sphinx-copybutton" },
+    { name = "sphinx-design" },
     { name = "sphinx-tabs" },
     { name = "sphinxcontrib-bibtex" },
     { name = "sphinxext-opengraph" },
@@ -124,7 +123,6 @@ requires-dist = [
     { name = "pre-commit", marker = "extra == 'dev'" },
     { name = "pytest", marker = "extra == 'test'" },
     { name = "pytest-cov", marker = "extra == 'test'", specifier = ">=6" },
-    { name = "pytest-sugar", marker = "extra == 'dev'", specifier = ">=1" },
     { name = "pytest-xdist", marker = "extra == 'test'", specifier = ">=3.6.1" },
     { name = "scanpydoc", marker = "extra == 'doc'", specifier = ">=0.14.1" },
     { name = "session-info" },
@@ -134,7 +132,7 @@ requires-dist = [
     { name = "sphinx-autosummary-accessors", marker = "extra == 'doc'", specifier = ">=2023.4" },
     { name = "sphinx-book-theme", marker = "extra == 'doc'", specifier = ">=1.1.3" },
     { name = "sphinx-copybutton", marker = "extra == 'doc'" },
-    { name = "sphinx-design", marker = "extra == 'dev'", specifier = ">=0.6.1" },
+    { name = "sphinx-design", marker = "extra == 'doc'", specifier = ">=0.6.1" },
     { name = "sphinx-tabs", marker = "extra == 'doc'" },
     { name = "sphinxcontrib-bibtex", marker = "extra == 'doc'", specifier = ">=2.6.3" },
     { name = "sphinxext-opengraph", marker = "extra == 'doc'" },
@@ -1102,11 +1100,11 @@ wheels = [
 
 [[package]]
 name = "json5"
-version = "0.9.25"
+version = "0.9.27"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/91/59/51b032d53212a51f17ebbcc01bd4217faab6d6c09ed0d856a987a5f42bbc/json5-0.9.25.tar.gz", hash = "sha256:548e41b9be043f9426776f05df8635a00fe06104ea51ed24b67f908856e151ae", size = 40332 }
+sdist = { url = "https://files.pythonhosted.org/packages/8c/04/69fff96cffa54cbd60645ea94d36f40f3e90f1cff0e4c7b27475753f1724/json5-0.9.27.tar.gz", hash = "sha256:5a19de4a6ca24ba664dc7d50307eb73ba9a16dea5d6bde85677ae85d3ed2d8e0", size = 41842 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8a/3c/4f8791ee53ab9eeb0b022205aa79387119a74cc9429582ce04098e6fc540/json5-0.9.25-py3-none-any.whl", hash = "sha256:34ed7d834b1341a86987ed52f3f76cd8ee184394906b6e22a1e0deb9ab294e8f", size = 30109 },
+    { url = "https://files.pythonhosted.org/packages/a1/55/4bd7bcf5be870b5806cab717d68fbf26a8d1bf54583337950c70f0dc729b/json5-0.9.27-py3-none-any.whl", hash = "sha256:17b43d78d3a6daeca4d7030e9bf22092dba29b1282cc2d0cfa56f6febee8dc93", size = 30894 },
 ]
 
 [[package]]
@@ -2309,20 +2307,6 @@ wheels = [
 ]
 
 [[package]]
-name = "pytest-sugar"
-version = "1.0.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "packaging" },
-    { name = "pytest" },
-    { name = "termcolor" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/f5/ac/5754f5edd6d508bc6493bc37d74b928f102a5fff82d9a80347e180998f08/pytest-sugar-1.0.0.tar.gz", hash = "sha256:6422e83258f5b0c04ce7c632176c7732cab5fdb909cb39cca5c9139f81276c0a", size = 14992 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/92/fb/889f1b69da2f13691de09a111c16c4766a433382d44aa0ecf221deded44a/pytest_sugar-1.0.0-py3-none-any.whl", hash = "sha256:70ebcd8fc5795dc457ff8b69d266a4e2e8a74ae0c3edc749381c64b5246c8dfd", size = 10171 },
-]
-
-[[package]]
 name = "pytest-xdist"
 version = "3.6.1"
 source = { registry = "https://pypi.org/simple" }
@@ -3052,15 +3036,6 @@ wheels = [
 ]
 
 [[package]]
-name = "termcolor"
-version = "2.5.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/37/72/88311445fd44c455c7d553e61f95412cf89054308a1aa2434ab835075fc5/termcolor-2.5.0.tar.gz", hash = "sha256:998d8d27da6d48442e8e1f016119076b690d962507531df4890fcd2db2ef8a6f", size = 13057 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/7f/be/df630c387a0a054815d60be6a97eb4e8f17385d5d6fe660e1c02750062b4/termcolor-2.5.0-py3-none-any.whl", hash = "sha256:37b17b5fc1e604945c2642c872a3764b5d547a48009871aea3edd3afa180afb8", size = 7755 },
-]
-
-[[package]]
 name = "terminado"
 version = "0.18.1"
 source = { registry = "https://pypi.org/simple" }
@@ -3302,11 +3277,11 @@ wheels = [
 
 [[package]]
 name = "webcolors"
-version = "24.8.0"
+version = "24.11.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/fe/f8/53150a5bda7e042840b14f0236e1c0a4819d403658e3d453237983addfac/webcolors-24.8.0.tar.gz", hash = "sha256:08b07af286a01bcd30d583a7acadf629583d1f79bfef27dd2c2c5c263817277d", size = 42392 }
+sdist = { url = "https://files.pythonhosted.org/packages/ee/80/9cd418f80aacfcb3cd04abfd9a28e063e64f3e5d7993c103a1de8967ff80/webcolors-24.11.0.tar.gz", hash = "sha256:ebcfbefa2b11c6ce09619a320824b3e7d7ddb91061608a9e53508926e73f87a6", size = 44971 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f0/33/12020ba99beaff91682b28dc0bbf0345bbc3244a4afbae7644e4fa348f23/webcolors-24.8.0-py3-none-any.whl", hash = "sha256:fc4c3b59358ada164552084a8ebee637c221e4059267d0f8325b3b560f6c7f0a", size = 15027 },
+    { url = "https://files.pythonhosted.org/packages/ed/e5/e91b94af8223e9061216ff881faedcf934e5c9118729719a56e127467798/webcolors-24.11.0-py3-none-any.whl", hash = "sha256:66ebd21f1d626960961df2443618e408d96da35d23c99c3a15d6c6a4628de89c", size = 14950 },
 ]
 
 [[package]]
