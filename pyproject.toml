@@ -28,6 +28,7 @@ dependencies = [
   # for debug logging (referenced from the issue template)
   "session-info",
   "tqdm>=4.67",
+  "typing-extensions>=4.12.2",
   "universal-pathlib>=0.2.5",
   "xxhash>=3.5",
 ]

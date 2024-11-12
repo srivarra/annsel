@@ -48,7 +48,7 @@ wheels = [
 
 [[package]]
 name = "annsel"
-version = "0.0.1"
+version = "0.0.2.dev32+ga2fbbc7.d20241112"
 source = { editable = "." }
 dependencies = [
     { name = "anndata" },
@@ -57,6 +57,7 @@ dependencies = [
     { name = "pooch" },
     { name = "session-info" },
     { name = "tqdm" },
+    { name = "typing-extensions" },
     { name = "universal-pathlib" },
     { name = "xxhash" },
 ]
@@ -131,6 +132,7 @@ requires-dist = [
     { name = "sphinxcontrib-bibtex", marker = "extra == 'doc'", specifier = ">=2.6.3" },
     { name = "sphinxext-opengraph", marker = "extra == 'doc'" },
     { name = "tqdm", specifier = ">=4.67" },
+    { name = "typing-extensions", specifier = ">=4.12.2" },
     { name = "universal-pathlib", specifier = ">=0.2.5" },
     { name = "xxhash", specifier = ">=3.5" },
 ]
