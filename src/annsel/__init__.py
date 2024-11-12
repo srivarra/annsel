@@ -14,5 +14,3 @@ __all__ = [
     "x",
     "datasets",
 ]
-
-__version__ = version("annsel")
