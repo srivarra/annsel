@@ -2,12 +2,12 @@
 
 <div align="center">
 
-|             |                                                                                                                                                           |
-| :---------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| **Status**  | [![Build][badge-build]][link-build] [![Tests][badge-test]][link-test] [![Documentation][badge-docs]][link-docs] [![codecov][badge-codecov]][link-codecov] |
-|  **Meta**   |     [![Hatch project][badge-hatch]][link-hatch] [![Ruff][badge-ruff]][link-ruff] [![uv][badge-uv]][link-uv] [![License][badge-license]][link-license]     |
-| **Package** |                                       [![PyPI][badge-pypi]][link-pypi] [![PyPI][badge-python-versions]][link-pypi]                                        |
-|             |                                                                                                                                                           |
+|             |                                                                                                                                                                                                              |
+| :---------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| **Status**  | [![Build][badge-build]][link-build] [![Tests][badge-test]][link-test] [![Documentation][badge-docs]][link-docs] [![codecov][badge-codecov]][link-codecov] [![pre-commit][badge-pre-commit]][link-pre-commit] |
+|  **Meta**   |                              [![Hatch project][badge-hatch]][link-hatch] [![Ruff][badge-ruff]][link-ruff] [![uv][badge-uv]][link-uv] [![License][badge-license]][link-license]                               |
+| **Package** |                                                                 [![PyPI][badge-pypi]][link-pypi] [![PyPI][badge-python-versions]][link-pypi]                                                                 |
+|             |                                                                                                                                                                                                              |
 
 </div>
 
@@ -21,6 +21,9 @@
 [badge-hatch]: https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg
 [badge-pypi]: https://img.shields.io/pypi/v/annsel.svg?logo=pypi&label=PyPI&logoColor=gold
 [badge-python-versions]: https://img.shields.io/pypi/pyversions/annsel.svg?logo=python&label=Python&logoColor=gold
+[badge-pre-commit]: https://results.pre-commit.ci/badge/github/srivarra/annsel/main.svg
+
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/srivarra/annsel/main.svg)]()
 
 `annsel` brings familiar DataFrame-style operations to [`AnnData`](https://anndata.readthedocs.io/en/latest/) objects, making filtering and selection intuitive and straightforward. Built on the [narwhals][link-narwhals] library, it provides a seamless interface for manipulating complex biological datasets stored in `AnnData` format.
 
@@ -111,3 +114,4 @@ If you found a bug, please use the [issue tracker][issue-tracker].
 [link-hatch]: https://github.com/pypa/hatch
 [link-narwhals]: https://github.com/narwhals-dev/narwhals
 [link-disucssions]: https://github.com/srivarra/annsel/discussions
+[link-pre-commit]: https://results.pre-commit.ci/latest/github/srivarra/annsel/main
