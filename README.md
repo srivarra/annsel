@@ -56,19 +56,30 @@ There are several alternative options to install `annsel`:
 
 3.  Install the latest development version:
 
-        With `pip`:
+    With `pip`:
 
-        ```zsh
-        pip install git+https://github.com/srivarra/annsel.git@main
-        ```
+    ```zsh
+    pip install git+https://github.com/srivarra/annsel.git@main
+    ```
 
-        With `uv`:
+    With `uv`:
 
-        ```zsh
-        uv add git+https://github.com/srivarra/annsel
-        ```
+    ```zsh
+    uv add git+https://github.com/srivarra/annsel
+    ```
 
     <!-- done2 -->
+
+## Example
+
+```python
+import annsel as an
+
+adata= an.datasets.leukemic_bone_marrow_dataset()
+
+adata.an.filter(an.var(["feature_type"]).is_in(["protein_coding", "lncRNA"]), copy=True)
+
+```
 
 ## Release notes
 

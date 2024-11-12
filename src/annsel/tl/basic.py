@@ -146,5 +146,5 @@ class AnnselAccessor:
                 raise ValueError(f"{target} is both the pipe target and a keyword argument")
             kwargs[target] = self._obj
         else:
-            args = (self._obj,) + args
+            args = (self._obj, *args)
         return func(*args, **kwargs)

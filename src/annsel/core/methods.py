@@ -21,7 +21,7 @@ def predicate_guard(
 
     def decorator(func: Callable[..., T]) -> Callable[..., T | None]:
         @wraps(func)
-        def wrapper(self: "NarwhalsMethod", *args, **kwargs) -> T | None:
+        def wrapper(self: NarwhalsMethod, *args, **kwargs) -> T | None:
             predicates = getattr(self._predicates, predicate_type)
             if len(predicates) > 0:
                 return func(self, *args, **kwargs)
@@ -54,32 +54,32 @@ class NarwhalsMethod(ABC):
     @abstractmethod
     def __call__(self, *args, **kwargs):
         """Execute the command on the AnnData object."""
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def _run_var_predicates(self) -> pd.Index | None:
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def _run_var_names_predicates(self) -> pd.Index | None:
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def _run_obs_predicates(self) -> pd.Index | None:
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def _run_obs_names_predicates(self) -> pd.Index | None:
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def _run_x_predicates(self, layer: str | None = None, keep_sparse: bool = True) -> XIndicies | None:
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def _finalize_indices_obs(self, *idx: pd.Index) -> pd.Index:
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def _finalize_indices_var(self, *idx: pd.Index) -> pd.Index:
-        pass
+        raise NotImplementedError

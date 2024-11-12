@@ -2,3 +2,33 @@
 div.cell_output table.dataframe {
     font-size: 0.8em;
 }
+
+/* Dark mode styles - explicit dark mode setting */
+html[data-theme="dark"] {
+    --pst-color-background: #000000 !important;
+}
+
+/* System dark mode when theme is set to auto */
+@media (prefers-color-scheme: dark) {
+    html[data-theme="auto"] {
+        --pst-color-background: #000000 !important;
+    }
+}
+
+/* Keep your existing navbar styles */
+.navbar-light {
+    background-color: #000000 !important;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #ffffff !important;
+}
+
+.navbar-light .navbar-brand {
+    color: #ffffff !important;
+}
+
+/* For the search icon and other navbar icons */
+.navbar-light .btn-navbar-icon {
+    color: #ffffff !important;
+}
