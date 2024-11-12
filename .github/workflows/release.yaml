@@ -58,7 +58,7 @@ jobs:
 
     environment:
       name: testpypi
-      url: https://test.pypi.org/p/anatomize
+      url: https://test.pypi.org/p/annsel
 
     permissions:
       id-token: write # IMPORTANT: mandatory for trusted publishing
@@ -71,7 +71,7 @@ jobs:
           path: dist/
 
       - name: Publish distribution 📦 to TestPyPI
-        uses: pypa/gh-action-pypi-publish@release/v1.9
+        uses: pypa/gh-action-pypi-publish@v1.12.2
         with:
           repository-url: https://test.pypi.org/legacy/
 
@@ -83,7 +83,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/anatomize # Replace <package-name> with your PyPI project name
+      url: https://pypi.org/p/annsel
     permissions:
       id-token: write # IMPORTANT: mandatory for trusted publishing
 
