@@ -54,7 +54,6 @@ jobs:
 
   publish-to-testpypi:
     name: Publish Python 🐍 distribution 📦 to TestPyPI
-    if: github.event_name == 'release' && github.event.action == 'published'
     needs:
       - build
     runs-on: ubuntu-latest
@@ -82,7 +81,6 @@ jobs:
   publish-to-pypi:
     name: >-
       Publish Python 🐍 distribution 📦 to PyPI
-    if: github.event_name == 'release' && github.event.action == 'published'
     needs: [build, publish-to-testpypi]
     runs-on: ubuntu-latest
     environment:
@@ -107,8 +105,7 @@ jobs:
     name: >-
       Sign the Python 🐍 distribution 📦 with Sigstore
       and upload them to GitHub Release
-    needs:
-      - publish-to-pypi
+    needs: [build, publish-to-testpypi, publish-to-pypi]
     runs-on: ubuntu-latest
 
     permissions:
@@ -127,14 +124,6 @@ jobs:
           inputs: >-
             ./dist/*.tar.gz
             ./dist/*.whl
-      - name: Create GitHub Release
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: >-
-          gh release create
-          '${{ github.ref_name }}'
-          --repo '${{ github.repository }}'
-          --notes ""
       - name: Upload artifact signatures to GitHub Release
         env:
           GITHUB_TOKEN: ${{ github.token }}
