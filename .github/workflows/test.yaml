@@ -52,7 +52,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          uv sync --extra test
+          uv sync --extra test --frozen
 
       - name: Test
         env:
