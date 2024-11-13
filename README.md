@@ -23,7 +23,6 @@
 [badge-python-versions]: https://img.shields.io/pypi/pyversions/annsel.svg?logo=python&label=Python&logoColor=gold
 [badge-pre-commit]: https://results.pre-commit.ci/badge/github/srivarra/annsel/main.svg
 
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/srivarra/annsel/main.svg)]()
 
 `annsel` brings familiar DataFrame-style operations to [`AnnData`](https://anndata.readthedocs.io/en/latest/) objects, making filtering and selection intuitive and straightforward. Built on the [narwhals][link-narwhals] library, it provides a seamless interface for manipulating complex biological datasets stored in `AnnData` format.
 
