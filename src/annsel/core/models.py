@@ -83,3 +83,7 @@ class NarwhalsMethod(ABC):
     @abstractmethod
     def _finalize_indices_var(self, *idx: pd.Index) -> pd.Index:
         raise NotImplementedError
+
+    @abstractmethod
+    def _apply_predicates(self, df: pd.DataFrame, *predicates: IntoExpr | Iterable[IntoExpr] | list[bool]) -> pd.Index:
+        raise NotImplementedError

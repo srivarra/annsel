@@ -85,13 +85,14 @@ def _get_final_indices(
     return obj_names.intersection(pd.Index(list(reduce(and_, map(set, *idx)))))
 
 
-def _handle_sparse_method(adata: ad.AnnData, sparse_method: Literal["csr", "csc"] | None) -> ad.AnnData:
-    if sparse_method == "csc":
-        _X = sparse.csc_matrix(adata.X)
-    if sparse_method == "csr":
-        _X = sparse.csr_matrix(adata.X)
-    elif sparse_method is None:
-        _X = adata.X.toarray() if sparse.issparse(adata.X) else adata.X
+def _handle_sparse_method(adata: ad.AnnData, sparse_method: Literal["csr", "csc"] | str | None) -> ad.AnnData:
+    match sparse_method:
+        case "csc":
+            _X = sparse.csc_matrix(adata.X)
+        case "csr":
+            _X = sparse.csr_matrix(adata.X)
+        case _:
+            _X = adata.X.toarray() if sparse.issparse(adata.X) else adata.X
     return ad.AnnData(
         X=_X,
         obs=adata.obs,

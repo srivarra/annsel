@@ -52,7 +52,7 @@ class TestFilterAnnData:
         dense_adata = lbm_dataset.copy()
         dense_adata.X = dense_adata.X.toarray()
 
-        adata = lbm_dataset.an.filter(an.x(["ENSG00000206560"]) >= 1, keep_sparse=True, sparse_method="csr")
+        adata = lbm_dataset.an.filter(an.x(["ENSG00000206560"]) >= 1, keep_sparse=True, sparse_method="csr", copy=True)
         verify_adata = dense_adata[lbm_dataset[:, "ENSG00000206560"].X >= 1, :]
         ath.assert_adata_equal(adata, verify_adata)
         assert sparse.isspmatrix_csr(adata.X)
@@ -138,3 +138,84 @@ class TestPipeAnnData:
 
         with pytest.raises(ValueError, match="adata_param is both the pipe target and a keyword argument"):
             lbm_dataset.an.pipe((dummy_func, "adata_param"), adata_param=lbm_dataset)
+
+
+class TestSelectAnnData:
+    def test_select_with_single_predicate(self, lbm_dataset: ad.AnnData):
+        adata = lbm_dataset.an.select(an.obs_col(["Cell_label", "is_primary_data"]))
+
+        verify_adata = lbm_dataset.copy()
+        verify_adata.obs = verify_adata.obs[["Cell_label", "is_primary_data"]]
+        ath.assert_adata_equal(adata, verify_adata)
+
+    def test_select_with_multiple_predicates(self, lbm_dataset: ad.AnnData):
+        adata = lbm_dataset.an.select(an.obs_col(["Cell_label"]), an.var_col(["vst.mean", "feature_type"]))
+
+        verify_adata = lbm_dataset.copy()
+        verify_adata.obs = verify_adata.obs[["Cell_label"]]
+        verify_adata.var = verify_adata.var[["vst.mean", "feature_type"]]
+        ath.assert_adata_equal(adata, verify_adata, exact=False)
+
+    def test_select_with_x_predicate(self, lbm_dataset: ad.AnnData):
+        adata = lbm_dataset.an.select(an.x(["ENSG00000204472", "ENSG00000206560"]))
+
+        verify_adata = lbm_dataset.copy()
+        verify_adata = ad.AnnData(
+            X=verify_adata[:, ["ENSG00000204472", "ENSG00000206560"]].X,
+            obs=verify_adata.obs,
+            var=verify_adata.var.loc[["ENSG00000204472", "ENSG00000206560"]],
+            obsm=verify_adata.obsm,
+            varm=verify_adata.varm,
+            obsp=verify_adata.obsp,
+            varp=verify_adata.varp,
+            layers=verify_adata.layers,
+            raw=verify_adata.raw,
+            uns=verify_adata.uns,
+        )
+
+        ath.assert_adata_equal(adata, verify_adata)
+
+    def test_select_with_layer(self, lbm_dataset: ad.AnnData):
+        lbm_dataset.layers["test_layer"] = lbm_dataset.X.copy()
+        adata = lbm_dataset.an.select(an.x(["ENSG00000206560"]), layer="test_layer")
+
+        verify_adata = lbm_dataset.copy()
+
+        verify_adata[:, ["ENSG00000206560"]]
+
+        verify_adata = ad.AnnData(
+            X=verify_adata[:, ["ENSG00000206560"]].X,
+            obs=verify_adata.obs,
+            var=verify_adata.var.loc[["ENSG00000206560"]],
+            obsm=verify_adata.obsm,
+            varm=verify_adata.varm,
+            obsp=verify_adata.obsp,
+            varp=verify_adata.varp,
+            layers=verify_adata[:, ["ENSG00000206560"]].layers,
+            raw=verify_adata.raw,
+            uns=verify_adata.uns,
+        )
+
+        assert "test_layer" in adata.layers
+        ath.assert_adata_equal(adata, verify_adata)
+
+    def test_select_with_sparse_method(self, lbm_dataset: ad.AnnData):
+        adata = lbm_dataset.an.select(an.obs_col(["Cell_label"]), sparse_method="csr")
+
+        assert sparse.isspmatrix_csr(adata.X)
+
+        adata = lbm_dataset.an.select(an.obs_col(["Cell_label"]), sparse_method="csc")
+
+        assert sparse.isspmatrix_csc(adata.X)
+
+    def test_select_with_keep_sparse_false(self, lbm_dataset: ad.AnnData):
+        adata = lbm_dataset.an.select(an.obs_col(["Cell_label"]), keep_sparse=False)
+
+        assert not sparse.issparse(adata.X)
+
+    def test_select_raises_on_invalid_predicates(self, lbm_dataset: ad.AnnData):
+        with pytest.raises(ValueError, match="var_names"):
+            lbm_dataset.an.select(an.var_names().str.starts_with("ENSG"))
+
+        with pytest.raises(ValueError, match="obs_names"):
+            lbm_dataset.an.select(an.obs_names().str.ends_with("4"))
