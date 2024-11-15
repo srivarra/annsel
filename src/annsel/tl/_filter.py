@@ -6,7 +6,7 @@ import narwhals as nw
 import pandas as pd
 from narwhals.typing import IntoDataFrame, IntoExpr
 
-from annsel.core.methods import NarwhalsMethod, predicate_guard
+from annsel.core.models import NarwhalsMethod, predicate_guard
 from annsel.core.typing import XIndicies
 from annsel.core.utils import _extract_X, _get_final_indices, _map_predicates
 
@@ -16,63 +16,40 @@ def _filter_df(df: IntoDataFrame, *predicates: IntoExpr | Iterable[IntoExpr] | l
     return df.filter(*predicates)
 
 
-def _filter_adata_by_obs(adata: ad.AnnData, *predicates: IntoExpr | Iterable[IntoExpr] | list[bool]) -> pd.Index:
-    return _filter_df(adata.obs, *predicates).index
-
-
-def _filter_adata_by_var(adata: ad.AnnData, *predicates: IntoExpr | Iterable[IntoExpr] | list[bool]) -> pd.Index:
-    return _filter_df(adata.var, *predicates).index
-
-
-def _filter_adata_by_var_names(adata: ad.AnnData, *predicates: IntoExpr | Iterable[IntoExpr] | list[bool]) -> pd.Index:
-    return _filter_df(adata.var_names.to_frame(name="var_names"), *predicates).index
-
-
-def _filter_adata_by_obs_names(adata: ad.AnnData, *predicates: IntoExpr | Iterable[IntoExpr] | list[bool]) -> pd.Index:
-    return _filter_df(adata.obs_names.to_frame(name="obs_names"), *predicates).index
-
-
-def _filter_adata_by_X(
-    adata: ad.AnnData,
-    *predicates: IntoExpr | Iterable[IntoExpr] | list[bool],
-    layer=str | None,
-    keep_sparse: bool = True,
-    sparse_method: Literal["csr", "csc"] | None = None,
-) -> XIndicies:
-    _X_df: pd.DataFrame = _extract_X(adata, layer=layer, keep_sparse=keep_sparse, sparse_method=sparse_method)
-
-    _X_df = _filter_df(_X_df, *predicates)
-    return XIndicies(_X_df.index, _X_df.columns)
-
-
 class FilterAnnData(NarwhalsMethod):
     def __init__(self, adata: ad.AnnData, *predicates: IntoExpr | Iterable[IntoExpr] | list[bool]):
         self._adata = adata
         self._predicates = _map_predicates(*predicates)
 
+    def _apply_predicates(self, df: pd.DataFrame, *predicates: IntoExpr | Iterable[IntoExpr] | list[bool]) -> pd.Index:
+        return _filter_df(df, *predicates).index
+
     @predicate_guard("var")
     def _run_var_predicates(self) -> pd.Index:
-        return _filter_adata_by_var(self._adata, *self._predicates.var)
+        return self._apply_predicates(self._adata.var, *self._predicates.var)
 
     @predicate_guard("var_names")
     def _run_var_names_predicates(self) -> pd.Index:
-        return _filter_adata_by_var_names(self._adata, *self._predicates.var_names)
+        return self._apply_predicates(self._adata.var_names.to_frame(name="var_names"), *self._predicates.var_names)
 
     @predicate_guard("obs")
     def _run_obs_predicates(self) -> pd.Index:
-        return _filter_adata_by_obs(self._adata, *self._predicates.obs)
+        return self._apply_predicates(self._adata.obs, *self._predicates.obs)
 
     @predicate_guard("obs_names")
     def _run_obs_names_predicates(self) -> pd.Index:
-        return _filter_adata_by_obs_names(self._adata, *self._predicates.obs_names)
+        return self._apply_predicates(self._adata.obs_names.to_frame(name="obs_names"), *self._predicates.obs_names)
 
     @predicate_guard("x")
     def _run_x_predicates(
         self, layer: str | None = None, keep_sparse: bool = True, sparse_method: Literal["csr", "csc"] | None = None
     ) -> XIndicies:
-        return _filter_adata_by_X(
-            self._adata, *self._predicates.x, layer=layer, keep_sparse=keep_sparse, sparse_method=sparse_method
+        _X_df: pd.DataFrame = _extract_X(
+            adata=self._adata, layer=layer, keep_sparse=keep_sparse, sparse_method=sparse_method
         )
+
+        _X_df = _filter_df(_X_df, *self._predicates.x)
+        return XIndicies(_X_df.index, _X_df.columns)
 
     def _finalize_indices_obs(self, *idx: pd.Index) -> pd.Index:
         return _get_final_indices(self._adata.obs_names, *idx)

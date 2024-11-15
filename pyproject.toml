@@ -23,7 +23,7 @@ dynamic = [ "version" ]
 dependencies = [
   "anndata",
   "more-itertools>=10.5",
-  "narwhals>=1.13.3",
+  "narwhals>=1.13.4",
   "pooch>=1.8.2",
   # for debug logging (referenced from the issue template)
   "session-info",

@@ -6,9 +6,8 @@ import anndata as ad
 from annsel.core.extensions import register_anndata_accessor
 from annsel.core.typing import IntoExpr
 from annsel.core.utils import _handle_sparse_method
-from annsel.tl._filter import (
-    FilterAnnData,
-)
+from annsel.tl._filter import FilterAnnData
+from annsel.tl._select import SelectAnnData
 
 T = TypeVar("T")
 
@@ -71,23 +70,56 @@ class AnnselAccessor:
         filtered_adata = self._obj[final_obs_idx, final_var_idx]
 
         filtered_adata = _handle_sparse_method(filtered_adata, sparse_method)
-        if copy:
-            return filtered_adata.copy()
-        return filtered_adata
+        return filtered_adata.copy() if copy else filtered_adata
 
-    def select(self, *predicates: IntoExpr | Iterable[IntoExpr], copy: bool = True) -> ad.AnnData:
+    def select(
+        self,
+        *predicates: IntoExpr | Iterable[IntoExpr],
+        layer: str | None = None,
+        keep_sparse: bool = True,
+        sparse_method: Literal["csr", "csc"] | None = None,
+        copy: bool = True,
+    ) -> ad.AnnData:
         """Selects the AnnData object by the given predicates.
 
         Parameters
         ----------
+        predicates
+            The predicates to select the AnnData object by.
+        layer
+            The layer to select the AnnData object by.
+        keep_sparse
+            Whether to keep the sparse matrix.
+        sparse_method
+            Convert X to a sparse array if desired. `"csr"` and `"csc"` are supported.
         copy
-            _description_, by default True
+            Whether to return a copy of the AnnData object, or return a view of the original.
+            Defaults to `True`, which returns a copy.
 
         Returns
         -------
-            _description_
+            The selected AnnData object.
         """
-        raise NotImplementedError
+        select_adata = SelectAnnData(self._obj, *predicates)
+
+        final_obs_cols, final_var_cols, final_var_names = select_adata(
+            layer=layer, keep_sparse=keep_sparse, sparse_method=sparse_method
+        )
+
+        selected_adata = ad.AnnData(
+            X=self._obj[:, final_var_names].X,
+            obs=self._obj.obs[final_obs_cols],
+            var=self._obj.var.loc[final_var_names, final_var_cols],
+            obsm=self._obj.obsm,
+            varm=self._obj.varm,
+            obsp=self._obj.obsp,
+            varp=self._obj.varp,
+            layers=self._obj[:, final_var_names].layers,
+            raw=self._obj.raw,
+            uns=self._obj.uns,
+        )
+        selected_adata = _handle_sparse_method(selected_adata, sparse_method)
+        return selected_adata.copy() if copy else selected_adata
 
     def pipe(self, func: Callable[..., T] | tuple[Callable[..., T], str], *args: Any, **kwargs: Any) -> Any:
         """

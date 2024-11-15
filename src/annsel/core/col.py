@@ -62,7 +62,7 @@ class VarCol:
 class ObsNames:
     """Selects the :obj:`~anndata.AnnData.obs_names` index of the :obj:`~anndata.AnnData` object."""
 
-    def __call__(self) -> ObsExpr:
+    def __call__(self) -> ObsNamesExpr:
         """Selects the :obj:`~anndata.AnnData.obs_names` index of the :obj:`~anndata.AnnData` object.
 
         Returns
@@ -75,7 +75,7 @@ class ObsNames:
 class VarNames:
     """Selects the :obj:`~anndata.AnnData.var_names` index of the :obj:`~anndata.AnnData` object."""
 
-    def __call__(self) -> VarExpr:
+    def __call__(self) -> VarNamesExpr:
         """Selects the :obj:`~anndata.AnnData.var_names` index of the :obj:`~anndata.AnnData` object.
 
         Returns
