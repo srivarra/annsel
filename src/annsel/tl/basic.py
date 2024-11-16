@@ -1,4 +1,4 @@
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Iterator
 from typing import Any, Literal, TypeVar
 
 import anndata as ad
@@ -7,6 +7,7 @@ from annsel.core.extensions import register_anndata_accessor
 from annsel.core.typing import IntoExpr
 from annsel.core.utils import _handle_sparse_method
 from annsel.tl._filter import FilterAnnData
+from annsel.tl._group_by import GroupByAnnData
 from annsel.tl._select import SelectAnnData
 
 T = TypeVar("T")
@@ -120,6 +121,26 @@ class AnnselAccessor:
         )
         selected_adata = _handle_sparse_method(selected_adata, sparse_method)
         return selected_adata.copy() if copy else selected_adata
+
+    def group_by(self, *predicates, return_group_names: bool = False) -> Iterator[ad.AnnData]:
+        """Perform a groupby operation on the AnnData object with respect to columns in `obs`, `var` or both.
+
+        Parameters
+        ----------
+        return_group_names
+            Whether to return the group names or not. Defaults to `False`.
+
+        Returns
+        -------
+            An iterator of AnnData objects.
+
+        Yields
+        ------
+            An AnnData object.
+        """
+        gb_adata = GroupByAnnData(self._obj, *predicates)
+
+        return gb_adata(return_group_names=return_group_names)
 
     def pipe(self, func: Callable[..., T] | tuple[Callable[..., T], str], *args: Any, **kwargs: Any) -> Any:
         """

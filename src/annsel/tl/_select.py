@@ -5,7 +5,6 @@ import anndata as ad
 import narwhals as nw
 import pandas as pd
 from narwhals.typing import IntoDataFrame, IntoExpr
-from pandas import DataFrame
 
 from annsel.core.models import NarwhalsMethod, predicate_guard
 from annsel.core.typing import XIndicies
@@ -23,7 +22,9 @@ class SelectAnnData(NarwhalsMethod):
         self._predicates = _map_predicates(*predicates)
 
     def _apply_predicates(
-        self, df: DataFrame, *predicates: nw.Expr | str | nw.Series | Iterable[nw.Expr | str | nw.Series] | list[bool]
+        self,
+        df: pd.DataFrame,
+        *predicates: nw.Expr | str | nw.Series | Iterable[nw.Expr | str | nw.Series] | list[bool],
     ) -> pd.Index:
         return _select_df(df, *predicates).columns
 

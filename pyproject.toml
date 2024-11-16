@@ -23,7 +23,7 @@ dynamic = [ "version" ]
 dependencies = [
   "anndata",
   "more-itertools>=10.5",
-  "narwhals>=1.13.4",
+  "narwhals>=1.13.5",
   "pooch>=1.8.2",
   # for debug logging (referenced from the issue template)
   "session-info",
@@ -40,7 +40,7 @@ optional-dependencies.doc = [
   "matplotlib>=3.9.2",
   "myst-nb>=1.1.2",
   "pandas",
-  "scanpy>=1.10.3",
+  "scanpy>=1.10.4",
   "scanpydoc>=0.14.1",
   # Until pybtex >0.23.0 releases: https://bitbucket.org/pybtex-devs/pybtex/issues/169/
   "setuptools",
