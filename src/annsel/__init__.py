@@ -6,13 +6,13 @@ from .tl import AnnselAccessor
 
 __all__ = [
     "AnnselAccessor",
-    "obs_col",
-    "var_col",
-    "obs_names",
-    "var_names",
-    "register_anndata_accessor",
-    "x",
     "datasets",
+    "obs_col",
+    "obs_names",
+    "register_anndata_accessor",
+    "var_col",
+    "var_names",
+    "x",
 ]
 
 __version__ = version("annsel")

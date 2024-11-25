@@ -5,17 +5,17 @@ from .models import NarwhalsMethod
 from .utils import _map_predicates
 
 __all__ = [
+    "NarwhalsMethod",
+    "ObsExpr",
+    "ObsNamesExpr",
+    "VarExpr",
+    "VarNamesExpr",
+    "XExpr",
+    "_map_predicates",
     "obs_col",
     "obs_names",
+    "register_anndata_accessor",
     "var_col",
     "var_names",
-    "register_anndata_accessor",
     "x",
-    "XExpr",
-    "ObsExpr",
-    "VarExpr",
-    "ObsNamesExpr",
-    "VarNamesExpr",
-    "_map_predicates",
-    "NarwhalsMethod",
 ]
