@@ -1,7 +1,7 @@
 # Core
 
 ```{eval-rst}
-.. module:: annsel.core
+.. module:: annsel.core.col
 ```
 
 ```{eval-rst}
@@ -13,10 +13,19 @@
 ```{eval-rst}
 .. autosummary::
     :toctree: ../generated
-
-    obs_col
-    obs_names
-    var_col
-    var_names
-    x
+    ObsCol
+    VarCol
+    ObsNames
+    VarNames
+    X
 ```
+
+<!--
+```{eval-rst}
+.. currentmodule:: polars.functions.col
+.. autoclass:: Col
+   :members: __call__, __getattr__
+   :noindex:
+   :autosummary:
+   :autosummary-nosignatures:
+``` -->
