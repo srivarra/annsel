@@ -48,7 +48,7 @@ wheels = [
 
 [[package]]
 name = "annsel"
-version = "0.0.3.dev4+ga30e2ea.d20241115"
+version = "0.0.3.dev8+g5223c54.d20241119"
 source = { editable = "." }
 dependencies = [
     { name = "anndata" },
