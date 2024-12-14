@@ -81,7 +81,7 @@ import annsel as an
 
 adata= an.datasets.leukemic_bone_marrow_dataset()
 
-adata.an.filter(an.var(["feature_type"]).is_in(["protein_coding", "lncRNA"]), copy=True)
+adata.an.filter(an.var_col(["feature_type"]).is_in(["protein_coding", "lncRNA"]), copy=True)
 
 ```
 
