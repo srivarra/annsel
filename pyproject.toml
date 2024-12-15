@@ -23,13 +23,14 @@ dynamic = [ "version" ]
 dependencies = [
   "anndata",
   "more-itertools>=10.5",
-  "narwhals>=1.13.5",
+  "narwhals>=1.18.3",
+  "pipefunc[pandas,widgets]>=0.41.3",
   "pooch>=1.8.2",
   # for debug logging (referenced from the issue template)
   "session-info",
   "tqdm>=4",
   "typing-extensions>=4.12.2",
-  "universal-pathlib>=0.2.5",
+  "universal-pathlib>=0.2",
   "xxhash>=3.5",
 ]
 optional-dependencies.dev = [ "esbonio>=0.16.5", "pre-commit" ]
@@ -37,7 +38,7 @@ optional-dependencies.doc = [
   "docutils>=0.21.2",
   "ipykernel",
   "ipython",
-  "matplotlib>=3.9.2",
+  "matplotlib>=3.10",
   "myst-nb>=1.1.2",
   "pandas",
   "scanpy>=1.10.4",

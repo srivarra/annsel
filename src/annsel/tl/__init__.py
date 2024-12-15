@@ -1,3 +1,3 @@
-from .basic import AnnselAccessor
+from .anndata import AnnselAccessor
 
 __all__ = ["AnnselAccessor"]
