@@ -9,46 +9,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
--   ✅ Added sparsity X tests
--   ♻️ Refactor \_extract_X
--   📝 Clean notebook
--   ✅ Updated x tests
--   Merge branch 'main' into docs/restructure
--   Merge pull request #8 from srivarra/pre-commit-ci-update-config
--   [pre-commit.ci] pre-commit autoupdate
--   ✅ Add pipe tests
--   📝 Added scanpy plot with pipe
--   🎨 Format pyproject.toml
--   📝 Updated landing page
--   📝 Updated documentation structure
+- ✅ Added sparsity X tests
+- ♻️ Refactor \_extract_X
+- 📝 Clean notebook
+- ✅ Updated x tests
+- Merge branch 'main' into docs/restructure
+- Merge pull request #8 from srivarra/pre-commit-ci-update-config
+- [pre-commit.ci] pre-commit autoupdate
+- ✅ Add pipe tests
+- 📝 Added scanpy plot with pipe
+- 🎨 Format pyproject.toml
+- 📝 Updated landing page
+- 📝 Updated documentation structure
 
 ## [0.0.1] - 2024-11-10
 
 ### Changed
 
--   Merge pull request #5 from srivarra/ci_release_fix
--   💚 Release fixes
--   Merge pull request #4 from srivarra/filter
--   📝 Remove nbsphinx
--   ➖ Remove pytest rich
--   ✨ Filter mostly fixed
--   📝 Add a link to the discussions.
--   ✅ Dataclasses from attrs again
--   🏷️ Fixed dataclasses
--   ✨ Fixed up filtering
--   Merge pull request #1 from srivarra/configuration
--   📝 Do not fail on warning
--   💚 Removed upload test results to codecov
--   📝 Added matplotlib to docs
--   📝 Update rtd
--   📝 Fix rtd
--   🧑‍💻 Added gitcliff changelog
--   💚 Added python 3.12 to test suite
--   ♻️ Renamed accessor
--   ➖ Removed twine
--   ➕ Added twine
--   ➕ Added pytest extra deps
--   🎉 Begin
+- Merge pull request #5 from srivarra/ci_release_fix
+- 💚 Release fixes
+- Merge pull request #4 from srivarra/filter
+- 📝 Remove nbsphinx
+- ➖ Remove pytest rich
+- ✨ Filter mostly fixed
+- 📝 Add a link to the discussions.
+- ✅ Dataclasses from attrs again
+- 🏷️ Fixed dataclasses
+- ✨ Fixed up filtering
+- Merge pull request #1 from srivarra/configuration
+- 📝 Do not fail on warning
+- 💚 Removed upload test results to codecov
+- 📝 Added matplotlib to docs
+- 📝 Update rtd
+- 📝 Fix rtd
+- 🧑‍💻 Added gitcliff changelog
+- 💚 Added python 3.12 to test suite
+- ♻️ Renamed accessor
+- ➖ Removed twine
+- ➕ Added twine
+- ➕ Added pytest extra deps
+- 🎉 Begin
 
 [unreleased]: https://github.com///compare/0.0.1..HEAD
 
