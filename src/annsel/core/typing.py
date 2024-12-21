@@ -1,20 +1,22 @@
-from dataclasses import dataclass
-from typing import TypeAlias
+from collections.abc import Iterator
+from typing import Any, Protocol, TypeAlias, runtime_checkable
 
-import pandas as pd
 from narwhals.expr import Expr
 from narwhals.series import Series
 
+# Base type for single expressions
+IntoExpr: TypeAlias = Expr | str | Series[Any]
 
-# from narwhals.typing import IntoExpr
-@dataclass
-class XIndicies:
-    """A dataclass representing the indices of the X matrix of an AnnData object."""
-
-    obs: pd.Index
-    var: pd.Index
+# Single predicate can be IntoExpr or list[bool]
+SinglePredicate: TypeAlias = IntoExpr | list[bool]
 
 
-# Define custom IntoExpr type for documentation mainly as Union["Expr", str, "Series"]
-# doesn't play nice with Sphinx autodoc
-IntoExpr: TypeAlias = Expr | str | Series
+@runtime_checkable
+class PredicatesCollection(Protocol):
+    """Protocol for collections of predicates."""
+
+    def __iter__(self) -> Iterator[SinglePredicate]: ...
+
+
+# Final recursive type
+Predicates: TypeAlias = SinglePredicate | PredicatesCollection

@@ -1,21 +1,10 @@
-from .col import obs_col, obs_names, var_col, var_names, x
-from .expr import ObsExpr, ObsNamesExpr, VarExpr, VarNamesExpr, XExpr
+from .expr import col, obs_names, var_names
 from .extensions import register_anndata_accessor
-from .models import NarwhalsMethod
-from .utils import _map_predicates
+from .typing import Predicates
 
 __all__ = [
-    "obs_col",
+    "col",
     "obs_names",
-    "var_col",
-    "var_names",
     "register_anndata_accessor",
-    "x",
-    "XExpr",
-    "ObsExpr",
-    "VarExpr",
-    "ObsNamesExpr",
-    "VarNamesExpr",
-    "_map_predicates",
-    "NarwhalsMethod",
+    "var_names",
 ]

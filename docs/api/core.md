@@ -1,31 +1,34 @@
 # Core
 
 ```{eval-rst}
-.. module:: annsel.core.col
+.. module:: annsel.core.expr
 ```
 
 ```{eval-rst}
 .. currentmodule:: annsel
 ```
 
-## Selectors
+## Selectors and Expressions
 
 ```{eval-rst}
 .. autosummary::
-    :toctree: ../generated
-    ObsCol
-    VarCol
-    ObsNames
-    VarNames
-    X
+   :toctree: ../generated/
+
+   obs_names
+   var_names
+   col
+
 ```
 
-<!--
+## Types
+
 ```{eval-rst}
-.. currentmodule:: polars.functions.col
-.. autoclass:: Col
-   :members: __call__, __getattr__
-   :noindex:
-   :autosummary:
-   :autosummary-nosignatures:
-``` -->
+.. currentmodule:: annsel.core.typing
+.. autosummary::
+   :toctree: ../generated/
+
+   Predicates
+   IntoExpr
+   SinglePredicate
+   PredicatesCollection
+```

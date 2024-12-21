@@ -8,9 +8,9 @@
 .. currentmodule:: annsel
 ```
 
-## Accessor: `an`
+## AnnData Accessor: `an`
 
-In order to use the `an` accessor, you need to import `annsel`.
+In order to use the `AnnData` `an` accessor, you need to import `annsel`.
 
 Something like the following:
 
@@ -24,6 +24,8 @@ or
 import annsel as an
 ```
 
+This will register the `an` accessor to the `AnnData` object.
+
 ```{eval-rst}
 .. autosummary::
     :toctree: ../generated
@@ -31,5 +33,6 @@ import annsel as an
 
     AnnselAccessor.filter
     AnnselAccessor.select
+    AnnselAccessor.group_by
     AnnselAccessor.pipe
 ```
