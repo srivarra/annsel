@@ -36,10 +36,12 @@ optional-dependencies.doc = [
   "docutils>=0.21.2",
   "ipykernel",
   "ipython",
+  "llvmlite>=0.44.0rc2",
   "matplotlib>=3.10",
   "myst-nb>=1.1.2",
+  "numba>=0.61.0rc2",
   "pandas",
-  "scanpy>=1.10.4; python_version!='3.13'",
+  "scanpy>=1.11.0rc1",
   "scanpydoc>=0.14.1",
   # Until pybtex >0.23.0 releases: https://bitbucket.org/pybtex-devs/pybtex/issues/169/
   "setuptools",
@@ -53,7 +55,7 @@ optional-dependencies.doc = [
   "sphinxcontrib-bibtex>=2.6.3",
   "sphinxext-opengraph",
 ]
-optional-dependencies.nb = [ "jupyterlab>=4.3" ]
+optional-dependencies.nb = [ "jupyterlab>=4.3.4" ]
 optional-dependencies.test = [
   "coverage",
   "pytest",
