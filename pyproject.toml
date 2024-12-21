@@ -23,24 +23,25 @@ dynamic = [ "version" ]
 dependencies = [
   "anndata",
   "more-itertools>=10.5",
-  "narwhals>=1.13.4",
+  "narwhals>=1.19",
+  # "numpy>=2.1",
   "pooch>=1.8.2",
   # for debug logging (referenced from the issue template)
-  "session-info",
-  "tqdm>=4.67",
-  "typing-extensions>=4.12.2",
-  "universal-pathlib>=0.2.5",
-  "xxhash>=3.5",
+  "session-info2",
+  "tqdm>=4",
+  "universal-pathlib>=0.2",
 ]
 optional-dependencies.dev = [ "esbonio>=0.16.5", "pre-commit" ]
 optional-dependencies.doc = [
   "docutils>=0.21.2",
   "ipykernel",
   "ipython",
-  "matplotlib>=3.9.2",
+  "llvmlite>=0.44.0rc2",
+  "matplotlib>=3.10",
   "myst-nb>=1.1.2",
+  "numba>=0.61.0rc2",
   "pandas",
-  "scanpy>=1.10.3",
+  "scanpy>=1.11.0rc1",
   "scanpydoc>=0.14.1",
   # Until pybtex >0.23.0 releases: https://bitbucket.org/pybtex-devs/pybtex/issues/169/
   "setuptools",
@@ -54,7 +55,7 @@ optional-dependencies.doc = [
   "sphinxcontrib-bibtex>=2.6.3",
   "sphinxext-opengraph",
 ]
-optional-dependencies.nb = [ "jupyterlab>=4.3", "marimo>=0.9.17" ]
+optional-dependencies.nb = [ "jupyterlab>=4.3.4" ]
 optional-dependencies.test = [
   "coverage",
   "pytest",

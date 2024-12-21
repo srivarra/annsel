@@ -1,22 +1,34 @@
 # Core
 
 ```{eval-rst}
-.. module:: annsel.core
+.. module:: annsel.core.expr
 ```
 
 ```{eval-rst}
 .. currentmodule:: annsel
 ```
 
-## Selectors
+## Selectors and Expressions
 
 ```{eval-rst}
 .. autosummary::
-    :toctree: ../generated
+   :toctree: ../generated/
 
-    obs_col
-    obs_names
-    var_col
-    var_names
-    x
+   obs_names
+   var_names
+   col
+
+```
+
+## Types
+
+```{eval-rst}
+.. currentmodule:: annsel.core.typing
+.. autosummary::
+   :toctree: ../generated/
+
+   Predicates
+   IntoExpr
+   SinglePredicate
+   PredicatesCollection
 ```

@@ -43,25 +43,25 @@ There are several alternative options to install `annsel`:
 
 1. Install the most recent release:
 
-:::::{tabs}
-::::{group-tab} uv
-If you are using `uv`
+    :::::{tabs}
+    ::::{group-tab} uv
+    If you are using `uv`
 
-```zsh
-uv add annsel
-```
+    ```zsh
+    uv add annsel
+    ```
 
-::::
+    ::::
 
-::::{group-tab} Pip
-If you are using `pip`:
+    ::::{group-tab} Pip
+    If you are using `pip`:
 
-```zsh
-pip install annsel
-```
+    ```zsh
+    pip install annsel
+    ```
 
-::::
-:::::
+    ::::
+    :::::
 
 2. Install the latest development version:
 

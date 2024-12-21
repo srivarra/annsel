@@ -22,7 +22,7 @@ sys.path.insert(0, str(HERE / "extensions"))
 info = metadata("annsel")
 project_name = info["Name"]
 author = info["Author"]
-copyright = f"{datetime.now():%Y}, {author}."
+copyright = f"{datetime.now():%Y}, {author}"
 version = info["Version"]
 urls = dict(pu.split(", ") for pu in info.get_all("Project-URL"))
 repository_url = urls["Source"]
@@ -74,7 +74,7 @@ default_role = "literal"
 napoleon_google_docstring = False
 napoleon_numpy_docstring = True
 napoleon_include_init_with_doc = False
-napoleon_use_rtype = True  # having a separate entry generally helps readability
+napoleon_use_rtype = True  # having a separate entry generally helps readaibteility
 napoleon_use_param = True
 myst_heading_anchors = 6  # create anchors for h1-h6
 myst_enable_extensions = [
