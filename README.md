@@ -44,7 +44,7 @@ You need to have Python 3.10 or newer installed on your system. If you don't hav
 Python installed, we recommend installing [uv][link-uv].
 There are several alternative options to install `annsel`:
 
-2.  Install the most recent release:
+1.  Install the most recent release:
 
     With `pip`:
 
@@ -58,7 +58,7 @@ There are several alternative options to install `annsel`:
     uv add annsel
     ```
 
-3.  Install the latest development version:
+2.  Install the latest development version:
 
     With `pip`:
 
@@ -71,8 +71,6 @@ There are several alternative options to install `annsel`:
     ```zsh
     uv add git+https://github.com/srivarra/annsel
     ```
-
-    <!-- done2 -->
 
 ## Example
 
