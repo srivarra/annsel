@@ -79,10 +79,15 @@ There are several alternative options to install `annsel`:
 ```python
 import annsel as an
 
-adata= an.datasets.leukemic_bone_marrow_dataset()
+adata=an.datasets.leukemic_bone_marrow_dataset()
 
-adata.an.filter(an.var_col(["feature_type"]).is_in(["protein_coding", "lncRNA"]), copy=True)
-
+adata.an.filter(
+    obs=(
+        an.col(["Cell_label"]).is_in(["Classical Monocytes", "CD8+CD103+ tissue resident memory T cells"]),
+        an.col(["sex"]) == "male",
+    ),
+    var=an.col(["vst.mean"]) >= 3,
+)
 ```
 
 ## Release notes
