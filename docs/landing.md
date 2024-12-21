@@ -65,25 +65,25 @@ There are several alternative options to install `annsel`:
 
 2. Install the latest development version:
 
-:::::{tabs}
-::::{group-tab} uv
-If you are using `uv`
+    :::::{tabs}
+    ::::{group-tab} uv
+    If you are using `uv`
 
-```zsh
-uv add git+https://github.com/srivarra/annsel
-```
+    ```zsh
+    uv add git+https://github.com/srivarra/annsel
+    ```
 
-::::
+    ::::
 
-::::{group-tab} Pip
-If you are using `pip`:
+    ::::{group-tab} Pip
+    If you are using `pip`:
 
-```zsh
-pip install git+https://github.com/srivarra/annsel.git@main
-```
+    ```zsh
+    pip install git+https://github.com/srivarra/annsel.git@main
+    ```
 
-::::
-:::::
+    ::::
+    :::::
 
 ## Release notes
 

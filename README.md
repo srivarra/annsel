@@ -2,7 +2,7 @@
 
 <div align="center">
 
-|             |                                                                                                                                                                                                              |
+|             |
 | :---------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | **Status**  | [![Build][badge-build]][link-build] [![Tests][badge-test]][link-test] [![Documentation][badge-docs]][link-docs] [![codecov][badge-codecov]][link-codecov] [![pre-commit][badge-pre-commit]][link-pre-commit] |
 |  **Meta**   |         [![Hatch project][badge-hatch]][link-hatch] [![Ruff][badge-ruff]][link-ruff] [![uv][badge-uv]][link-uv] [![License][badge-license]][link-license] [![gitmoji][badge-gitmoji]][link-gitmoji]          |
@@ -44,7 +44,7 @@ You need to have Python 3.10 or newer installed on your system. If you don't hav
 Python installed, we recommend installing [uv][link-uv].
 There are several alternative options to install `annsel`:
 
-1.  Install the most recent release:
+1. Install the most recent release:
 
     With `pip`:
 
@@ -58,9 +58,8 @@ There are several alternative options to install `annsel`:
     uv add annsel
     ```
 
-2.  Install the latest development version:
-
-    With `pip`:
+2. Install the latest development version:
+   With `pip`:
 
     ```zsh
     pip install git+https://github.com/srivarra/annsel.git@main
@@ -99,7 +98,7 @@ If you found a bug, please use the [issue tracker][issue-tracker].
 
 ## Citation
 
-> t.b.a
+> Varra, S. R. annsel [Computer software]. https://github.com/srivarra/annsel
 
 <!-- done3 -->
 
