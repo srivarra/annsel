@@ -1,6 +1,6 @@
 name: Bug report
 description: Report something that is broken or incorrect
-labels: bug
+labels: [bug]
 body:
   - type: markdown
     attributes:
@@ -28,13 +28,13 @@ body:
         Please paste below the output of
 
         ```python
-        import session_info
-        session_info.show(html=False, dependencies=True)
+        import session_info2
+        session_info2.show(html=False, dependencies=True)
         ```
       placeholder: |
         -----
         anndata             0.8.0rc2.dev27+ge524389
-        session_info        1.0.0
+        session_info2        0.0.1
         -----
         asttokens           NA
         awkward             1.8.0
