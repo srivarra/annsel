@@ -2,7 +2,7 @@
 
 <div align="center">
 
-|             |
+|             |                                                                                                                                                                                                              |
 | :---------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | **Status**  | [![Build][badge-build]][link-build] [![Tests][badge-test]][link-test] [![Documentation][badge-docs]][link-docs] [![codecov][badge-codecov]][link-codecov] [![pre-commit][badge-pre-commit]][link-pre-commit] |
 |  **Meta**   |         [![Hatch project][badge-hatch]][link-hatch] [![Ruff][badge-ruff]][link-ruff] [![uv][badge-uv]][link-uv] [![License][badge-license]][link-license] [![gitmoji][badge-gitmoji]][link-gitmoji]          |
