@@ -22,14 +22,13 @@ classifiers = [
 dynamic = [ "version" ]
 dependencies = [
   "anndata",
-  "graphviz-anywidget>=0.3",
   "more-itertools>=10.5",
-  "narwhals>=1.18.3",
+  "narwhals>=1.19",
+  "numpy>=2,!=2.0.2",
   "pooch>=1.8.2",
   # for debug logging (referenced from the issue template)
   "session-info",
   "tqdm>=4",
-  "typing-extensions>=4.12.2",
   "universal-pathlib>=0.2",
 ]
 optional-dependencies.dev = [ "esbonio>=0.16.5", "pre-commit" ]
@@ -54,7 +53,7 @@ optional-dependencies.doc = [
   "sphinxcontrib-bibtex>=2.6.3",
   "sphinxext-opengraph",
 ]
-optional-dependencies.nb = [ "jupyterlab>=4.3", "marimo>=0.9.17" ]
+optional-dependencies.nb = [ "jupyterlab>=4.3" ]
 optional-dependencies.test = [
   "coverage",
   "pytest",
