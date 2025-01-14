@@ -30,9 +30,6 @@ it provides a seamless interface for manipulating complex biological datasets st
 
 <!-- done -->
 
-> [!WARNING]
-> This package is still early in development, and there is no guarantee of API stability or backwards compatibility.
-
 ## Getting started
 
 Please refer to the [documentation][link-docs],
@@ -106,7 +103,7 @@ If you found a bug, please use the [issue tracker][issue-tracker].
 [issue-tracker]: https://github.com/srivarra/annsel/issues
 [changelog]: https://annsel.readthedocs.io/latest/changelog.html
 [link-docs]: https://annsel.readthedocs.io
-[link-api]: https://annsel.readthedocs.io/en/latest/api.html
+[link-api]: https://annsel.readthedocs.io/en/latest/api/index.html
 [link-pypi]: https://pypi.org/project/annsel
 [link-codecov]: https://codecov.io/gh/srivarra/annsel
 [link-test]: https://github.com/srivarra/annsel/actions/workflows/test.yml
