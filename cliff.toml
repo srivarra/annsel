@@ -27,7 +27,7 @@ body = """
     ### {{ group | upper_first }}
     {%- for commit in commits %}
         - {{ commit.message | split(pat="\n") | first | upper_first | trim }}\
-            {% if commit.remote.username %} by @{{ commit.remote.username }}{%- endif -%}
+            {% if commit.remote.username %} by [@{{ commit.remote.username }}](https://github.com/{{ commit.remote.username }}){%- endif -%}
             {% if commit.remote.pr_number %} in \
             [#{{ commit.remote.pr_number }}]({{ self::remote_url() }}/pull/{{ commit.remote.pr_number }}) \
             {%- endif -%}
@@ -77,22 +77,18 @@ commit_preprocessors = [
     { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "" },
 ]
 # regex for parsing and grouping commits
+
 commit_parsers = [
-    { message = "^[a|A]dd", group = "Added" },
-    { message = "^[s|S]upport", group = "Added" },
-    { message = "^[r|R]emove", group = "Removed" },
-    { message = "^.*: add", group = "Added" },
-    { message = "^.*: support", group = "Added" },
-    { message = "^.*: remove", group = "Removed" },
-    { message = "^.*: delete", group = "Removed" },
-    { message = "^test", group = "Fixed" },
-    { message = "^fix", group = "Fixed" },
-    { message = "^.*: fix", group = "Fixed" },
-    { message = "^.*", group = "Changed" },
+  { field = "github.pr_labels", pattern = "github-actions", group = "<!-- 0 --> 🏗️ Github Actions" },
+  { field = "github.pr_labels", pattern = "enhancement", group = "<!-- 1 --> 🚀 Features" },
+  { field = "github.pr_labels", pattern = "bug", group = "<!-- 2 --> 🐛 Fixes" },
+  { field = "github.pr_labels", pattern = "documentation", group = "<!-- 3 --> 📝 Documentation" },
+  { field = "github.pr_labels", pattern = "dependencies", group = "<!-- 4 --> 🧪 Dependencies" },
+  { field = "github.pr_labels", pattern = ".*", group = "<!-- 5 --> 🌀 Miscellaneous" },
 ]
 # filter out the commits that are not matched by commit parsers
-filter_commits = false
+filter_commits = true
 # sort the tags topologically
-topo_order = false
+topo_order = true
 # sort the commits inside sections by oldest/newest order
 sort_commits = "newest"
