@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   generate-changelog:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     defaults:
       run:
         shell: bash -e {0} # -e to fail on error

@@ -22,8 +22,8 @@ classifiers = [
 dynamic = [ "version" ]
 dependencies = [
   "anndata",
-  "more-itertools>=10.5",
-  "narwhals>=1.19",
+  "more-itertools>=10.6",
+  "narwhals>=1.22",
   # "numpy>=2.1",
   "pooch>=1.8.2",
   # for debug logging (referenced from the issue template)
@@ -37,6 +37,7 @@ optional-dependencies.doc = [
   "ipykernel",
   "ipython",
   "llvmlite>=0.44.0rc2",
+  "marimo>=0.10.14",
   "matplotlib>=3.10",
   "myst-nb>=1.1.2",
   "numba>=0.61.0rc2",
