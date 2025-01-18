@@ -14,11 +14,6 @@ def _filter_df(df: IntoDataFrameT, *predicates: Predicates) -> IntoDataFrameT:
     return df.filter(*predicates)
 
 
-@nw.narwhalify
-def _filter_names(df: IntoDataFrameT, *predicates: Predicates) -> IntoDataFrameT:
-    return df.filter(*predicates)
-
-
 def _filter_obs(adata: ad.AnnData, *predicates: Predicates) -> pd.Index:
     return _filter_df(adata.obs, *predicates).index
 
@@ -32,11 +27,11 @@ def _filter_x(adata: ad.AnnData, *predicates: Predicates, layer: str | None = No
 
 
 def _filter_obs_names(adata: ad.AnnData, *predicates: Predicates) -> pd.Index:
-    return _filter_names(adata.obs_names.to_frame(name="obs_names"), *predicates).index
+    return _filter_df(adata.obs_names.to_frame(name="obs_names"), *predicates).index
 
 
 def _filter_var_names(adata: ad.AnnData, *predicates: Predicates) -> pd.Index:
-    return _filter_names(adata.var_names.to_frame(name="var_names"), *predicates).index
+    return _filter_df(adata.var_names.to_frame(name="var_names"), *predicates).index
 
 
 def _filter(

@@ -14,11 +14,6 @@ def _select_df(df: IntoDataFrame, *predicates: Predicates) -> IntoDataFrame:
     return df.select(*predicates)
 
 
-@nw.narwhalify
-def _select_names(df: IntoDataFrame, *predicates: Predicates) -> IntoDataFrame:
-    return df.select(*predicates)
-
-
 def _select_obs(adata: ad.AnnData, *predicates: Predicates) -> pd.Index:
     return _select_df(adata.obs, *predicates).columns
 

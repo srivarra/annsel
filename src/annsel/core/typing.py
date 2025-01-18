@@ -1,11 +1,7 @@
 from collections.abc import Iterator
-from typing import Any, Protocol, TypeAlias, runtime_checkable
+from typing import Protocol, TypeAlias, runtime_checkable
 
-from narwhals.expr import Expr
-from narwhals.series import Series
-
-# Base type for single expressions
-IntoExpr: TypeAlias = Expr | str | Series[Any]
+from narwhals.typing import IntoExpr
 
 # Single predicate can be IntoExpr or list[bool]
 SinglePredicate: TypeAlias = IntoExpr | list[bool]
