@@ -43,7 +43,7 @@ optional-dependencies.doc = [
   "numba>=0.61.0rc2",
   "pandas",
   "scanpy>=1.11.0rc1",
-  "scanpydoc>=0.14.1",
+  "scanpydoc>=0.15.1",
   # Until pybtex >0.23.0 releases: https://bitbucket.org/pybtex-devs/pybtex/issues/169/
   "setuptools",
   "sphinx>=8.1.3",
