@@ -15,5 +15,4 @@
     :toctree: ../generated
 
     leukemic_bone_marrow_dataset
-    marimo_dataset
 ```

@@ -37,7 +37,6 @@ optional-dependencies.doc = [
   "ipykernel",
   "ipython",
   "llvmlite>=0.44.0rc2",
-  "marimo>=0.10.14",
   "matplotlib>=3.10",
   "myst-nb>=1.1.2",
   "numba>=0.61.0rc2",

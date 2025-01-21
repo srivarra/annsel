@@ -1,8 +1,0 @@
-[runtime]
-auto_instantiate = false
-
-[format]
-line_length = 120
-
-[display]
-default_width = "full"
