@@ -119,3 +119,49 @@ def leukemic_bone_marrow_dataset(
     )
     adata.strings_to_categoricals()
     return adata
+
+
+def marimo_dataset() -> ad.AnnData:
+    """Generate a fake in memory dataset for Marimo, since it's not possible to load a dataset from a URL.
+
+    Returns
+    -------
+    A minimal  dataset as an AnnData object.
+    """
+    import numpy as np
+    import pandas as pd
+
+    rng = np.random.default_rng(42)
+
+    X = rng.random((100, 100)) * 10
+    log1p_X = np.log1p(X)
+
+    obs = pd.DataFrame(
+        data={
+            "cell_type": pd.Categorical(
+                rng.choice(a=["A", "B", "C"], p=[0.3, 0.4, 0.3], size=100),
+            ),
+            "batch": pd.Categorical(
+                rng.choice(a=["1", "2", "3"], p=[0.3, 0.4, 0.3], size=100),
+            ),
+            "development_stage": pd.Categorical(
+                rng.choice(a=["embryonic", "adult"], p=[0.3, 0.7], size=100),
+            ),
+        },
+        index=pd.Index([f"cell_{i}" for i in range(100)], name="index"),
+    )
+
+    var = pd.DataFrame(
+        data={
+            "feature_type": pd.Categorical(
+                rng.choice(a=["protein", "rna"], p=[0.3, 0.7], size=100),
+            ),
+        },
+        index=pd.Index([f"gene_{i}" for i in range(100)], name="index"),
+    )
+
+    adata = ad.AnnData(X=X, obs=obs, var=var, layers={"log1p": log1p_X})
+    return adata
+
+    # adata = ad.AnnData(X=X, obs=obs, var=var)
+    # return adata
