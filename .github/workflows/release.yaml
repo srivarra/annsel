@@ -15,7 +15,7 @@ permissions:
 jobs:
   build:
     name: Build distribution 📦
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -57,7 +57,7 @@ jobs:
     name: Publish Python 🐍 distribution 📦 to TestPyPI
     needs:
       - build
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-latest
 
     environment:
       name: testpypi
@@ -83,7 +83,7 @@ jobs:
     name: >-
       Publish Python 🐍 distribution 📦 to PyPI
     needs: [build, publish-to-testpypi]
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-latest
     environment:
       name: pypi
       url: https://pypi.org/p/annsel
@@ -107,7 +107,7 @@ jobs:
       Sign the Python 🐍 distribution 📦 with Sigstore
       and upload them to GitHub Release
     needs: [build, publish-to-testpypi, publish-to-pypi]
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-latest
 
     permissions:
       contents: write # IMPORTANT: mandatory for making GitHub Releases
