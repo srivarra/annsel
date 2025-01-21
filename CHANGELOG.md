@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### <!-- 0 --> 🏗️ Github Actions
+
+- Merge pull request #25 from srivarra/feature/type_fixes by [@srivarra](https://github.com/srivarra) in [#25](https://github.com/srivarra/annsel/pull/25)
+
+### <!-- 3 --> 📝 Documentation
+
+- Merge pull request #24 from srivarra/docs/changelog-template-add-gh-account by [@srivarra](https://github.com/srivarra) in [#24](https://github.com/srivarra/annsel/pull/24)
+
 ### <!-- 4 --> 🧪 Dependencies
 
 - Merge pull request #23 from srivarra/pre-commit-ci-update-config by [@srivarra](https://github.com/srivarra) in [#23](https://github.com/srivarra/annsel/pull/23)
@@ -15,7 +23,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### <!-- 5 --> 🌀 Miscellaneous
 
-- 📝 Updated changelog template
+- Merge pull request #27 from srivarra/ci/revert-arm-runner by [@srivarra](https://github.com/srivarra) in [#27](https://github.com/srivarra/annsel/pull/27)
+- 💚 One day I'll get CI right by [@srivarra](https://github.com/srivarra)
+- Merge pull request #26 from srivarra/pre-commit-ci-update-config by [@srivarra](https://github.com/srivarra) in [#26](https://github.com/srivarra/annsel/pull/26)
+- [pre-commit.ci] pre-commit autoupdate by [@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot])
+- 💚 Testing arm based ubuntu ci by [@srivarra](https://github.com/srivarra)
+- 🏷️ Update IntoExpr by [@srivarra](https://github.com/srivarra)
+- ⚗️ Marimo testing by [@srivarra](https://github.com/srivarra)
+- [pre-commit.ci] auto fixes from pre-commit.com hooks by [@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot])
+- Added github label commit parser by [@srivarra](https://github.com/srivarra)
+- 📝 Added github pr label commit parser by [@srivarra](https://github.com/srivarra)
+- 📝 Updated changelog template by [@srivarra](https://github.com/srivarra)
 - [pre-commit.ci] auto fixes from pre-commit.com hooks by [@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot])
 - [pre-commit.ci] pre-commit autoupdate by [@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot])
 - [pre-commit.ci] pre-commit autoupdate by [@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot])
