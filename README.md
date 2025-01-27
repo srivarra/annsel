@@ -40,15 +40,9 @@ Please refer to the [documentation][link-docs], in particular, the [API document
 
 You need to have Python 3.10 or newer installed on your system. If you don't have
 Python installed, we recommend installing [uv][link-uv].
-There are several alternative options to install `annsel`:
+There are several ways to install `annsel`:
 
 1. Install the most recent release:
-
-    With `pip`:
-
-    ```zsh
-    pip install annsel
-    ```
 
     With `uv`:
 
@@ -56,17 +50,24 @@ There are several alternative options to install `annsel`:
     uv add annsel
     ```
 
-2. Install the latest development version:
-   With `pip`:
+    With `pip`:
 
     ```zsh
-    pip install git+https://github.com/srivarra/annsel.git@main
+    pip install annsel
     ```
+
+2. Install the latest development version:
 
     With `uv`:
 
     ```zsh
     uv add git+https://github.com/srivarra/annsel
+    ```
+
+    With `pip`:
+
+    ```zsh
+    pip install git+https://github.com/srivarra/annsel.git@main
     ```
 
 ## Examples
