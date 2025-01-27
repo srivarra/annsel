@@ -71,13 +71,15 @@ There are several alternative options to install `annsel`:
 
 ## Examples
 
-### Filtering
-
 ```python
 import annsel as an
 
 adata=an.datasets.leukemic_bone_marrow_dataset()
+```
 
+### Filter
+
+```python
 adata.an.filter(
     obs=(
         an.col(["Cell_label"]).is_in(["Classical Monocytes", "CD8+CD103+ tissue resident memory T cells"]),
@@ -87,16 +89,22 @@ adata.an.filter(
 )
 ```
 
-### Selecting
+### Select
 
 ```python
-import annsel as an
-
-adata=an.datasets.leukemic_bone_marrow_dataset()
-
 adata.an.select(
     obs=an.col(["Cell_label"]),
     var=an.col(["vst.mean", "vst.std"]),
+)
+```
+
+### Group By
+
+```python
+adata.an.group_by(
+    obs=an.col(["Cell_label"]),
+    var=an.col(["feature_type"]),
+    return_group_names=True,
 )
 ```
 
@@ -111,13 +119,13 @@ If you found a bug, please use the [issue tracker][issue-tracker].
 
 ## Citation
 
-> Varra, S. R. annsel [Computer software]. https://github.com/srivarra/annsel
+> Varra, S. R. annsel [Computer software]. <https://github.com/srivarra/annsel>
 
 <!-- done3 -->
 
 [scverse-discourse]: https://discourse.scverse.org/
 [issue-tracker]: https://github.com/srivarra/annsel/issues
-[changelog]: https://annsel.readthedocs.io/latest/changelog.html
+[changelog]: https://annsel.readthedocs.io/en/latest/changelog.html
 [link-docs]: https://annsel.readthedocs.io
 [link-api]: https://annsel.readthedocs.io/en/latest/api/index.html
 [link-pypi]: https://pypi.org/project/annsel
