@@ -8,8 +8,19 @@ from narwhals.utils import flatten
 class AnnselExpr(nw.Expr):
     """A wrapper for the `narwhals.Expr` class."""
 
-    def __init__(self, call: Callable[[Any], Any], *names: Iterable[str]) -> None:
-        super().__init__(call)
+    def __init__(
+        self,
+        call: Callable[[Any], Any],
+        *names: Iterable[str],
+        is_order_dependent: bool = False,
+        changes_length: bool = False,
+        aggregates: bool = False,
+    ) -> None:
+        self._to_compliant_expr = call
+        self._is_order_dependent = is_order_dependent
+        self._changes_length = changes_length
+        self._aggregates = aggregates
+
         self.names = names
 
 
@@ -58,5 +69,5 @@ class Col:
 
 
 col: Col = Col()
-obs_names: AnnselExpr = col("obs_names")
-var_names: AnnselExpr = col("var_names")
+obs_names: AnnselExpr = col(names="obs_names")
+var_names: AnnselExpr = col(names="var_names")

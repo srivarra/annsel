@@ -24,16 +24,17 @@
 [badge-pre-commit]: https://results.pre-commit.ci/badge/github/srivarra/annsel/main.svg
 [badge-gitmoji]: https://img.shields.io/badge/gitmoji-😜😍-FFDD67.svg
 
-`annsel` brings familiar DataFrame-style operations to [`AnnData`](https://anndata.readthedocs.io/en/latest/) objects,
-making filtering and selection intuitive and straightforward. Built on the [narwhals][link-narwhals] library,
-it provides a seamless interface for manipulating complex biological datasets stored in `AnnData` format.
+Annsel is a user-friendly library that brings familiar dataframe-style operations to [`AnnData`](https://anndata.readthedocs.io/en/latest/) objects.
+
+It's built on the [narwhals][link-narwhals] compatibility layer for dataframes.
+
+See the GitHub Projects board for features and future plans: [Annsel Features][link-gh-project]
 
 <!-- done -->
 
 ## Getting started
 
-Please refer to the [documentation][link-docs],
-in particular, the [API documentation][link-api].
+Please refer to the [documentation][link-docs], in particular, the [API documentation][link-api].
 
 ## Installation
 
@@ -68,7 +69,9 @@ There are several alternative options to install `annsel`:
     uv add git+https://github.com/srivarra/annsel
     ```
 
-## Example
+## Examples
+
+### Filtering
 
 ```python
 import annsel as an
@@ -81,6 +84,19 @@ adata.an.filter(
         an.col(["sex"]) == "male",
     ),
     var=an.col(["vst.mean"]) >= 3,
+)
+```
+
+### Selecting
+
+```python
+import annsel as an
+
+adata=an.datasets.leukemic_bone_marrow_dataset()
+
+adata.an.select(
+    obs=an.col(["Cell_label"]),
+    var=an.col(["vst.mean", "vst.std"]),
 )
 ```
 
@@ -116,3 +132,4 @@ If you found a bug, please use the [issue tracker][issue-tracker].
 [link-disucssions]: https://github.com/srivarra/annsel/discussions
 [link-pre-commit]: https://results.pre-commit.ci/latest/github/srivarra/annsel/main
 [link-gitmoji]: https://gitmoji.dev/
+[link-gh-project]: https://github.com/users/srivarra/projects/9
