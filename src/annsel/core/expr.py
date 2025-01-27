@@ -69,5 +69,5 @@ class Col:
 
 
 col: Col = Col()
-obs_names: AnnselExpr = col(names="obs_names")
-var_names: AnnselExpr = col(names="var_names")
+obs_names: AnnselExpr = col("obs_names")
+var_names: AnnselExpr = col("var_names")
