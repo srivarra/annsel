@@ -28,7 +28,7 @@ Annsel is a user-friendly library that brings familiar dataframe-style operation
 
 It's built on the [narwhals][link-narwhals] compatibility layer for dataframes.
 
-See the GitHub Projects board for features and future plans: [Annsel Features][link-gh-project]
+Take a look at the GitHub Projects board for features and future plans: [Annsel Features][link-gh-project]
 
 <!-- done -->
 
