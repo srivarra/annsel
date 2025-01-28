@@ -40,15 +40,9 @@ Please refer to the [documentation][link-docs], in particular, the [API document
 
 You need to have Python 3.10 or newer installed on your system. If you don't have
 Python installed, we recommend installing [uv][link-uv].
-There are several alternative options to install `annsel`:
+There are several ways to install `annsel`:
 
 1. Install the most recent release:
-
-    With `pip`:
-
-    ```zsh
-    pip install annsel
-    ```
 
     With `uv`:
 
@@ -56,12 +50,13 @@ There are several alternative options to install `annsel`:
     uv add annsel
     ```
 
-2. Install the latest development version:
-   With `pip`:
+    With `pip`:
 
     ```zsh
-    pip install git+https://github.com/srivarra/annsel.git@main
+    pip install annsel
     ```
+
+2. Install the latest development version:
 
     With `uv`:
 
@@ -69,15 +64,23 @@ There are several alternative options to install `annsel`:
     uv add git+https://github.com/srivarra/annsel
     ```
 
-## Examples
+    With `pip`:
 
-### Filtering
+    ```zsh
+    pip install git+https://github.com/srivarra/annsel.git@main
+    ```
+
+## Examples
 
 ```python
 import annsel as an
 
 adata=an.datasets.leukemic_bone_marrow_dataset()
+```
 
+### Filter
+
+```python
 adata.an.filter(
     obs=(
         an.col(["Cell_label"]).is_in(["Classical Monocytes", "CD8+CD103+ tissue resident memory T cells"]),
@@ -87,16 +90,22 @@ adata.an.filter(
 )
 ```
 
-### Selecting
+### Select
 
 ```python
-import annsel as an
-
-adata=an.datasets.leukemic_bone_marrow_dataset()
-
 adata.an.select(
     obs=an.col(["Cell_label"]),
     var=an.col(["vst.mean", "vst.std"]),
+)
+```
+
+### Group By
+
+```python
+adata.an.group_by(
+    obs=an.col(["Cell_label"]),
+    var=an.col(["feature_type"]),
+    return_group_names=True,
 )
 ```
 
@@ -111,13 +120,13 @@ If you found a bug, please use the [issue tracker][issue-tracker].
 
 ## Citation
 
-> Varra, S. R. annsel [Computer software]. https://github.com/srivarra/annsel
+> Varra, S. R. annsel [Computer software]. <https://github.com/srivarra/annsel>
 
 <!-- done3 -->
 
 [scverse-discourse]: https://discourse.scverse.org/
 [issue-tracker]: https://github.com/srivarra/annsel/issues
-[changelog]: https://annsel.readthedocs.io/latest/changelog.html
+[changelog]: https://annsel.readthedocs.io/en/latest/changelog.html
 [link-docs]: https://annsel.readthedocs.io
 [link-api]: https://annsel.readthedocs.io/en/latest/api/index.html
 [link-pypi]: https://pypi.org/project/annsel
