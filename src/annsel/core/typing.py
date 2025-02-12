@@ -1,6 +1,7 @@
 from collections.abc import Iterator
 from typing import Protocol, TypeAlias, runtime_checkable
 
+import anndata as ad
 from narwhals.typing import IntoExpr
 
 # Single predicate can be IntoExpr or list[bool]
@@ -16,3 +17,7 @@ class PredicatesCollection(Protocol):
 
 # Final recursive type
 Predicates: TypeAlias = SinglePredicate | PredicatesCollection
+
+
+GroupNames: TypeAlias = tuple[str, ...]
+GroupBy: TypeAlias = ad.AnnData | tuple[GroupNames, ad.AnnData] | tuple[GroupNames, GroupNames, ad.AnnData]

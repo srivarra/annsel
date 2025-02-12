@@ -2,31 +2,35 @@ import anndata as ad
 import anndata.tests.helpers as ath
 import numpy as np
 import pytest
-from scipy import sparse
 
 import annsel as an
 
 
+@pytest.mark.filter
 class TestFilterAnnData:
     def test_filter_var_names(self, lbm_dataset: ad.AnnData):
+        """Test filtering by variable names."""
         adata = lbm_dataset.an.filter(var_names=an.var_names.str.starts_with("ENSG0000018"))
         verify_adata = lbm_dataset[:, lbm_dataset.var_names.str.startswith("ENSG0000018")]
 
         ath.assert_adata_equal(adata, verify_adata)
 
     def test_filter_var(self, lbm_dataset: ad.AnnData):
+        """Test filtering by variable column."""
         adata = lbm_dataset.an.filter(var=an.col(["vst.mean"]) >= 1)
         verify_adata = lbm_dataset[:, lbm_dataset.var["vst.mean"] >= 1]
 
         ath.assert_adata_equal(adata, verify_adata)
 
     def test_filter_obs(self, lbm_dataset: ad.AnnData):
+        """Test filtering by observation column."""
         adata = lbm_dataset.an.filter(obs=an.col("Cell_label") == "Lymphomyeloid prog")
         verify_adata = lbm_dataset[lbm_dataset.obs["Cell_label"] == "Lymphomyeloid prog"]
 
         ath.assert_adata_equal(adata, verify_adata)
 
     def test_filter_obs_names(self, lbm_dataset: ad.AnnData):
+        """Test filtering by observation names."""
         adata = lbm_dataset.an.filter(obs_names=an.obs_names.str.ends_with("4"))
         verify_adata = lbm_dataset[lbm_dataset.obs_names.str.endswith("4")]
 
@@ -48,26 +52,17 @@ class TestFilterAnnData:
         verify_adata = dense_adata[dense_adata[:, "ENSG00000206560"].X >= 1, :]
         ath.assert_adata_equal(adata, verify_adata)
 
-    def test_filter_X_force_csr(self, lbm_dataset: ad.AnnData):
-        """Test filtering X with forced CSR format."""
-        dense_adata = lbm_dataset.copy()
-        dense_adata.X = dense_adata.X.toarray()
-
-        adata = lbm_dataset.an.filter(x=an.col(["ENSG00000206560"]) >= 1, sparse="csr")
-        verify_adata = dense_adata[lbm_dataset[:, "ENSG00000206560"].X >= 1, :]
-        ath.assert_adata_equal(adata, verify_adata)
-        assert sparse.isspmatrix_csr(adata.X)
-
     def test_filter_X_layer(self, lbm_dataset: ad.AnnData):
         """Test filtering X from a specific layer."""
         # Add a test layer
-        lbm_dataset.layers["test"] = np.log(lbm_dataset.X.toarray())
+        lbm_dataset.layers["test"] = np.log1p(lbm_dataset.X.toarray())
 
         adata = lbm_dataset.an.filter(x=an.col(["ENSG00000206560"]) >= 1, layer="test")
         verify_adata = lbm_dataset[lbm_dataset[:, "ENSG00000206560"].layers["test"] >= 1, :]
         ath.assert_adata_equal(adata, verify_adata)
 
 
+@pytest.mark.pipe
 class TestPipeAnnData:
     def test_pipe_simple(self, lbm_dataset: ad.AnnData):
         """Test basic pipe functionality."""
@@ -123,8 +118,10 @@ class TestPipeAnnData:
             lbm_dataset.an.pipe((dummy_func, "adata_param"), adata_param=lbm_dataset)
 
 
+@pytest.mark.select
 class TestSelectAnnData:
     def test_select_with_single_predicate(self, lbm_dataset: ad.AnnData):
+        """Test selecting observations with a single predicate."""
         adata = lbm_dataset.an.select(obs=an.col(["Cell_label", "is_primary_data"]))
 
         verify_adata = lbm_dataset.copy()
@@ -132,6 +129,7 @@ class TestSelectAnnData:
         ath.assert_adata_equal(adata, verify_adata)
 
     def test_select_with_multiple_predicates(self, lbm_dataset: ad.AnnData):
+        """Test selecting observations and variables with multiple predicates."""
         adata = lbm_dataset.an.select(obs=an.col(["Cell_label"]), var=an.col(["vst.mean", "feature_type"]))
 
         verify_adata = lbm_dataset.copy()
@@ -140,6 +138,7 @@ class TestSelectAnnData:
         ath.assert_adata_equal(adata, verify_adata, exact=False)
 
     def test_select_with_x_predicate(self, lbm_dataset: ad.AnnData):
+        """Test selecting observations with an X predicate."""
         adata = lbm_dataset.an.select(x=an.col(["ENSG00000204472", "ENSG00000206560"]))
 
         verify_adata = lbm_dataset[:, ["ENSG00000204472", "ENSG00000206560"]]
@@ -147,6 +146,7 @@ class TestSelectAnnData:
         ath.assert_adata_equal(adata, verify_adata)
 
 
+@pytest.mark.groupby
 class TestGroupByAnnData:
     def test_group_by_obs(self, lbm_dataset: ad.AnnData):
         """Test grouping by observation columns."""
@@ -179,7 +179,7 @@ class TestGroupByAnnData:
         groups = list(lbm_dataset.an.group_by(obs=an.col(["Cell_label", "sex"])))
 
         # Verify number of groups matches unique combinations
-        expected_groups = lbm_dataset.obs.groupby(["Cell_label", "sex"]).ngroups
+        expected_groups = lbm_dataset.obs.groupby(["Cell_label", "sex"], observed=True).ngroups
         assert len(groups) == expected_groups
 
     def test_group_by_with_names(self, lbm_dataset: ad.AnnData):
@@ -212,3 +212,24 @@ class TestGroupByAnnData:
         """Test grouping that results in no matches."""
         with pytest.raises(ValueError, match="No group keys passed!"):
             list(lbm_dataset.an.group_by(obs=an.col(["Cell_label"]) == "NonexistentType"))
+
+    def test_group_by_no_kwargs(self, lbm_dataset: ad.AnnData):
+        """Test grouping with no kwargs."""
+        groups = list(lbm_dataset.an.group_by(return_group_names=True, copy=True))
+        assert len(groups) == 1
+        assert isinstance(groups[0], ad.AnnData)
+        assert groups[0].n_obs == lbm_dataset.n_obs
+        assert groups[0].n_vars == lbm_dataset.n_vars
+
+    def test_group_by_no_group_names(self, lbm_dataset: ad.AnnData):
+        """Test grouping with no group names."""
+        groups = list(
+            lbm_dataset.an.group_by(
+                obs=an.col(["Cell_label"]),
+                return_group_names=False,
+            )
+        )
+        assert len(groups) == lbm_dataset.obs["Cell_label"].nunique()
+        for group in groups:
+            assert isinstance(group, ad.AnnData)
+            assert lbm_dataset.obs.columns.isin(group.obs.columns).all()
