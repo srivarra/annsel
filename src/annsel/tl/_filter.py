@@ -1,5 +1,3 @@
-from typing import Literal
-
 import anndata as ad
 import narwhals as nw
 import pandas as pd
@@ -42,7 +40,6 @@ def _filter(
     obs_names: Predicates | None = None,
     var_names: Predicates | None = None,
     layer: str | None = None,
-    sparse: Literal["csr", "csc", True, False] | None = None,
 ) -> ad.AnnData:
     obs_names_idx = []
     var_names_idx = []
@@ -65,4 +62,4 @@ def _filter(
     final_obs_idx = adata.obs_names if not obs_names_idx else _get_final_indices(adata.obs_names, obs_names_idx)
     final_var_idx = adata.var_names if not var_names_idx else _get_final_indices(adata.var_names, var_names_idx)
 
-    return _construct_adata_from_indices(adata, final_obs_idx, final_var_idx, sparse)
+    return _construct_adata_from_indices(adata, final_obs_idx, final_var_idx)

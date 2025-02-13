@@ -1,5 +1,3 @@
-from typing import Literal
-
 import anndata as ad
 import narwhals as nw
 import pandas as pd
@@ -31,7 +29,6 @@ def _select(
     obs: Predicates | None = None,
     var: Predicates | None = None,
     x: Predicates | None = None,
-    sparse: Literal["csr", "csc", True, False] | None = None,
 ) -> ad.AnnData:
     obs_columns = []
     var_columns = []
@@ -50,9 +47,7 @@ def _select(
     final_var_cols = _get_final_indices(adata.var.columns, var_columns) if var_columns else adata.var.columns
     final_var_names = _get_final_indices(adata.var_names, var_names) if var_names else adata.var_names
 
-    _adata = _construct_adata_from_indices(
-        adata, obs_idx=adata.obs_names, var_idx=final_var_names, sparse_method=sparse
-    )
+    _adata = _construct_adata_from_indices(adata, obs_idx=adata.obs_names, var_idx=final_var_names)
 
     _adata.obs = _adata.obs[final_obs_cols]
     _adata.var = _adata.var[final_var_cols]

@@ -1,18 +1,16 @@
 from collections.abc import Callable
-from typing import Any, Literal, TypeAlias, TypeVar
+from typing import Any, TypeVar
 
 import anndata as ad
 
 from annsel.core.extensions import register_anndata_accessor
-from annsel.core.typing import Predicates
+from annsel.core.typing import GroupBy, Predicates
 from annsel.tl._filter import _filter
 from annsel.tl._group_by import _group_by
 from annsel.tl._select import _select
 
 # Define type aliases
 T = TypeVar("T")
-GroupNames = tuple[str, ...]
-GroupedResult: TypeAlias = ad.AnnData | tuple[GroupNames, ad.AnnData] | tuple[GroupNames, GroupNames, ad.AnnData]
 
 
 @register_anndata_accessor("an")
@@ -30,7 +28,6 @@ class AnnselAccessor:
         obs_names: Predicates | None = None,
         var_names: Predicates | None = None,
         layer: str | None = None,
-        sparse: Literal["csr", "csc", True, False] | None = None,
         copy: bool = False,
     ) -> ad.AnnData:
         """Filter the AnnData object by the given predicates.
@@ -49,8 +46,6 @@ class AnnselAccessor:
             Predicates to filter the variable names by.
         layer
             The layer to filter.
-        sparse
-            Whether to use sparse matrices.
         copy
             Whether to return a copy of the AnnData object.
 
@@ -76,15 +71,14 @@ class AnnselAccessor:
              obsm: 'X_bothumap', 'X_pca', 'X_projected', 'X_projectedmean', 'X_tsneni', 'X_umapni'
 
         """
-        _adata = _filter(self._obj, obs, var, x, obs_names, var_names, layer, sparse)
-        return _adata if copy else _adata.copy()
+        _adata = _filter(self._obj, obs, var, x, obs_names, var_names, layer)
+        return _adata if not copy else _adata.copy()
 
     def select(
         self,
         obs: Predicates | None = None,
         var: Predicates | None = None,
         x: Predicates | None = None,
-        sparse: Literal["csr", "csc", True, False] | None = None,
         copy: bool = False,
     ) -> ad.AnnData:
         """Select the AnnData object by the given predicates.
@@ -99,8 +93,6 @@ class AnnselAccessor:
             Predicates to filter the data by.
         layer
             The layer to filter.
-        sparse
-            Whether to use sparse matrices.
         copy
             Whether to return a copy of the AnnData object.
 
@@ -123,16 +115,16 @@ class AnnselAccessor:
             uns: 'cell_type_ontology_term_id_colors', 'citation', 'default_embedding', 'schema_reference', 'schema_version', 'title'
             obsm: 'X_bothumap', 'X_pca', 'X_projected', 'X_projectedmean', 'X_tsneni', 'X_umapni'
         """
-        _adata = _select(self._obj, obs, var, x, sparse)
-        return _adata if copy else _adata.copy()
+        _adata = _select(self._obj, obs, var, x)
+        return _adata if not copy else _adata.copy()
 
     def group_by(
         self,
         obs: Predicates | None = None,
         var: Predicates | None = None,
-        sparse: Literal["csr", "csc", True, False] | None = None,
         return_group_names: bool = False,
-    ) -> GroupedResult:
+        copy: bool = False,
+    ) -> GroupBy:
         """Group the AnnData object by the given predicates.
 
         Parameters
@@ -141,10 +133,10 @@ class AnnselAccessor:
             Predicates to group the observations by.
         var
             Predicates to group the variables by.
-        sparse
-            Whether to use sparse matrices.
         return_group_names
             Whether to return the group names.
+        copy
+            Whether to return a copy of the AnnData object.
 
         Returns
         -------
@@ -160,7 +152,7 @@ class AnnselAccessor:
         ...     return_group_names=False,
         ... )
         """
-        gb_adata = _group_by(self._obj, obs, var, return_group_names=return_group_names, sparse_method=sparse)
+        gb_adata = _group_by(self._obj, obs, var, return_group_names=return_group_names, copy=copy)
 
         return gb_adata
 
