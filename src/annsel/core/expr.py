@@ -2,6 +2,7 @@ from collections.abc import Callable, Iterable
 from typing import Any, Protocol
 
 import narwhals as nw
+from narwhals._expression_parsing import ExprKind, ExprMetadata
 from narwhals.utils import flatten
 
 
@@ -10,16 +11,12 @@ class AnnselExpr(nw.Expr):
 
     def __init__(
         self,
-        call: Callable[[Any], Any],
+        to_compliant_expr: Callable[[Any], Any],
+        metadata: ExprMetadata,
         *names: Iterable[str],
-        is_order_dependent: bool = False,
-        changes_length: bool = False,
-        aggregates: bool = False,
     ) -> None:
-        self._to_compliant_expr = call
-        self._is_order_dependent = is_order_dependent
-        self._changes_length = changes_length
-        self._aggregates = aggregates
+        self._to_compliant_expr = to_compliant_expr
+        self._metadata = metadata
 
         self.names = names
 
@@ -65,7 +62,9 @@ class Col:
         def column_selector(plx: Any):
             return plx.col(*flatten(names))
 
-        return AnnselExpr(column_selector, *flatten(names))
+        return AnnselExpr(
+            column_selector, ExprMetadata(kind=ExprKind.TRANSFORM, is_order_dependent=False), *flatten(names)
+        )
 
 
 col: Col = Col()
