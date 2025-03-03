@@ -62,9 +62,7 @@ class Col:
         def column_selector(plx: Any):
             return plx.col(*flatten(names))
 
-        return AnnselExpr(
-            column_selector, ExprMetadata(kind=ExprKind.TRANSFORM, is_order_dependent=False), *flatten(names)
-        )
+        return AnnselExpr(column_selector, ExprMetadata(ExprKind.TRANSFORM, order_dependent=False), *flatten(names))
 
 
 col: Col = Col()
