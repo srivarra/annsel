@@ -40,7 +40,7 @@ class ColProtocol(Protocol):
         ...
 
 
-class Col:
+class Col(ColProtocol):
     """A wrapper around the `narwhals.col` function."""
 
     names: Iterable[str]
