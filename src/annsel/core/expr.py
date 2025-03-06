@@ -2,7 +2,7 @@ from collections.abc import Callable, Iterable
 from typing import Any, Protocol
 
 import narwhals as nw
-from narwhals._expression_parsing import ExprKind, ExprMetadata
+from narwhals._expression_parsing import ExprMetadata
 from narwhals.utils import flatten
 
 
@@ -62,7 +62,7 @@ class Col(ColProtocol):
         def column_selector(plx: Any):
             return plx.col(*flatten(names))
 
-        return AnnselExpr(column_selector, ExprMetadata(ExprKind.TRANSFORM, order_dependent=False), *flatten(names))
+        return AnnselExpr(column_selector, ExprMetadata.selector(), *flatten(names))
 
 
 col: Col = Col()
