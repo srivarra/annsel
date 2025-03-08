@@ -1,14 +1,14 @@
 import anndata as ad
 import narwhals as nw
 import pandas as pd
-from narwhals.typing import IntoDataFrame
+from narwhals.typing import Frame
 
 from annsel.core.typing import Predicates
 from annsel.core.utils import _construct_adata_from_indices, _get_final_indices
 
 
 @nw.narwhalify
-def _select_df(df: IntoDataFrame, *predicates: Predicates) -> IntoDataFrame:
+def _select_df(df: Frame, *predicates: Predicates) -> Frame:
     return df.select(*predicates)
 
 
@@ -43,9 +43,9 @@ def _select(
     if x:
         var_names.append(_select_x(adata, x, layer=None))
 
-    final_obs_cols = _get_final_indices(adata.obs.columns, obs_columns) if obs_columns else adata.obs.columns
-    final_var_cols = _get_final_indices(adata.var.columns, var_columns) if var_columns else adata.var.columns
-    final_var_names = _get_final_indices(adata.var_names, var_names) if var_names else adata.var_names
+    final_obs_cols = _get_final_indices(adata.obs.columns, *obs_columns) if obs_columns else adata.obs.columns
+    final_var_cols = _get_final_indices(adata.var.columns, *var_columns) if var_columns else adata.var.columns
+    final_var_names = _get_final_indices(adata.var_names, *var_names) if var_names else adata.var_names
 
     _adata = _construct_adata_from_indices(adata, obs_idx=adata.obs_names, var_idx=final_var_names)
 

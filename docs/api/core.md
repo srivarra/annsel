@@ -27,8 +27,7 @@
 .. autosummary::
    :toctree: ../generated/
 
+   Predicate
    Predicates
-   IntoExpr
-   SinglePredicate
-   PredicatesCollection
+
 ```

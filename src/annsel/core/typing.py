@@ -1,23 +1,14 @@
-from collections.abc import Iterator
-from typing import Protocol, TypeAlias, runtime_checkable
+from collections.abc import Iterable
+from typing import Any, TypeAlias
 
-import anndata as ad
-from narwhals.typing import IntoExpr
+import narwhals as nw
+from narwhals.group_by import GroupBy, LazyGroupBy
 
-# Single predicate can be IntoExpr or list[bool]
-SinglePredicate: TypeAlias = IntoExpr | list[bool]
-
-
-@runtime_checkable
-class PredicatesCollection(Protocol):
-    """Protocol for collections of predicates."""
-
-    def __iter__(self) -> Iterator[SinglePredicate]: ...
-
+Predicate = nw.Expr | str | nw.Series
 
 # Final recursive type
-Predicates: TypeAlias = SinglePredicate | PredicatesCollection
+Predicates: TypeAlias = Predicate | Iterable[Predicate]
 
+# Groupby Types
 
-GroupNames: TypeAlias = tuple[str, ...]
-GroupBy: TypeAlias = ad.AnnData | tuple[GroupNames, ad.AnnData] | tuple[GroupNames, GroupNames, ad.AnnData]
+NwGroupBy: TypeAlias = GroupBy[nw.DataFrame[Any]] | LazyGroupBy[nw.LazyFrame[Any]]
