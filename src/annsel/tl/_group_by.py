@@ -1,87 +1,138 @@
 import itertools
-from collections.abc import Generator, Iterator
+from collections.abc import Generator, Iterable
 from dataclasses import dataclass
+from typing import Any
 
 import anndata as ad
 import narwhals as nw
-import pandas as pd
-from more_itertools import first, nth
-from narwhals.group_by import GroupBy as NwGroupBy
-from narwhals.typing import IntoDataFrameT
+from more_itertools import first
+from narwhals.typing import Frame
 
-from annsel.core.typing import GroupBy, Predicates
-from annsel.core.utils import _construct_adata_from_indices
-
-
-@dataclass(frozen=True, slots=True)
-class GroupResult:
-    """A named tuple that contains the group key and the indices of the group.
-
-    Yields
-    ------
-        A tuple of the group key and the indices of the group.
-
-    Note
-    ----
-        Once Narwhals supports `nw.Expr` in `GroupBy` we can remove this, along with the custom AnnselExpr class.
-    """
-
-    key: tuple[str, ...]
-    indices: pd.Index
-
-    def __iter__(self):
-        yield from (self.key, self.indices)
+from annsel.core.typing import NwGroupBy, Predicates
+from annsel.core.utils import _construct_adata_from_indices, _extract_names_from_expr, second
 
 
 @nw.narwhalify
-def _group_by_df(df: IntoDataFrameT, *predicates: Predicates) -> NwGroupBy:
-    return df.group_by(*predicates)
+def _group_by_df(df: Frame, *names: str) -> NwGroupBy:
+    return df.group_by(*names)
 
 
-def _group_by_obs(adata: ad.AnnData, *predicates: Predicates) -> Generator[GroupResult, None, None]:
-    return (
-        GroupResult(first(gb), nth(gb, 1).to_native().index)
-        for gb in _group_by_df(adata.obs, *(p.names for p in predicates))
-    )
+def _group_by_obs(adata: ad.AnnData, *predicates: Predicates):
+    obs_col_names = _extract_names_from_expr(*predicates)
+    _gb = _group_by_df(adata.obs, *obs_col_names)
+    return (obs_col_names, _gb)
 
 
-def _group_by_var(adata: ad.AnnData, *predicates: Predicates) -> Generator[GroupResult, None, None]:
-    return (
-        GroupResult(first(gb), nth(gb, 1).to_native().index)
-        for gb in _group_by_df(adata.var, *(p.names for p in predicates))
-    )
+def _group_by_var(adata: ad.AnnData, *predicates: Predicates):
+    var_col_names = _extract_names_from_expr(*predicates)
+    _gb = _group_by_df(adata.var, *var_col_names)
+    return (var_col_names, _gb)
+
+
+@dataclass
+class GroupByAnndata:
+    """Container for grouped AnnData objects and their metadata."""
+
+    # Column names used for grouping
+    obs_columns: Iterable[str]
+    var_columns: Iterable[str]
+
+    # Values for those columns in this group
+    obs_values: tuple[str, ...]
+    var_values: tuple[str, ...]
+
+    # The actual data subset
+    adata: ad.AnnData
+
+    def obs_dict(self):
+        """Dictionary mapping observation column names to their values."""
+        return dict(zip(self.obs_columns, self.obs_values, strict=False))
+
+    def var_dict(self):
+        """Dictionary mapping variable column names to their values."""
+        return dict(zip(self.var_columns, self.var_values, strict=False))
+
+    def __repr__(self):
+        """Tree-like representation of the GroupData object."""
+        indent = "  "
+        repr_str = "GroupByAnnData:\n"
+
+        # Observations branch
+        repr_str += f"{indent}├── Observations:\n"
+        if self.obs_columns:
+            for i, (col, val) in enumerate(zip(self.obs_columns, self.obs_values, strict=False)):
+                if i == len(list(self.obs_columns)) - 1:
+                    repr_str += f"{indent}│   └── {col}: {val}\n"
+                else:
+                    repr_str += f"{indent}│   ├── {col}: {val}\n"
+        else:
+            repr_str += f"{indent}│   └── (all observations)\n"
+
+        # Variables branch
+        repr_str += f"{indent}├── Variables:\n"
+        if self.var_columns:
+            for i, (col, val) in enumerate(zip(self.var_columns, self.var_values, strict=False)):
+                if i == len(list(self.var_columns)) - 1:
+                    repr_str += f"{indent}│   └── {col}: {val}\n"
+                else:
+                    repr_str += f"{indent}│   ├── {col}: {val}\n"
+        else:
+            repr_str += f"{indent}│   └── (all variables)\n"
+
+        # AnnData branch
+        repr_str += f"{indent}└── AnnData:\n"
+
+        # Get AnnData representation and properly indent it
+        adata_repr = self.adata.__repr__()
+        adata_lines = adata_repr.split("\n")
+        for line in adata_lines:
+            repr_str += f"{indent}    {line}\n"
+
+        return repr_str.rstrip()
 
 
 def _group_by(
     adata: ad.AnnData,
     obs: Predicates | None = None,
     var: Predicates | None = None,
-    return_group_names: bool = False,
     copy: bool = False,
-) -> Iterator[GroupBy]:
-    # Create groupings - if no predicate provided, use a single default group.
-    obs_gb = list(_group_by_obs(adata, obs)) if obs else [(None, adata.obs_names)]
-    var_gb = list(_group_by_var(adata, var)) if var else [(None, adata.var_names)]
-
-    has_obs = obs is not None
-    has_var = var is not None
-
-    if not has_obs and not has_var:
+) -> Generator[ad.AnnData | GroupByAnndata, Any, None]:
+    if obs is None and var is None:
         yield adata
         return
 
-    for (obs_groups, obs_idx), (var_groups, var_idx) in itertools.product(obs_gb, var_gb):
-        _adata = _construct_adata_from_indices(adata, obs_idx=obs_idx, var_idx=var_idx)
-        if copy:
-            _adata = _adata.copy()
+    if obs is not None:
+        obs_col_names, obs_grouped = _group_by_obs(adata, obs)
+        obs_groups = []
 
-        if not return_group_names:
-            yield _adata
-        else:
-            match (has_obs, has_var):
-                case (False, False):
-                    yield (var_groups, _adata)
-                case (False, True):
-                    yield (obs_groups, _adata)
-                case (True, True):
-                    yield (obs_groups, var_groups, _adata)
+        # Extract groups from the grouped object
+        for group in obs_grouped:
+            key = tuple(first(group))  # Get group values
+            indices = second(group).to_native().index  # Get indices
+            obs_groups.append((obs_col_names, key, indices))
+    else:
+        # Default: one group with all observations
+        obs_groups = [([], (), adata.obs_names)]
+
+    if var is not None:
+        var_col_names, var_grouped = _group_by_var(adata, var)
+        var_groups = []
+
+        # Extract groups from the grouped object
+        for group in var_grouped:
+            key = tuple(first(group))  # Get group values
+            indices = second(group).to_native().index  # Get indices
+            var_groups.append((var_col_names, key, indices))
+    else:
+        # Default: one group with all variables
+        var_groups = [([], (), adata.var_names)]
+
+    for (obs_cols, obs_values, obs_idx), (var_cols, var_values, var_idx) in itertools.product(obs_groups, var_groups):
+        subset = _construct_adata_from_indices(adata, obs_idx, var_idx)
+        if copy:
+            subset = subset.copy()
+
+        # Yield GroupData with dictionary accessors
+        yield GroupByAnndata(
+            obs_columns=obs_cols, var_columns=var_cols, obs_values=obs_values, var_values=var_values, adata=subset
+        )
