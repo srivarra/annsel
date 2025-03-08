@@ -55,15 +55,13 @@ dependencies = [
     { name = "anndata" },
     { name = "more-itertools" },
     { name = "narwhals" },
+    { name = "pooch" },
     { name = "session-info2" },
     { name = "tqdm" },
     { name = "universal-pathlib" },
 ]
 
 [package.optional-dependencies]
-dataset = [
-    { name = "pooch" },
-]
 dev = [
     { name = "esbonio" },
     { name = "pre-commit" },
@@ -123,7 +121,7 @@ requires-dist = [
     { name = "numba", marker = "extra == 'doc'", specifier = ">=0.61.0rc2" },
     { name = "pandas", marker = "extra == 'doc'" },
     { name = "polars", marker = "extra == 'doc'" },
-    { name = "pooch", marker = "extra == 'dataset'", specifier = ">=1.8.2" },
+    { name = "pooch", specifier = ">=1.8.2" },
     { name = "pre-commit", marker = "extra == 'dev'" },
     { name = "pyarrow", marker = "extra == 'doc'" },
     { name = "pytest", marker = "extra == 'test'" },
@@ -146,7 +144,7 @@ requires-dist = [
     { name = "tqdm", specifier = ">=4" },
     { name = "universal-pathlib", specifier = ">=0.2" },
 ]
-provides-extras = ["dataset", "dev", "doc", "nb", "test"]
+provides-extras = ["dev", "doc", "nb", "test"]
 
 [[package]]
 name = "anyio"

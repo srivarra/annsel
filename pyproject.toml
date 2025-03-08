@@ -26,12 +26,12 @@ dependencies = [
   "anndata",
   "more-itertools>=10.6",
   "narwhals>=1.29.1",
+  "pooch>=1.8.2",
   # for debug logging (referenced from the issue template)
   "session-info2",
   "tqdm>=4",
   "universal-pathlib>=0.2",
 ]
-optional-dependencies.dataset = [ "pooch>=1.8.2" ]
 optional-dependencies.dev = [ "esbonio>=0.16.5", "pre-commit" ]
 optional-dependencies.doc = [
   "docutils>=0.21.2",
