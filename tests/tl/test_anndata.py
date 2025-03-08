@@ -184,7 +184,7 @@ class TestGroupByAnnData:
 
     def test_group_by_multiple_columns(self, lbm_dataset: ad.AnnData):
         """Test grouping by multiple columns simultaneously."""
-        groups = list(lbm_dataset.an.group_by(obs=an.col(["Cell_label", "sex"])))
+        groups = list(lbm_dataset.an.group_by(obs=an.col(["Cell_label", "sex"])), copy=True)
 
         # Verify number of groups matches unique combinations
         expected_groups = lbm_dataset.obs.groupby(["Cell_label", "sex"], observed=True).ngroups
