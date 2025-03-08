@@ -184,7 +184,7 @@ class TestGroupByAnnData:
 
     def test_group_by_multiple_columns(self, lbm_dataset: ad.AnnData):
         """Test grouping by multiple columns simultaneously."""
-        groups = list(lbm_dataset.an.group_by(obs=an.col(["Cell_label", "sex"])), copy=True)
+        groups = list(lbm_dataset.an.group_by(obs=an.col(["Cell_label", "sex"]), copy=True))
 
         # Verify number of groups matches unique combinations
         expected_groups = lbm_dataset.obs.groupby(["Cell_label", "sex"], observed=True).ngroups
@@ -229,7 +229,7 @@ class TestGroupByAnnData:
 
     def test_repr_format(self, lbm_dataset: ad.AnnData):
         """Test the tree-like representation of GroupByAnndata."""
-        # Get a single group for testing representation
+        # Test with both obs and var specified
         group = next(lbm_dataset.an.group_by(obs=an.col(["Cell_label"]), var=an.col(["feature_type"])))
 
         # Check that the representation is formatted correctly
@@ -247,3 +247,37 @@ class TestGroupByAnnData:
 
         assert f"Cell_label: {cell_type}" in repr_str
         assert f"feature_type: {feature_type}" in repr_str
+
+    def test_repr_format_no_obs(self, lbm_dataset: ad.AnnData):
+        """Test representation when obs is None (all observations)."""
+        # Test with only var specified (obs=None)
+        group = next(lbm_dataset.an.group_by(var=an.col(["feature_type"])))
+
+        repr_str = repr(group)
+
+        # Check structure elements
+        assert repr_str.startswith("GroupByAnnData:")
+        assert "├── Observations:" in repr_str
+        assert "(all observations)" in repr_str
+        assert "├── Variables:" in repr_str
+
+        # Check that var content is included
+        feature_type = group.var_dict()["feature_type"]
+        assert f"feature_type: {feature_type}" in repr_str
+
+    def test_repr_format_no_var(self, lbm_dataset: ad.AnnData):
+        """Test representation when var is None (all variables)."""
+        # Test with only obs specified (var=None)
+        group = next(lbm_dataset.an.group_by(obs=an.col(["Cell_label"])))
+
+        repr_str = repr(group)
+
+        # Check structure elements
+        assert repr_str.startswith("GroupByAnnData:")
+        assert "├── Observations:" in repr_str
+        assert "├── Variables:" in repr_str
+        assert "(all variables)" in repr_str
+
+        # Check that obs content is included
+        cell_type = group.obs_dict()["Cell_label"]
+        assert f"Cell_label: {cell_type}" in repr_str
