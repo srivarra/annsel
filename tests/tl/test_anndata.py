@@ -281,3 +281,29 @@ class TestGroupByAnnData:
         # Check that obs content is included
         cell_type = group.obs_dict()["Cell_label"]
         assert f"Cell_label: {cell_type}" in repr_str
+
+    def test_repr_format_multiple_groups(self, lbm_dataset: ad.AnnData):
+        """Test representation when multiple groups are present."""
+        # Create a new AnnData with multiple groups
+        group = next(
+            lbm_dataset.an.group_by(
+                obs=an.col(["Cell_label", "disease"]), var=an.col(["feature_type", "feature_is_filtered"])
+            )
+        )
+
+        repr_str = repr(group)
+
+        assert repr_str.startswith("GroupByAnnData:")
+        assert "├── Observations:" in repr_str
+        assert "├── Variables:" in repr_str
+        assert "└── AnnData:" in repr_str
+
+        cell_type = group.obs_dict()["Cell_label"]
+        disease = group.obs_dict()["disease"]
+        feature_type = group.var_dict()["feature_type"]
+        feature_is_filtered = group.var_dict()["feature_is_filtered"]
+
+        assert f"Cell_label: {cell_type}" in repr_str
+        assert f"disease: {disease}" in repr_str
+        assert f"feature_type: {feature_type}" in repr_str
+        assert f"feature_is_filtered: {feature_is_filtered}" in repr_str
