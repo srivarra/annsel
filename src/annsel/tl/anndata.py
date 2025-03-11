@@ -1,12 +1,12 @@
-from collections.abc import Callable
+from collections.abc import Callable, Generator
 from typing import Any, TypeVar
 
 import anndata as ad
 
 from annsel.core.extensions import register_anndata_accessor
-from annsel.core.typing import GroupBy, Predicates
+from annsel.core.typing import Predicates
 from annsel.tl._filter import _filter
-from annsel.tl._group_by import _group_by
+from annsel.tl._group_by import GroupByAnndata, _group_by
 from annsel.tl._select import _select
 
 # Define type aliases
@@ -122,9 +122,8 @@ class AnnselAccessor:
         self,
         obs: Predicates | None = None,
         var: Predicates | None = None,
-        return_group_names: bool = False,
         copy: bool = False,
-    ) -> GroupBy:
+    ) -> ad.AnnData | Generator[GroupByAnndata, None, None]:
         """Group the AnnData object by the given predicates.
 
         Parameters
@@ -133,8 +132,6 @@ class AnnselAccessor:
             Predicates to group the observations by.
         var
             Predicates to group the variables by.
-        return_group_names
-            Whether to return the group names.
         copy
             Whether to return a copy of the AnnData object.
 
@@ -152,7 +149,7 @@ class AnnselAccessor:
         ...     return_group_names=False,
         ... )
         """
-        gb_adata = _group_by(self._obj, obs, var, return_group_names=return_group_names, copy=copy)
+        gb_adata = _group_by(self._obj, obs, var, copy=copy)
 
         return gb_adata
 

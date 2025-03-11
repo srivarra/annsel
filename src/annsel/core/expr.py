@@ -1,70 +1,38 @@
-from collections.abc import Callable, Iterable
-from typing import Any, Protocol
+from collections.abc import Iterable
 
 import narwhals as nw
-from narwhals._expression_parsing import ExprKind, ExprMetadata
-from narwhals.utils import flatten
 
 
-class AnnselExpr(nw.Expr):
-    """A wrapper for the `narwhals.Expr` class."""
+def col(*names: str | Iterable[str]) -> nw.Expr:
+    """Create a column expression for the given column name(s) in `obs` or `var`.
 
-    def __init__(
-        self,
-        to_compliant_expr: Callable[[Any], Any],
-        metadata: ExprMetadata,
-        *names: Iterable[str],
-    ) -> None:
-        self._to_compliant_expr = to_compliant_expr
-        self._metadata = metadata
+    Parameters
+    ----------
+    column : str or list of str
+        The column name(s) to reference
 
-        self.names = names
+    Returns
+    -------
+    A column expression that can be used in filter expressions
 
-
-class ColProtocol(Protocol):
-    """Protocol for column selection."""
-
-    def __call__(self, *names: str | Iterable[str]) -> AnnselExpr:
-        """Protocol for column selection.
-
-        Parameters
-        ----------
-        *names
-            Names of columns to select. Can be strings or iterables of strings.
-
-        Returns
-        -------
-        AnnselExpr
-            A wrapper around the narwhals.Expr class for column selection.
-        """
-        ...
+    Examples
+    --------
+    >>> import annsel as an
+    >>> an.col("gene_1")  # Reference a single column
+    >>> an.col(["gene_1", "gene_2"])  # Reference multiple columns
+    """
+    return nw.col(*names)
 
 
-class Col(ColProtocol):
-    """A wrapper around the `narwhals.col` function."""
+obs_names: nw.Expr = col("obs_names")
+"""
+A column expression representing the observation names `obs_names`.
 
-    names: Iterable[str]
+Examples
+--------
+>>> import annsel as an
+>>> an.obs_names
+"""
 
-    def __call__(self, *names: str | Iterable[str]) -> AnnselExpr:
-        """
-        Select columns from a DataFrame component of an AnnData object.
-
-        Parameters
-        ----------
-        *names
-            Names of columns to select. Can be strings or iterables of strings.
-
-        Returns
-        -------
-        A wrapper around the `narwhals.Expr` class.
-        """
-
-        def column_selector(plx: Any):
-            return plx.col(*flatten(names))
-
-        return AnnselExpr(column_selector, ExprMetadata(ExprKind.TRANSFORM, order_dependent=False), *flatten(names))
-
-
-col: Col = Col()
-obs_names: AnnselExpr = col("obs_names")
-var_names: AnnselExpr = col("var_names")
+var_names: nw.Expr = col("var_names")
+"""A column expression representing the variable names `var_names`."""
