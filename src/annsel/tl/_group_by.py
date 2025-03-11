@@ -1,7 +1,6 @@
 import itertools
 from collections.abc import Generator, Iterable
 from dataclasses import dataclass
-from typing import Any
 
 import anndata as ad
 import narwhals as nw
@@ -31,7 +30,25 @@ def _group_by_var(adata: ad.AnnData, *predicates: Predicates):
 
 @dataclass
 class GroupByAnndata:
-    """Container for grouped AnnData objects and their metadata."""
+    """Container for grouped AnnData objects and their metadata.
+
+    Parameters
+    ----------
+    obs_columns
+        Column names used for grouping observations.
+    var_columns
+        Column names used for grouping variables.
+    obs_values
+        Values for those columns in this group.
+    var_values
+        Values for those columns in this group.
+    adata
+        The actual data subset.
+
+    Returns
+    -------
+    A container for grouped AnnData objects and their metadata.
+    """
 
     # Column names used for grouping
     obs_columns: Iterable[str]
@@ -96,10 +113,9 @@ def _group_by(
     obs: Predicates | None = None,
     var: Predicates | None = None,
     copy: bool = False,
-) -> Generator[ad.AnnData | GroupByAnndata, Any, None]:
+) -> ad.AnnData | Generator[GroupByAnndata, None, None]:
     if obs is None and var is None:
-        yield adata
-        return
+        return adata
 
     if obs is not None:
         obs_col_names, obs_grouped = _group_by_obs(adata, obs)

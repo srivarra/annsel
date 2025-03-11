@@ -35,9 +35,13 @@ This will register the `an` accessor to the `AnnData` object.
     AnnselAccessor.select
     AnnselAccessor.group_by
     AnnselAccessor.pipe
+```
 
+```{eval-rst}
 .. autosummary::
     :toctree: ../generated
+    :template: autosummary/class.rst
 
     GroupByAnndata
+
 ```

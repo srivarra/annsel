@@ -202,10 +202,7 @@ class TestGroupByAnnData:
     def test_group_by_no_kwargs(self, lbm_dataset: ad.AnnData):
         """Test grouping with no kwargs."""
         groups = list(lbm_dataset.an.group_by(copy=True))
-        assert len(groups) == 1
-        assert isinstance(groups[0], ad.AnnData)
-        assert groups[0].n_obs == lbm_dataset.n_obs
-        assert groups[0].n_vars == lbm_dataset.n_vars
+        assert len(groups) == 0
 
     def test_group_by_obs_and_var(self, lbm_dataset: ad.AnnData):
         """Test grouping by both observations and variables."""

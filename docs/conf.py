@@ -24,7 +24,7 @@ project_name = info["Name"]
 author = info["Author"]
 copyright = f"{datetime.now():%Y}, {author}"
 version = info["Version"]
-urls = dict(pu.split(", ") for pu in info.get_all("Project-URL"))
+urls = dict(pu.split(", ") for pu in info.get_all("Project-URL"))  # type: ignore
 repository_url = urls["Source"]
 
 # The full version, including alpha/beta/rc tags
@@ -60,14 +60,19 @@ extensions = [
     "sphinx.ext.mathjax",
     "IPython.sphinxext.ipython_console_highlighting",
     "sphinxext.opengraph",
-    *[p.stem for p in (HERE / "extensions").glob("*.py")],
     "sphinx_design",
+    *[p.stem for p in (HERE / "extensions").glob("*.py")],
     "scanpydoc",
     "sphinx.ext.linkcode",
     "sphinx.ext.mathjax",
     "sphinx_autosummary_accessors",
-    "sphinx_toolbox.more_autodoc.typevars",
 ]
+
+autodoc_default_options = {
+    "members": True,
+    "inherited-members": True,
+    "show-inheritance": True,
+}
 
 autosummary_generate = True
 autodoc_member_order = "groupwise"

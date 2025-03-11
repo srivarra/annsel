@@ -123,7 +123,7 @@ class AnnselAccessor:
         obs: Predicates | None = None,
         var: Predicates | None = None,
         copy: bool = False,
-    ) -> Generator[ad.AnnData | GroupByAnndata, Any, None]:
+    ) -> ad.AnnData | Generator[GroupByAnndata, None, None]:
         """Group the AnnData object by the given predicates.
 
         Parameters
