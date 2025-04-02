@@ -1,148 +1,34 @@
-name: Publish Python 🐍 distribution 📦 to PyPI and TestPyPI
+name: Release
 
 on:
   release:
     types: [published]
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
-  cancel-in-progress: true
+defaults:
+  run:
+    # to fail on error in multiline statements (-e), in pipes (-o pipefail), and on unset variables (-u).
+    shell: bash -euo pipefail {0}
 
-permissions:
-  contents: read # to fetch code (actions/checkout)
-  id-token: write # This is required for requesting the JWT
-
+# Use "trusted publishing", see https://docs.pypi.org/trusted-publishers/
 jobs:
-  build:
-    name: Build distribution 📦
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.13"]
-
-    steps:
-      - name: Checkout ${{ github.ref }}
-        uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v3
-        with:
-          enable-cache: true
-          cache-dependency-glob: "uv.lock"
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set up Python
-        run: |
-          uv python install ${{ matrix.python-version }}
-
-      - name: Install Dependencies
-        run: |
-          uv sync --all-extras
-
-      - name: Build Package
-        run: |
-          uv build
-
-      - name: Check Package
-        run: |
-          uv run twine check --strict dist/*.whl
-
-      - name: Store Wheel Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: dist/*.whl
-
-  publish-to-testpypi:
-    name: Publish Python 🐍 distribution 📦 to TestPyPI
-    needs:
-      - build
-    runs-on: ubuntu-latest
-
-    environment:
-      name: testpypi
-      url: https://test.pypi.org/p/anatomize
-
-    permissions:
-      id-token: write # IMPORTANT: mandatory for trusted publishing
-
-    steps:
-      - name: Download Build Distributions 📦
-        uses: actions/download-artifact@v4
-        with:
-          pattern: dist-*
-          merge-multiple: true
-          path: dist
-
-      - name: Publish distribution 📦 to TestPyPI
-        uses: pypa/gh-action-pypi-publish@release/v1.9
-        with:
-          repository-url: https://test.pypi.org/legacy/
-
-  publish-to-pypi:
-    name: >-
-      Publish Python 🐍 distribution 📦 to PyPI
-    if: startsWith(github.ref, 'refs/tags/') # only publish to PyPI on tag pushes
-    needs: [build, publish-to-testpypi]
+  release:
+    name: Upload release to PyPI
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/anatomize # Replace <package-name> with your PyPI project name
+      url: https://pypi.org/p/annsel
     permissions:
-      id-token: write # IMPORTANT: mandatory for trusted publishing
-
+      id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
     steps:
-      - name: Download Built Distributions 📦
-        uses: actions/download-artifact@v4
+      - uses: actions/checkout@v4
         with:
-          pattern: dist-*
-          merge-multiple: true
-          path: dist/
-
-      - name: Publish Distributions 📦 to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1.9
-
-  github-release:
-    name: >-
-      Sign the Python 🐍 distribution 📦 with Sigstore
-      and upload them to GitHub Release
-    needs:
-      - publish-to-pypi
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: write # IMPORTANT: mandatory for making GitHub Releases
-      id-token: write # IMPORTANT: mandatory for sigstore
-
-    steps:
-      - name: Download Built Distributions 📦
-        uses: actions/download-artifact@v4
+          filter: blob:none
+          fetch-depth: 0
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
-          pattern: dist-*
-          merge-multiple: true
-          path: dist/
-      - name: Sign the dists with Sigstore
-        uses: sigstore/gh-action-sigstore-python@v3.0.0
-        with:
-          inputs: >-
-            ./dist/*.tar.gz
-            ./dist/*.whl
-      - name: Create GitHub Release
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: >-
-          gh release create
-          '${{ github.ref_name }}'
-          --repo '${{ github.repository }}'
-          --notes ""
-      - name: Upload artifact signatures to GitHub Release
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        # Upload to GitHub Release using the `gh` CLI.
-        # `dist/` contains the built packages, and the
-        # sigstore-produced signatures and certificates.
-        run: >-
-          gh release upload
-          '${{ github.ref_name }}' dist/**
-          --repo '${{ github.repository }}'
+          cache-dependency-glob: pyproject.toml
+      - name: Build package
+        run: uv build
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

@@ -7,71 +7,53 @@ on:
     branches: [main]
   schedule:
     - cron: "0 5 1,15 * *"
-  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-permissions:
-  id-token: write # This is required for requesting the JWT
-  contents: read # This is required for actions/checkout
+defaults:
+  run:
+    # to fail on error in multiline statements (-e), in pipes (-o pipefail), and on unset variables (-u).
+    shell: bash -euo pipefail {0}
 
 jobs:
   test:
     runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        shell: bash -e {0} # -e to fail on error
 
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.11", "3.12"]
-        os: ["ubuntu-latest"]
+        include:
+          - os: ubuntu-latest
+            python: "3.10"
+          - os: ubuntu-latest
+            python: "3.12"
+          - os: ubuntu-latest
+            python: "3.12"
+            pip-flags: "--pre"
+            name: PRE-RELEASE DEPENDENCIES
 
-    name: Python ${{ matrix.python-version }}
+    name: ${{ matrix.name }} Python ${{ matrix.python }}
 
-    environment:
-      name: codecov
+    env:
+      OS: ${{ matrix.os }}
+      PYTHON: ${{ matrix.python }}
 
     steps:
-      - name: Checkout ${{ github.ref }}
-        uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v3
+      - uses: actions/checkout@v4
         with:
-          enable-cache: true
-          cache-dependency-glob: "uv.lock"
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set up Python
-        run: |
-          uv python install ${{ matrix.python-version }}
-
-      - name: Install Dependencies
-        run: |
-          uv sync --all-extras
-
-      - name: Test
+          filter: blob:none
+          fetch-depth: 0
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          cache-dependency-glob: pyproject.toml
+      - name: run tests using hatch
         env:
           MPLBACKEND: agg
+          PLATFORM: ${{ matrix.os }}
           DISPLAY: :42
-        run: |
-          uv run pytest -n auto --cov --cov-report=xml -v --color=yes --junitxml=junit.xml
-
-      - name: Upload coverage to Codecov
+        run: uvx hatch test --cover --python ${{ matrix.python }}
+      - name: Upload coverage
         uses: codecov/codecov-action@v4
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        with:
-          use_oidc: true
-
-      - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        with:
-          flags: ${{ matrix.os }}-${{ matrix.python-version }}

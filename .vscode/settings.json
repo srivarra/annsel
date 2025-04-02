@@ -1,5 +1,5 @@
 {
-    "[python][jsonc][yaml]": {
+    "[python][json][jsonc]": {
         "editor.formatOnSave": true,
     },
     "[python]": {
@@ -9,10 +9,10 @@
             "source.organizeImports": "always",
         },
     },
-    "[jsonc][yaml]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[json][jsonc]": {
+        "editor.defaultFormatter": "biomejs.biome",
     },
-    "python.analysis.typeCheckingMode": "off",
+    "python.analysis.typeCheckingMode": "basic",
     "python.testing.pytestEnabled": true,
     "python.testing.pytestArgs": ["-vv", "--color=yes"],
 }

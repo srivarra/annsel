@@ -60,10 +60,6 @@ extensions = [
     "IPython.sphinxext.ipython_console_highlighting",
     "sphinxext.opengraph",
     *[p.stem for p in (HERE / "extensions").glob("*.py")],
-    "scanpydoc",
-    "sphinx.ext.linkcode",
-    "sphinx.ext.mathjax",
-    "sphinx_autosummary_accessors",
 ]
 
 autosummary_generate = True
@@ -100,7 +96,6 @@ intersphinx_mapping = {
     "anndata": ("https://anndata.readthedocs.io/en/stable/", None),
     "scanpy": ("https://scanpy.readthedocs.io/en/stable/", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
-    "narwhals": ("https://narwhals-dev.github.io/narwhals/", None),
 }
 
 # List of patterns, relative to source directory, that match files and

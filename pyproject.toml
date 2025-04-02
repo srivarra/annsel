@@ -24,32 +24,27 @@ classifiers = [
 ]
 dependencies = [
   "anndata",
-  "more-itertools>=10.5",
-  "narwhals>=1.13.2",
   # for debug logging (referenced from the issue template)
-  "session-info",
+  "session-info2",
 ]
 optional-dependencies.dev = [
   "pre-commit",
-  "scanpy>=1.10.3",
-  "twine>=5.1.1",
+  "twine>=4.0.2",
 ]
 optional-dependencies.doc = [
-  "docutils>=0.21.2",
+  "docutils>=0.8,!=0.18.*,!=0.19.*",
   "ipykernel",
   "ipython",
-  "myst-nb>=1.1.2",
+  "myst-nb>=1.1",
   "pandas",
-  "scanpydoc>=0.14.1",
-  # Until pybtex >0.23.0 releases: https://bitbucket.org/pybtex-devs/pybtex/issues/169/
+  # Until pybtex >0.24.0 releases: https://bitbucket.org/pybtex-devs/pybtex/issues/169/
   "setuptools",
-  "sphinx>=8.1.3",
+  "sphinx>=4",
   "sphinx-autodoc-typehints",
-  "sphinx-autosummary-accessors>=2023.4",
-  "sphinx-book-theme>=1.1.3",
+  "sphinx-book-theme>=1",
   "sphinx-copybutton",
   "sphinx-tabs",
-  "sphinxcontrib-bibtex>=2.6.3",
+  "sphinxcontrib-bibtex>=1",
   "sphinxext-opengraph",
 ]
 optional-dependencies.test = [
@@ -60,6 +55,59 @@ optional-dependencies.test = [
 urls.Documentation = "https://annsel.readthedocs.io/"
 urls.Homepage = "https://github.com/srivarra/annsel"
 urls.Source = "https://github.com/srivarra/annsel"
+
+[tool.hatch.envs.default]
+installer = "uv"
+features = [ "dev" ]
+
+[tool.hatch.envs.docs]
+features = [ "doc" ]
+scripts.build = "sphinx-build -M html docs docs/_build {args}"
+scripts.open = "python -m webbrowser -t docs/_build/html/index.html"
+scripts.clean = "git clean -fdX -- {args:docs}"
+
+[tool.hatch.envs.hatch-test]
+features = [ "test" ]
+
+[tool.ruff]
+line-length = 120
+src = [ "src" ]
+extend-include = [ "*.ipynb" ]
+
+format.docstring-code-format = true
+
+lint.select = [
+  "B",      # flake8-bugbear
+  "BLE",    # flake8-blind-except
+  "C4",     # flake8-comprehensions
+  "D",      # pydocstyle
+  "E",      # Error detected by Pycodestyle
+  "F",      # Errors detected by Pyflakes
+  "I",      # isort
+  "RUF100", # Report unused noqa directives
+  "TID",    # flake8-tidy-imports
+  "UP",     # pyupgrade
+  "W",      # Warning detected by Pycodestyle
+]
+lint.ignore = [
+  "B008", # Errors from function calls in argument defaults. These are fine when the result is immutable.
+  "D100", # Missing docstring in public module
+  "D104", # Missing docstring in public package
+  "D105", # __magic__ methods are often self-explanatory, allow missing docstrings
+  "D107", # Missing docstring in __init__
+  # Disable one in each pair of mutually incompatible rules
+  "D203", # We don’t want a blank line before a class docstring
+  "D213", # <> We want docstrings to start immediately after the opening triple quote
+  "D400", # first line should end with a period [Bug: doesn’t work with single-line docstrings]
+  "D401", # First line should be in imperative mood; try rephrasing
+  "E501", # line too long -> we accept long comment lines; formatter gets rid of long code lines
+  "E731", # Do not assign a lambda expression, use a def -> lambda expression assignments are convenient
+  "E741", # allow I, O, l as variable names -> I is the identity matrix
+]
+lint.per-file-ignores."*/__init__.py" = [ "F401" ]
+lint.per-file-ignores."docs/*" = [ "I" ]
+lint.per-file-ignores."tests/*" = [ "D" ]
+lint.pydocstyle.convention = "numpy"
 
 [tool.pytest.ini_options]
 testpaths = [ "tests" ]
