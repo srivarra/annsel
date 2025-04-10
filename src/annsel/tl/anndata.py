@@ -1,4 +1,4 @@
-from collections.abc import Callable, Generator
+from collections.abc import Callable, Generator, Mapping
 from typing import Any, TypeVar
 
 import anndata as ad
@@ -27,6 +27,8 @@ class AnnselAccessor:
         x: Predicates | None = None,
         obs_names: Predicates | None = None,
         var_names: Predicates | None = None,
+        obsm: Mapping[str, Predicates] | None = None,
+        varm: Mapping[str, Predicates] | None = None,
         layer: str | None = None,
         copy: bool = False,
     ) -> ad.AnnData:
@@ -44,6 +46,10 @@ class AnnselAccessor:
             Predicates to filter the observation names by.
         var_names
             Predicates to filter the variable names by.
+        obsm
+            A mapping of obsm keys and predicates to filter the obsm matrices by.
+        varm
+            A mapping of varm keys and predicates to filter the varm matrices by.
         layer
             The layer to filter.
         copy
@@ -71,7 +77,7 @@ class AnnselAccessor:
              obsm: 'X_bothumap', 'X_pca', 'X_projected', 'X_projectedmean', 'X_tsneni', 'X_umapni'
 
         """
-        _adata = _filter(self._obj, obs, var, x, obs_names, var_names, layer)
+        _adata = _filter(self._obj, obs, var, x, obs_names, var_names, obsm, varm, layer)
         return _adata if not copy else _adata.copy()
 
     def select(

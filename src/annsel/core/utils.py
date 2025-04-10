@@ -11,19 +11,36 @@ from more_itertools import collapse, nth
 
 from annsel.core.typing import Predicates
 
+T = TypeVar("T")
+
 
 def _get_final_indices(
     obj_names: pd.Index,
     *idx: Iterable,
 ) -> pd.Index:
+    """Given an iterable of indices, return the intersection of the indices w.r.t. the var_names or the obs_names.
+
+    If all indices are empty, return an empty index.
+
+    Parameters
+    ----------
+    obj_names
+        The names of the objects to filter.
+    idx
+        The indices to filter.
+
+    Returns
+    -------
+    The intersection of the indices.
+    """
     # Filter out empty indices
     non_empty_idx = [i for i in idx if len(i) > 0]
 
-    # If all indices were empty, return the original object names
+    # If all indices were empty, return an empty index
     if not non_empty_idx:
-        return obj_names
+        return pd.Index([])
 
-    # Otherwise, proceed with intersection of non-empty indices
+    # Otherwise, compute the intersection of non-empty indices
     return obj_names.intersection(pd.Index(list(reduce(and_, map(set, non_empty_idx)))))
 
 
@@ -35,9 +52,6 @@ def _construct_adata_from_indices(
     _adata = adata[obs_idx.to_series(), var_idx.to_series()]
 
     return _adata
-
-
-T = TypeVar("T")
 
 
 def second(i: Iterable[T]) -> T:
@@ -53,7 +67,8 @@ def _extract_names_from_expr(*predicates: Predicates) -> tuple[str, ...]:
     for p in predicates:
         match p:
             case nw.Expr():
-                names.extend(collapse(inspect.getclosurevars(p._to_compliant_expr).nonlocals["names"]))
+                to_complian_expr_closure = inspect.getclosurevars(p._to_compliant_expr).nonlocals["to_compliant_expr"]
+                names.extend(collapse(inspect.getclosurevars(to_complian_expr_closure).nonlocals["flat_names"]))
             case str():
                 names.append(p)
             case _:

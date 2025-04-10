@@ -35,14 +35,6 @@ jobs:
           cache-dependency-glob: "uv.lock"
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up Python
-        run: |
-          uv python install ${{ matrix.python-version }}
-
-      - name: Install Dependencies
-        run: |
-          uv sync --frozen
-
       - name: Build Package
         run: |
           uv build
