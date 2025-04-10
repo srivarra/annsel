@@ -61,11 +61,11 @@ class TestFilterAnnData:
         verify_adata = lbm_dataset[lbm_dataset[:, "ENSG00000206560"].layers["test"] >= 1, :]
         ath.assert_adata_equal(adata, verify_adata)
 
-    def test_filter_obsm(self, lbm_dataset: ad.AnnData):
+    def test_filter_obsm(self, lbm_dataset: ad.AnnData, rng: np.random.Generator):
         """Test filtering based on obsm matrices."""
         # Create a test obsm key if it doesn't exist
         if "X_test" not in lbm_dataset.obsm:
-            lbm_dataset.obsm["X_test"] = np.random.random((lbm_dataset.n_obs, 2))
+            lbm_dataset.obsm["X_test"] = rng.random((lbm_dataset.n_obs, 2))
             # Make some values specifically >0.8 for testing
             lbm_dataset.obsm["X_test"][0:5, 0] = 0.9
 
@@ -78,11 +78,11 @@ class TestFilterAnnData:
 
         ath.assert_adata_equal(adata, verify_adata)
 
-    def test_filter_varm(self, lbm_dataset: ad.AnnData):
+    def test_filter_varm(self, lbm_dataset: ad.AnnData, rng: np.random.Generator):
         """Test filtering based on varm matrices."""
         # Create a test varm key if it doesn't exist
         if "PCs" not in lbm_dataset.varm:
-            lbm_dataset.varm["PCs"] = np.random.random((lbm_dataset.n_vars, 3))
+            lbm_dataset.varm["PCs"] = rng.random((lbm_dataset.n_vars, 3))
             # Make some values specifically <0.2 for testing
             lbm_dataset.varm["PCs"][0:10, 0] = 0.1
 
