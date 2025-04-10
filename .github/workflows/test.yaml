@@ -38,16 +38,13 @@ jobs:
       - name: Checkout ${{ github.ref }}
         uses: actions/checkout@v4
 
-      - name: Install uv
+      - name: Install uv and setup Python
         uses: astral-sh/setup-uv@v5
         with:
+          python-version: ${{ matrix.python-version }}
           enable-cache: true
           cache-dependency-glob: "uv.lock"
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set up Python
-        run: |
-          uv python install ${{ matrix.python-version }}
 
       - name: Install Dependencies
         run: |
@@ -58,10 +55,10 @@ jobs:
           MPLBACKEND: agg
           DISPLAY: :42
         run: |
-          uv run pytest -n auto --cov --cov-report=xml -v --color=yes --junitxml=junit.xml
+          uv run --frozen pytest -n auto --cov --cov-report=xml -v --color=yes --junitxml=junit.xml
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
