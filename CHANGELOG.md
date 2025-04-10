@@ -8,14 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### <!-- 5 --> 🌀 Miscellaneous
-- Added additional repr test, remove .bacon-locations
-- ✅ Add repr with multiple groups test
-- ✅ More repr tests
-- Sphinx autodoc typehints >= 3.1.0 for python 3.11+
-- ⬆️ Sphinx autodoc typehings >= 3.1.0 for python 3.11+
-- ➕ Pooch as dep, not opt dep
-- 🏗️ Removed AnnselExpr class, now getting names from closure
-- Updated ExprMetadata
+- 💚 Fix biome.jsonc for 2.0.0-beta.1
+- 🎨 Ruff NP rules for tests
+- 👷 Update CI
+- [pre-commit.ci] auto fixes from pre-commit.com hooks
+- 👽️ Nonlocals of a nonlocal??? sure why not
+
+## [0.1.0] - 2025-03-11
+
+### <!-- 1 --> 🚀 Features
+- Look at names in closure for nw.Expr instead of subclassing it. by [@srivarra](https://github.com/srivarra) in [#50](https://github.com/srivarra/annsel/pull/50)
+
+### <!-- 5 --> 🌀 Miscellaneous
+- [pre-commit.ci] pre-commit autoupdate by [@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot]) in [#48](https://github.com/srivarra/annsel/pull/48)
 
 ## [0.0.10] - 2025-03-03
 
@@ -110,7 +115,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### <!-- 5 --> 🌀 Miscellaneous
 - 💚 Missed one pypi-publish by [@srivarra](https://github.com/srivarra)
-- 💚 Bump gh-action-pypi-publish to 1.12.3 by [@srivarra](https://github.com/srivarra)
 
 ## [0.0.3] - 2024-12-21
 
@@ -125,6 +129,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Merge pull request #17 from srivarra/pre-commit-ci-update-config by [@srivarra](https://github.com/srivarra) in [#17](https://github.com/srivarra/annsel/pull/17)
 
 ### <!-- 5 --> 🌀 Miscellaneous
+- 💚 Bump gh-action-pypi-publish to 1.12.3 by [@srivarra](https://github.com/srivarra)
 - Api documentation fix by [@srivarra](https://github.com/srivarra)
 - Update README.md example by [@srivarra](https://github.com/srivarra)
 - 📌 Pin doc deps: scanpy, numba, llvmlite to release canidates by [@srivarra](https://github.com/srivarra)
@@ -145,7 +150,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ✨ Added Groupby by [@srivarra](https://github.com/srivarra)
 - ✨ Add select by [@srivarra](https://github.com/srivarra)
 - Update README.md by [@srivarra](https://github.com/srivarra)
-- 💚 Set uv sync --frozen by [@srivarra](https://github.com/srivarra)
 
 ## [0.0.2] - 2024-11-12
 
@@ -160,6 +164,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Merge pull request #8 from srivarra/pre-commit-ci-update-config by [@srivarra](https://github.com/srivarra) in [#8](https://github.com/srivarra/annsel/pull/8)
 
 ### <!-- 5 --> 🌀 Miscellaneous
+- 💚 Set uv sync --frozen by [@srivarra](https://github.com/srivarra)
 - 📝 Added pre-commit readme badge by [@srivarra](https://github.com/srivarra)
 - 🔧 Add __version__ to __init__ by [@srivarra](https://github.com/srivarra)
 - ➕ Add typing-extensions by [@srivarra](https://github.com/srivarra)
@@ -230,7 +235,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @srivarra made their first contribution in [#5](https://github.com/srivarra/annsel/pull/5)
-[unreleased]: https://github.com/srivarra/annsel/compare/v0.0.10..HEAD
+[unreleased]: https://github.com/srivarra/annsel/compare/v0.1.0..HEAD
+[0.1.0]: https://github.com/srivarra/annsel/compare/v0.0.10..v0.1.0
 [0.0.10]: https://github.com/srivarra/annsel/compare/v0.0.9..v0.0.10
 [0.0.9]: https://github.com/srivarra/annsel/compare/v0.0.8..v0.0.9
 [0.0.8]: https://github.com/srivarra/annsel/compare/v0.0.7..v0.0.8
