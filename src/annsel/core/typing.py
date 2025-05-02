@@ -10,5 +10,4 @@ Predicate = nw.Expr | str | nw.Series
 Predicates: TypeAlias = Predicate | Iterable[Predicate]
 
 # Groupby Types
-
 NwGroupBy: TypeAlias = GroupBy[nw.DataFrame[Any]] | LazyGroupBy[nw.LazyFrame[Any]]

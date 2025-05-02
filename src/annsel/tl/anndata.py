@@ -139,11 +139,13 @@ class AnnselAccessor:
         var
             Predicates to group the variables by.
         copy
-            Whether to return a copy of the AnnData object.
+            Whether to return a copy of the AnnData object when grouping.
+            If obs and var are both None, returns a copy of the original AnnData object if True, otherwise returns the original object.
 
         Returns
         -------
-        An iterator of grouped AnnData objects with the group names if `return_group_names` is `True`.
+        The original AnnData object (or a copy) if both `obs` and `var` are `None`.
+        Otherwise, returns a generator that yields `GroupByAnndata` objects for each group.
 
         Examples
         --------
@@ -152,11 +154,17 @@ class AnnselAccessor:
         >>> groups = adata.an.group_by(
         ...     obs=an.col(["Cell_label", "sex"]),
         ...     var=an.col(["feature_name"]),
-        ...     return_group_names=False,
         ... )
+        >>> for group in groups:
+        ...     print(group.obs_dict, group.var_dict)
+        ...
         """
-        gb_adata = _group_by(self._obj, obs, var, copy=copy)
+        # Handle the case where no grouping is requested
+        if obs is None and var is None:
+            return self._obj if not copy else self._obj.copy()
 
+        # Otherwise, call the internal generator function
+        gb_adata = _group_by(self._obj, obs, var, copy=copy)
         return gb_adata
 
     def pipe(self, func: Callable[..., T] | tuple[Callable[..., T], str], *args: Any, **kwargs: Any) -> Any:
