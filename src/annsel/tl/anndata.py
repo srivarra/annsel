@@ -157,7 +157,6 @@ class AnnselAccessor:
         ... )
         >>> for group in groups:
         ...     print(group.obs_dict, group.var_dict)
-        ...
         """
         # Handle the case where no grouping is requested
         if obs is None and var is None:

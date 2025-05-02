@@ -130,7 +130,7 @@ def _prepare_groups_for_axis(
     adata: ad.AnnData,
     axis_names: pd.Index,
     grouping_func: Callable[[ad.AnnData, Predicates], tuple[Predicates, NwGroupBy]],
-    predicates: Predicates | None
+    predicates: Predicates | None,
 ) -> list[tuple[Predicates | None, tuple[str, ...], pd.Index]]:
     """Helper to prepare the list of groups for a given axis (obs or var)."""
     if predicates is not None:
