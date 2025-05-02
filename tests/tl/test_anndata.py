@@ -184,7 +184,7 @@ class TestSelectAnnData:
 class TestGroupByAnnData:
     def test_group_by_obs(self, lbm_dataset: ad.AnnData):
         """Test grouping by observation columns."""
-        groups = list(lbm_dataset.an.group_by(obs=an.col(["Cell_label"])))
+        groups = list(lbm_dataset.an.group_by(obs=an.col("Cell_label")))
 
         # Verify number of groups matches unique Cell_label values
         assert len(groups) == lbm_dataset.obs["Cell_label"].nunique()
@@ -201,7 +201,7 @@ class TestGroupByAnnData:
 
     def test_group_by_var(self, lbm_dataset: ad.AnnData):
         """Test grouping by variable columns."""
-        groups = list(lbm_dataset.an.group_by(var=an.col(["feature_type"])))
+        groups = list(lbm_dataset.an.group_by(var=an.col("feature_type")))
 
         # Verify number of groups matches unique feature_type values
         assert len(groups) == lbm_dataset.var["feature_type"].nunique()
