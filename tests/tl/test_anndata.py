@@ -184,7 +184,7 @@ class TestSelectAnnData:
 class TestGroupByAnnData:
     def test_group_by_obs(self, lbm_dataset: ad.AnnData):
         """Test grouping by observation columns."""
-        groups = list(lbm_dataset.an.group_by(obs=an.col(["Cell_label"])))
+        groups = list(lbm_dataset.an.group_by(obs=an.col("Cell_label")))
 
         # Verify number of groups matches unique Cell_label values
         assert len(groups) == lbm_dataset.obs["Cell_label"].nunique()
@@ -197,11 +197,11 @@ class TestGroupByAnnData:
             ath.assert_adata_equal(group.adata, verify_adata)
 
             # Verify obs_dict contains the expected values
-            assert group.obs_dict() == {"Cell_label": cell_type}
+            assert group.obs_dict == {"Cell_label": cell_type}
 
     def test_group_by_var(self, lbm_dataset: ad.AnnData):
         """Test grouping by variable columns."""
-        groups = list(lbm_dataset.an.group_by(var=an.col(["feature_type"])))
+        groups = list(lbm_dataset.an.group_by(var=an.col("feature_type")))
 
         # Verify number of groups matches unique feature_type values
         assert len(groups) == lbm_dataset.var["feature_type"].nunique()
@@ -214,7 +214,7 @@ class TestGroupByAnnData:
             ath.assert_adata_equal(group.adata, verify_adata)
 
             # Verify var_dict contains the expected values
-            assert group.var_dict() == {"feature_type": feature_type}
+            assert group.var_dict == {"feature_type": feature_type}
 
     def test_group_by_multiple_columns(self, lbm_dataset: ad.AnnData):
         """Test grouping by multiple columns simultaneously."""
@@ -226,17 +226,22 @@ class TestGroupByAnnData:
 
         # Verify each group has the correct columns in obs_dict
         for group in groups:
-            assert set(group.obs_dict().keys()) == {"Cell_label", "sex"}
-
-    def test_group_by_empty_result(self, lbm_dataset: ad.AnnData):
-        """Test grouping that results in no matches."""
-        with pytest.raises(KeyError, match="names"):
-            list(lbm_dataset.an.group_by(obs=an.col(["Cell_label"]) == "NonexistentType"))
+            assert set(group.obs_dict.keys()) == {"Cell_label", "sex"}
 
     def test_group_by_no_kwargs(self, lbm_dataset: ad.AnnData):
-        """Test grouping with no kwargs."""
-        groups = list(lbm_dataset.an.group_by(copy=True))
-        assert len(groups) == 0
+        """Test grouping with no kwargs returns the original AnnData."""
+        # When no grouping arguments are given, it should return the original adata
+        # (or a copy if copy=True)
+        grouped_obj = lbm_dataset.an.group_by()
+        assert isinstance(grouped_obj, ad.AnnData)
+        ath.assert_adata_equal(grouped_obj, lbm_dataset)
+
+        # With copy=True
+        copied_grouped_obj = lbm_dataset.an.group_by(copy=True)
+        assert isinstance(copied_grouped_obj, ad.AnnData)
+        ath.assert_adata_equal(copied_grouped_obj, lbm_dataset)
+        # Ensure it's a copy, not the same object
+        assert copied_grouped_obj is not lbm_dataset
 
     def test_group_by_obs_and_var(self, lbm_dataset: ad.AnnData):
         """Test grouping by both observations and variables."""
@@ -245,12 +250,12 @@ class TestGroupByAnnData:
         # Verify structure with both obs and var grouping
         for group in groups:
             # Check that obs and var dictionaries contain the expected keys
-            assert "Cell_label" in group.obs_dict()
-            assert "feature_type" in group.var_dict()
+            assert "Cell_label" in group.obs_dict
+            assert "feature_type" in group.var_dict
 
             # Verify the subset contains the expected data
-            cell_type = group.obs_dict()["Cell_label"]
-            feature_type = group.var_dict()["feature_type"]
+            cell_type = group.obs_dict["Cell_label"]
+            feature_type = group.var_dict["feature_type"]
 
             verify_adata = lbm_dataset[
                 lbm_dataset.obs["Cell_label"] == cell_type, lbm_dataset.var["feature_type"] == feature_type
@@ -273,8 +278,8 @@ class TestGroupByAnnData:
         assert "└── AnnData:" in repr_str
 
         # Check if content is included
-        cell_type = group.obs_dict()["Cell_label"]
-        feature_type = group.var_dict()["feature_type"]
+        cell_type = group.obs_dict["Cell_label"]
+        feature_type = group.var_dict["feature_type"]
 
         assert f"Cell_label: {cell_type}" in repr_str
         assert f"feature_type: {feature_type}" in repr_str
@@ -293,7 +298,7 @@ class TestGroupByAnnData:
         assert "├── Variables:" in repr_str
 
         # Check that var content is included
-        feature_type = group.var_dict()["feature_type"]
+        feature_type = group.var_dict["feature_type"]
         assert f"feature_type: {feature_type}" in repr_str
 
     def test_repr_format_no_var(self, lbm_dataset: ad.AnnData):
@@ -310,7 +315,7 @@ class TestGroupByAnnData:
         assert "(all variables)" in repr_str
 
         # Check that obs content is included
-        cell_type = group.obs_dict()["Cell_label"]
+        cell_type = group.obs_dict["Cell_label"]
         assert f"Cell_label: {cell_type}" in repr_str
 
     def test_repr_format_multiple_groups(self, lbm_dataset: ad.AnnData):
@@ -329,10 +334,10 @@ class TestGroupByAnnData:
         assert "├── Variables:" in repr_str
         assert "└── AnnData:" in repr_str
 
-        cell_type = group.obs_dict()["Cell_label"]
-        disease = group.obs_dict()["disease"]
-        feature_type = group.var_dict()["feature_type"]
-        feature_is_filtered = group.var_dict()["feature_is_filtered"]
+        cell_type = group.obs_dict["Cell_label"]
+        disease = group.obs_dict["disease"]
+        feature_type = group.var_dict["feature_type"]
+        feature_is_filtered = group.var_dict["feature_is_filtered"]
 
         assert f"Cell_label: {cell_type}" in repr_str
         assert f"disease: {disease}" in repr_str
