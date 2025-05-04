@@ -1,0 +1,55 @@
+name: Changelog ⛰️
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 5 1,15 * *"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
+
+jobs:
+  generate-changelog:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -e {0} # -e to fail on error
+    strategy:
+      fail-fast: false
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate the changelog
+        uses: orhun/git-cliff-action@v4
+        id: git-cliff
+        with:
+          config: cliff.toml
+          args: --verbose --latest --no-exec
+        env:
+          OUTPUT: CHANGELOG.md
+          GITHUB_REPO: ${{ github.repository }}
+
+      - name: Print the changelog
+        run: cat "${{ steps.git-cliff.outputs.changelog }}"
+      # - name: Commit the Changelog
+      #   run: |
+      #     git checkout ${{ github.head_ref || github.ref_name }}
+      #     git config user.name 'github-actions[bot]'
+      #     git config user.email 'github-actions[bot]@users.noreply.github.com'
+      #     set +e
+      #     git add CHANGELOG.md
+      #     git commit -m "Update changelog"
+      #     git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git

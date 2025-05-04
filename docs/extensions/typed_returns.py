@@ -6,7 +6,7 @@ import re
 from collections.abc import Generator, Iterable
 
 from sphinx.application import Sphinx
-from sphinx.ext.napoleon import NumpyDocstring
+from sphinx.ext.napoleon.docstring import NumpyDocstring
 
 
 def _process_return(lines: Iterable[str]) -> Generator[str, None, None]:

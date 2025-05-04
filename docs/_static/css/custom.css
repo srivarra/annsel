@@ -2,3 +2,246 @@
 div.cell_output table.dataframe {
     font-size: 0.8em;
 }
+
+/* Dark mode styles - explicit dark mode setting */
+html[data-theme="dark"] {
+    --pst-color-background: #000000 !important;
+}
+
+/* System dark mode when theme is set to auto */
+@media (prefers-color-scheme: dark) {
+    html[data-theme="auto"] {
+        --pst-color-background: #000000 !important;
+    }
+}
+
+/* Keep your existing navbar styles */
+.navbar-light {
+    background-color: #000000 !important;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #ffffff !important;
+}
+
+.navbar-light .navbar-brand {
+    color: #ffffff !important;
+}
+
+/* For the search icon and other navbar icons */
+.navbar-light .btn-navbar-icon {
+    color: #ffffff !important;
+}
+
+/* Light mode styles (default) */
+.sphinx-tabs-tab {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border-color: #dddddd !important;
+}
+
+.sphinx-tabs-tab[aria-selected="true"] {
+    background-color: #f5f5f5 !important;
+    border-bottom-color: #f5f5f5 !important;
+}
+
+.sphinx-tabs-panel {
+    background-color: #f5f5f5 !important;
+    border-color: #dddddd !important;
+    color: #000000 !important;
+}
+
+.sphinx-tabs-panel .highlight {
+    background-color: #ffffff !important;
+}
+
+.sphinx-tabs-panel .highlight pre {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+/* Dark mode styles - explicit dark mode setting */
+html[data-theme="dark"] .sphinx-tabs-tab {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border-color: #333333 !important;
+}
+
+html[data-theme="dark"] .sphinx-tabs-tab[aria-selected="true"] {
+    background-color: #000000 !important;
+    border-bottom-color: #1a1a1a !important;
+}
+
+html[data-theme="dark"] .sphinx-tabs-panel {
+    background-color: #000000 !important;
+    border-color: #333333 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .sphinx-tabs-panel .highlight {
+    background-color: #000000 !important;
+}
+
+html[data-theme="dark"] .sphinx-tabs-panel .highlight pre {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+}
+
+/* System dark mode when theme is set to auto */
+@media (prefers-color-scheme: dark) {
+    html[data-theme="auto"] .sphinx-tabs-tab {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+        border-color: #333333 !important;
+    }
+
+    html[data-theme="auto"] .sphinx-tabs-tab[aria-selected="true"] {
+        background-color: #000000 !important;
+        border-bottom-color: #1a1a1a !important;
+    }
+
+    html[data-theme="auto"] .sphinx-tabs-panel {
+        background-color: #000000 !important;
+        border-color: #333333 !important;
+        color: #ffffff !important;
+    }
+
+    html[data-theme="auto"] .sphinx-tabs-panel .highlight {
+        background-color: #000000 !important;
+    }
+
+    html[data-theme="auto"] .sphinx-tabs-panel .highlight pre {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+    }
+}
+
+/* Light mode styles (default) */
+.grid-item-card {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border-color: #dddddd !important;
+}
+
+table {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border-color: #dddddd !important;
+}
+
+table th,
+table td {
+    background-color: #ffffff !important;
+    border-color: #dddddd !important;
+}
+
+/* Dark mode styles - explicit dark mode setting */
+html[data-theme="dark"] .grid-item-card {
+    background-color: #1a1a1a !important;
+    color: #ffffff !important;
+    border-color: #333333 !important;
+}
+
+html[data-theme="dark"] table {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border-color: #333333 !important;
+}
+
+html[data-theme="dark"] table th,
+html[data-theme="dark"] table td {
+    background-color: #000000 !important;
+    border-color: #333333 !important;
+}
+
+/* System dark mode when theme is set to auto */
+@media (prefers-color-scheme: dark) {
+    html[data-theme="auto"] .grid-item-card {
+        background-color: #1a1a1a !important;
+        color: #ffffff !important;
+        border-color: #333333 !important;
+    }
+
+    html[data-theme="auto"] table {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+        border-color: #333333 !important;
+    }
+
+    html[data-theme="auto"] table th,
+    html[data-theme="auto"] table td {
+        background-color: #000000 !important;
+        border-color: #333333 !important;
+    }
+}
+
+/* Hover effects for grid-item-cards */
+.grid-item-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+html[data-theme="dark"] .grid-item-card:hover {
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+}
+
+/* Dark mode styles - explicit dark mode setting */
+html[data-theme="dark"] .sd-card {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border-color: #333333 !important;
+}
+
+/* System dark mode when theme is set to auto */
+@media (prefers-color-scheme: dark) {
+    html[data-theme="auto"] .sd-card {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+        border-color: #333333 !important;
+    }
+}
+
+/* Hover effects for cards in dark mode */
+html[data-theme="dark"] .sd-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(216, 23, 23, 0.1);
+    transition: all 0.3s ease;
+}
+
+/* Dark mode styles for notebook cells */
+html[data-theme="dark"] .cell {
+    background-color: #000000 !important;
+    border-color: #333333 !important;
+}
+
+html[data-theme="dark"] .cell_input {
+    background-color: #000000 !important;
+    border-color: #333333 !important;
+}
+
+html[data-theme="dark"] .cell_output {
+    background-color: #000000 !important;
+    border-color: #333333 !important;
+}
+
+/* System dark mode when theme is set to auto */
+@media (prefers-color-scheme: dark) {
+    html[data-theme="auto"] .cell,
+    html[data-theme="auto"] .cell_input,
+    html[data-theme="auto"] .cell_output {
+        background-color: #000000 !important;
+        border-color: #333333 !important;
+    }
+}
+
+/* Code block styling in dark mode */
+html[data-theme="dark"] .highlight {
+    background-color: #000000 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+    html[data-theme="auto"] .highlight {
+        background-color: #000000 !important;
+    }
+}

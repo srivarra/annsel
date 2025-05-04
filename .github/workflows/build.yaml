@@ -1,13 +1,17 @@
 name: Check Build
 
 on:
+  workflow_run:
+    workflows: ["Changelog ⛰️"]
+    types:
+      - completed
   push:
     branches: [main]
   pull_request:
     branches: [main]
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
   cancel-in-progress: true
 
 defaults:
@@ -18,16 +22,31 @@ defaults:
 jobs:
   package:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.13"]
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout ${{ github.ref }}
+        uses: actions/checkout@v4
         with:
           filter: blob:none
           fetch-depth: 0
+
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v3
         with:
-          cache-dependency-glob: pyproject.toml
-      - name: Build package
-        run: uv build
-      - name: Check package
-        run: uvx twine check --strict dist/*.whl
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Package
+        run: |
+          uv build
+
+      - name: Store Wheel Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/*.whl
