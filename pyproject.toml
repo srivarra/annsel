@@ -34,7 +34,7 @@ dependencies = [
 ]
 optional-dependencies.dev = [ "esbonio>=0.16.5", "pre-commit" ]
 optional-dependencies.doc = [
-  "docutils>=0.8,!=0.18.*,!=0.19.*",
+  "docutils>=0.21.2",
   "ipykernel",
   "ipython",
   "llvmlite>=0.44.0rc2",
@@ -50,7 +50,8 @@ optional-dependencies.doc = [
   "setuptools",
   "sphinx>=8.1.3,<8.2",
   "sphinx-autodoc-typehints",
-  "sphinx-book-theme>=1",
+  "sphinx-autosummary-accessors>=2025",
+  "sphinx-book-theme>=1.1.3",
   "sphinx-copybutton",
   "sphinx-design>=0.6.1",
   "sphinx-tabs",

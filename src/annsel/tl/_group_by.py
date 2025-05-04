@@ -24,12 +24,12 @@ def _group_by_df(df: Frame, *names: str) -> NwGroupBy:
 
 def _group_by_obs(adata: ad.AnnData, *predicates: Predicates):
     _gb = _group_by_df(adata.obs, *predicates)
-    return (predicates, _gb)
+    return _gb
 
 
 def _group_by_var(adata: ad.AnnData, *predicates: Predicates):
     _gb = _group_by_df(adata.var, *predicates)
-    return (predicates, _gb)
+    return _gb
 
 
 @dataclass
@@ -139,17 +139,17 @@ class GroupByAnndata:
 def _prepare_groups_for_axis(
     adata: ad.AnnData,
     axis_names: pd.Index,
-    grouping_func: Callable[[ad.AnnData, Predicates], tuple[Predicates, NwGroupBy]],
+    grouping_func: Callable[[ad.AnnData, Predicates], NwGroupBy],
     predicates: Predicates | None,
 ) -> list[tuple[Predicates | None, tuple[str, ...], pd.Index]]:
     """Helper to prepare the list of groups for a given axis (obs or var)."""
     if predicates is not None:
-        preds, grouped_result = grouping_func(adata, predicates)
+        grouped_result = grouping_func(adata, predicates)
         groups = []
-        for group in grouped_result:
+        for group in grouped_result:  # type: ignore
             key = tuple(first(group))
             indices = second(group).to_native().index
-            groups.append((preds, key, indices))
+            groups.append((predicates, key, indices))
         return groups
     else:
         return [(None, (), axis_names)]
