@@ -23,8 +23,6 @@ jobs:
     defaults:
       run:
         shell: bash -e {0} # -e to fail on error
-    strategy:
-      fail-fast: false
 
     steps:
       - name: Check out repository

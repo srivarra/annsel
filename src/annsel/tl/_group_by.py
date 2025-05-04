@@ -10,7 +10,11 @@ from more_itertools import first
 from narwhals.typing import Frame
 
 from annsel.core.typing import NwGroupBy, Predicates
-from annsel.core.utils import _construct_adata_from_indices, _extract_names_from_expr, second
+from annsel.core.utils import (
+    _construct_adata_from_indices,
+    _extract_names_from_expr,
+    second,
+)
 
 
 @nw.narwhalify
@@ -20,12 +24,12 @@ def _group_by_df(df: Frame, *names: str) -> NwGroupBy:
 
 def _group_by_obs(adata: ad.AnnData, *predicates: Predicates):
     _gb = _group_by_df(adata.obs, *predicates)
-    return (predicates, _gb)
+    return _gb
 
 
 def _group_by_var(adata: ad.AnnData, *predicates: Predicates):
     _gb = _group_by_df(adata.var, *predicates)
-    return (predicates, _gb)
+    return _gb
 
 
 @dataclass
@@ -92,7 +96,13 @@ class GroupByAnndata:
         var_cols = self._var_column_names
         return dict(zip(var_cols, self.var_values, strict=False))
 
-    def _format_repr_branch(self, indent: str, branch_name: str, cols: tuple[str, ...], vals: tuple[str, ...]) -> str:
+    def _format_repr_branch(
+        self,
+        indent: str,
+        branch_name: str,
+        cols: tuple[str, ...],
+        vals: tuple[str, ...],
+    ) -> str:
         """Helper to format a branch (Observations or Variables) for __repr__."""
         repr_str = f"{indent}├── {branch_name}:\n"
         if cols:
@@ -129,17 +139,17 @@ class GroupByAnndata:
 def _prepare_groups_for_axis(
     adata: ad.AnnData,
     axis_names: pd.Index,
-    grouping_func: Callable[[ad.AnnData, Predicates], tuple[Predicates, NwGroupBy]],
+    grouping_func: Callable[[ad.AnnData, Predicates], NwGroupBy],
     predicates: Predicates | None,
 ) -> list[tuple[Predicates | None, tuple[str, ...], pd.Index]]:
     """Helper to prepare the list of groups for a given axis (obs or var)."""
     if predicates is not None:
-        preds, grouped_result = grouping_func(adata, predicates)
+        grouped_result = grouping_func(adata, predicates)
         groups = []
-        for group in grouped_result:
+        for group in grouped_result:  # type: ignore
             key = tuple(first(group))
             indices = second(group).to_native().index
-            groups.append((preds, key, indices))
+            groups.append((predicates, key, indices))
         return groups
     else:
         return [(None, (), axis_names)]
@@ -154,7 +164,11 @@ def _group_by(
     obs_groups = _prepare_groups_for_axis(adata, adata.obs_names, _group_by_obs, obs)
     var_groups = _prepare_groups_for_axis(adata, adata.var_names, _group_by_var, var)
 
-    for (obs_pred, obs_values, obs_idx), (var_pred, var_values, var_idx) in itertools.product(obs_groups, var_groups):
+    for (obs_pred, obs_values, obs_idx), (
+        var_pred,
+        var_values,
+        var_idx,
+    ) in itertools.product(obs_groups, var_groups):
         subset = _construct_adata_from_indices(adata, obs_idx, var_idx)
 
         # Yield GroupByAnndata with dictionary accessors

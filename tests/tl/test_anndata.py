@@ -148,7 +148,10 @@ class TestPipeAnnData:
         def dummy_func(adata_param):
             return adata_param
 
-        with pytest.raises(ValueError, match="adata_param is both the pipe target and a keyword argument"):
+        with pytest.raises(
+            ValueError,
+            match="adata_param is both the pipe target and a keyword argument",
+        ):
             lbm_dataset.an.pipe((dummy_func, "adata_param"), adata_param=lbm_dataset)
 
 
@@ -258,7 +261,8 @@ class TestGroupByAnnData:
             feature_type = group.var_dict["feature_type"]
 
             verify_adata = lbm_dataset[
-                lbm_dataset.obs["Cell_label"] == cell_type, lbm_dataset.var["feature_type"] == feature_type
+                lbm_dataset.obs["Cell_label"] == cell_type,
+                lbm_dataset.var["feature_type"] == feature_type,
             ]
 
             ath.assert_adata_equal(group.adata, verify_adata)
@@ -323,7 +327,8 @@ class TestGroupByAnnData:
         # Create a new AnnData with multiple groups
         group = next(
             lbm_dataset.an.group_by(
-                obs=an.col(["Cell_label", "disease"]), var=an.col(["feature_type", "feature_is_filtered"])
+                obs=an.col(["Cell_label", "disease"]),
+                var=an.col(["feature_type", "feature_is_filtered"]),
             )
         )
 

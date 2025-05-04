@@ -33,6 +33,7 @@ select = [
   "PTH",    # pathlib
   "PT",     # Pytest
   "PERF",   # Perflint
+  "RUF",    # All other Ruff rules
 ]
 ignore = [
   "B008", # Errors from function calls in argument defaults. These are fine when the result is immutable.

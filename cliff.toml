@@ -6,7 +6,6 @@
 header = """
 # Changelog\n
 All notable changes to this project will be documented in this file.
-
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n
 """
@@ -16,13 +15,11 @@ body = """
 {%- macro remote_url() -%}
   https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}
 {%- endmacro -%}
-
 {% if version -%}
     ## [{{ version | trim_start_matches(pat="v") }}] - {{ timestamp | date(format="%Y-%m-%d") }}
 {% else -%}
     ## [Unreleased]
 {% endif -%}
-
 {% for group, commits in commits | group_by(attribute="group") %}
     ### {{ group | upper_first }}
     {%- for commit in commits %}
@@ -33,11 +30,9 @@ body = """
             {%- endif -%}
     {% endfor %}
 {% endfor %}
-
 {%- if github.contributors | filter(attribute="is_first_time", value=true) | length != 0 %}
   ## New Contributors
 {%- endif -%}
-
 {% for contributor in github.contributors | filter(attribute="is_first_time", value=true) %}
   * @{{ contributor.username }} made their first contribution
     {%- if contributor.pr_number %} in \
@@ -50,7 +45,6 @@ footer = """
 {%- macro remote_url() -%}
   https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}
 {%- endmacro -%}
-
 {% for release in releases -%}
     {% if release.version -%}
         {% if release.previous.version -%}

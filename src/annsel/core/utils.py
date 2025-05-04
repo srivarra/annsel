@@ -34,7 +34,7 @@ def _get_final_indices(
     The intersection of the indices.
     """
     # Filter out empty indices
-    non_empty_idx = [i for i in idx if len(i) > 0]
+    non_empty_idx = [i for i in idx if len(i) > 0]  # type: ignore
 
     # If all indices were empty, return an empty index
     if not non_empty_idx:
