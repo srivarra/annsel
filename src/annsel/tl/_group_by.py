@@ -10,7 +10,11 @@ from more_itertools import first
 from narwhals.typing import Frame
 
 from annsel.core.typing import NwGroupBy, Predicates
-from annsel.core.utils import _construct_adata_from_indices, _extract_names_from_expr, second
+from annsel.core.utils import (
+    _construct_adata_from_indices,
+    _extract_names_from_expr,
+    second,
+)
 
 
 @nw.narwhalify
@@ -92,7 +96,13 @@ class GroupByAnndata:
         var_cols = self._var_column_names
         return dict(zip(var_cols, self.var_values, strict=False))
 
-    def _format_repr_branch(self, indent: str, branch_name: str, cols: tuple[str, ...], vals: tuple[str, ...]) -> str:
+    def _format_repr_branch(
+        self,
+        indent: str,
+        branch_name: str,
+        cols: tuple[str, ...],
+        vals: tuple[str, ...],
+    ) -> str:
         """Helper to format a branch (Observations or Variables) for __repr__."""
         repr_str = f"{indent}├── {branch_name}:\n"
         if cols:
@@ -109,10 +119,14 @@ class GroupByAnndata:
         repr_str = "GroupByAnnData:\n"
 
         # Observations branch
-        repr_str += self._format_repr_branch(indent, "Observations", self._obs_column_names, self.obs_values)
+        repr_str += self._format_repr_branch(
+            indent, "Observations", self._obs_column_names, self.obs_values
+        )
 
         # Variables branch
-        repr_str += self._format_repr_branch(indent, "Variables", self._var_column_names, self.var_values)
+        repr_str += self._format_repr_branch(
+            indent, "Variables", self._var_column_names, self.var_values
+        )
 
         # AnnData branch
         repr_str += f"{indent}└── AnnData:\n"
@@ -154,7 +168,11 @@ def _group_by(
     obs_groups = _prepare_groups_for_axis(adata, adata.obs_names, _group_by_obs, obs)
     var_groups = _prepare_groups_for_axis(adata, adata.var_names, _group_by_var, var)
 
-    for (obs_pred, obs_values, obs_idx), (var_pred, var_values, var_idx) in itertools.product(obs_groups, var_groups):
+    for (obs_pred, obs_values, obs_idx), (
+        var_pred,
+        var_values,
+        var_idx,
+    ) in itertools.product(obs_groups, var_groups):
         subset = _construct_adata_from_indices(adata, obs_idx, var_idx)
 
         # Yield GroupByAnndata with dictionary accessors

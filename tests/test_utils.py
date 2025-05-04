@@ -3,7 +3,12 @@ import narwhals as nw
 import pandas as pd
 import pytest
 
-from annsel.core.utils import _construct_adata_from_indices, _extract_names_from_expr, _get_final_indices, second
+from annsel.core.utils import (
+    _construct_adata_from_indices,
+    _extract_names_from_expr,
+    _get_final_indices,
+    second,
+)
 
 
 def test_extract_names_from_expr():
@@ -18,7 +23,9 @@ def test_extract_names_from_expr():
 
 def test_get_final_indices():
     indices = [pd.Index([1, 2, 3]), pd.Index([1, 2, 6])]
-    assert _get_final_indices(pd.Index([1, 2, 3, 4, 5, 6]), *indices).equals(pd.Index([1, 2]))
+    assert _get_final_indices(pd.Index([1, 2, 3, 4, 5, 6]), *indices).equals(
+        pd.Index([1, 2])
+    )
 
     assert _get_final_indices(pd.Index([1]), []).equals(pd.Index([]))
 

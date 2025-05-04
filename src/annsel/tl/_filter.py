@@ -22,7 +22,9 @@ def _filter_var(adata: ad.AnnData, *predicates: Predicates) -> pd.Index:
     return _filter_df(adata.var, *predicates).index
 
 
-def _filter_x(adata: ad.AnnData, *predicates: Predicates, layer: str | None = None) -> pd.Index:
+def _filter_x(
+    adata: ad.AnnData, *predicates: Predicates, layer: str | None = None
+) -> pd.Index:
     return _filter_df(adata.to_df(layer=layer), *predicates).index
 
 
@@ -35,11 +37,15 @@ def _filter_var_names(adata: ad.AnnData, *predicates: Predicates) -> pd.Index:
 
 
 def _filter_obsm(adata: ad.AnnData, key: str, *predicates: Predicates) -> pd.Index:
-    return _filter_df(pd.DataFrame(adata.obsm[key], index=adata.obs_names), *predicates).index
+    return _filter_df(
+        pd.DataFrame(adata.obsm[key], index=adata.obs_names), *predicates
+    ).index
 
 
 def _filter_varm(adata: ad.AnnData, key: str, *predicates: Predicates) -> pd.Index:
-    return _filter_df(pd.DataFrame(adata.varm[key], index=adata.var_names), *predicates).index
+    return _filter_df(
+        pd.DataFrame(adata.varm[key], index=adata.var_names), *predicates
+    ).index
 
 
 def _filter(
@@ -79,6 +85,14 @@ def _filter(
         for key, predicates in varm.items():
             var_names_idx.append(_filter_varm(adata, key, predicates))
 
-    final_obs_idx = adata.obs_names if not obs_names_idx else _get_final_indices(adata.obs_names, *obs_names_idx)
-    final_var_idx = adata.var_names if not var_names_idx else _get_final_indices(adata.var_names, *var_names_idx)
+    final_obs_idx = (
+        adata.obs_names
+        if not obs_names_idx
+        else _get_final_indices(adata.obs_names, *obs_names_idx)
+    )
+    final_var_idx = (
+        adata.var_names
+        if not var_names_idx
+        else _get_final_indices(adata.var_names, *var_names_idx)
+    )
     return _construct_adata_from_indices(adata, final_obs_idx, final_var_idx)
