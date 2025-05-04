@@ -7,19 +7,19 @@ on:
     branches: [main]
   schedule:
     - cron: "0 5 1,15 * *"
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
   cancel-in-progress: true
 
-defaults:
-  run:
-    # to fail on error in multiline statements (-e), in pipes (-o pipefail), and on unset variables (-u).
-    shell: bash -euo pipefail {0}
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash -e {0} # -e to fail on error
@@ -28,13 +28,11 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.10", "3.11", "3.12", "3.13"]
-        os: ["ubuntu-latest"]
 
-    name: ${{ matrix.name }} Python ${{ matrix.python }}
+    name: Python ${{ matrix.python-version }}
 
-    env:
-      OS: ${{ matrix.os }}
-      PYTHON: ${{ matrix.python }}
+    environment:
+      name: codecov
 
     steps:
       - name: Checkout ${{ github.ref }}
@@ -55,7 +53,6 @@ jobs:
       - name: Test
         env:
           MPLBACKEND: agg
-          PLATFORM: ${{ matrix.os }}
           DISPLAY: :42
         run: |
           uv run --frozen pytest -n auto --cov --cov-report=xml -v --color=yes --junitxml=junit.xml

@@ -12,11 +12,6 @@ permissions:
   contents: read # to fetch code (actions/checkout)
   id-token: write # This is required for requesting the JWT
 
-defaults:
-  run:
-    # to fail on error in multiline statements (-e), in pipes (-o pipefail), and on unset variables (-u).
-    shell: bash -euo pipefail {0}
-
 jobs:
   build:
     name: Build distribution 📦

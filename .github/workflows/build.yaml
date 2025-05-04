@@ -1,4 +1,4 @@
-name: Check Build
+name: Build distribution 📦
 
 on:
   workflow_run:
@@ -14,13 +14,12 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
   cancel-in-progress: true
 
-defaults:
-  run:
-    # to fail on error in multiline statements (-e), in pipes (-o pipefail), and on unset variables (-u).
-    shell: bash -euo pipefail {0}
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
 
 jobs:
-  package:
+  build:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -29,12 +28,9 @@ jobs:
     steps:
       - name: Checkout ${{ github.ref }}
         uses: actions/checkout@v4
-        with:
-          filter: blob:none
-          fetch-depth: 0
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v3
+      - name: Install uv and setup Python
+        uses: astral-sh/setup-uv@v6.0.1
         with:
           python-version: ${{ matrix.python-version }}
           enable-cache: true
