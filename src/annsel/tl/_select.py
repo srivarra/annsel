@@ -20,9 +20,7 @@ def _select_var(adata: ad.AnnData, *predicates: Predicates) -> pd.Index:
     return _select_df(adata.var, *predicates).columns
 
 
-def _select_x(
-    adata: ad.AnnData, *predicates: Predicates, layer: str | None = None
-) -> pd.Index:
+def _select_x(adata: ad.AnnData, *predicates: Predicates, layer: str | None = None) -> pd.Index:
     return _select_df(adata.to_df(layer=layer), *predicates).columns
 
 
@@ -45,25 +43,11 @@ def _select(
     if x:
         var_names.append(_select_x(adata, x, layer=None))
 
-    final_obs_cols = (
-        _get_final_indices(adata.obs.columns, *obs_columns)
-        if obs_columns
-        else adata.obs.columns
-    )
-    final_var_cols = (
-        _get_final_indices(adata.var.columns, *var_columns)
-        if var_columns
-        else adata.var.columns
-    )
-    final_var_names = (
-        _get_final_indices(adata.var_names, *var_names)
-        if var_names
-        else adata.var_names
-    )
+    final_obs_cols = _get_final_indices(adata.obs.columns, *obs_columns) if obs_columns else adata.obs.columns
+    final_var_cols = _get_final_indices(adata.var.columns, *var_columns) if var_columns else adata.var.columns
+    final_var_names = _get_final_indices(adata.var_names, *var_names) if var_names else adata.var_names
 
-    _adata = _construct_adata_from_indices(
-        adata, obs_idx=adata.obs_names, var_idx=final_var_names
-    )
+    _adata = _construct_adata_from_indices(adata, obs_idx=adata.obs_names, var_idx=final_var_names)
 
     _adata.obs = _adata.obs[final_obs_cols]
     _adata.var = _adata.var[final_var_cols]

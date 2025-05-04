@@ -77,9 +77,7 @@ class AnnselAccessor:
              obsm: 'X_bothumap', 'X_pca', 'X_projected', 'X_projectedmean', 'X_tsneni', 'X_umapni'
 
         """
-        _adata = _filter(
-            self._obj, obs, var, x, obs_names, var_names, obsm, varm, layer
-        )
+        _adata = _filter(self._obj, obs, var, x, obs_names, var_names, obsm, varm, layer)
         return _adata if not copy else _adata.copy()
 
     def select(
@@ -233,9 +231,7 @@ class AnnselAccessor:
         if isinstance(func, tuple):
             func, target = func
             if target in kwargs:
-                raise ValueError(
-                    f"{target} is both the pipe target and a keyword argument"
-                )
+                raise ValueError(f"{target} is both the pipe target and a keyword argument")
             kwargs[target] = self._obj
         else:
             args = (self._obj, *args)

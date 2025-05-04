@@ -119,14 +119,10 @@ class GroupByAnndata:
         repr_str = "GroupByAnnData:\n"
 
         # Observations branch
-        repr_str += self._format_repr_branch(
-            indent, "Observations", self._obs_column_names, self.obs_values
-        )
+        repr_str += self._format_repr_branch(indent, "Observations", self._obs_column_names, self.obs_values)
 
         # Variables branch
-        repr_str += self._format_repr_branch(
-            indent, "Variables", self._var_column_names, self.var_values
-        )
+        repr_str += self._format_repr_branch(indent, "Variables", self._var_column_names, self.var_values)
 
         # AnnData branch
         repr_str += f"{indent}└── AnnData:\n"

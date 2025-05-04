@@ -67,16 +67,8 @@ def _extract_names_from_expr(*predicates: Predicates) -> tuple[str, ...]:
     for p in predicates:
         match p:
             case nw.Expr():
-                to_complian_expr_closure = inspect.getclosurevars(
-                    p._to_compliant_expr
-                ).nonlocals["to_compliant_expr"]
-                names.extend(
-                    collapse(
-                        inspect.getclosurevars(to_complian_expr_closure).nonlocals[
-                            "flat_names"
-                        ]
-                    )
-                )
+                to_complian_expr_closure = inspect.getclosurevars(p._to_compliant_expr).nonlocals["to_compliant_expr"]
+                names.extend(collapse(inspect.getclosurevars(to_complian_expr_closure).nonlocals["flat_names"]))
             case str():
                 names.append(p)
             case _:

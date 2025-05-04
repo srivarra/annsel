@@ -10,12 +10,8 @@ import annsel as an
 class TestFilterAnnData:
     def test_filter_var_names(self, lbm_dataset: ad.AnnData):
         """Test filtering by variable names."""
-        adata = lbm_dataset.an.filter(
-            var_names=an.var_names.str.starts_with("ENSG0000018")
-        )
-        verify_adata = lbm_dataset[
-            :, lbm_dataset.var_names.str.startswith("ENSG0000018")
-        ]
+        adata = lbm_dataset.an.filter(var_names=an.var_names.str.starts_with("ENSG0000018"))
+        verify_adata = lbm_dataset[:, lbm_dataset.var_names.str.startswith("ENSG0000018")]
 
         ath.assert_adata_equal(adata, verify_adata)
 
@@ -29,9 +25,7 @@ class TestFilterAnnData:
     def test_filter_obs(self, lbm_dataset: ad.AnnData):
         """Test filtering by observation column."""
         adata = lbm_dataset.an.filter(obs=an.col("Cell_label") == "Lymphomyeloid prog")
-        verify_adata = lbm_dataset[
-            lbm_dataset.obs["Cell_label"] == "Lymphomyeloid prog"
-        ]
+        verify_adata = lbm_dataset[lbm_dataset.obs["Cell_label"] == "Lymphomyeloid prog"]
 
         ath.assert_adata_equal(adata, verify_adata)
 
@@ -64,9 +58,7 @@ class TestFilterAnnData:
         lbm_dataset.layers["test"] = np.log1p(lbm_dataset.X.toarray())
 
         adata = lbm_dataset.an.filter(x=an.col(["ENSG00000206560"]) >= 1, layer="test")
-        verify_adata = lbm_dataset[
-            lbm_dataset[:, "ENSG00000206560"].layers["test"] >= 1, :
-        ]
+        verify_adata = lbm_dataset[lbm_dataset[:, "ENSG00000206560"].layers["test"] >= 1, :]
         ath.assert_adata_equal(adata, verify_adata)
 
     def test_filter_obsm(self, lbm_dataset: ad.AnnData, rng: np.random.Generator):
@@ -81,9 +73,7 @@ class TestFilterAnnData:
         adata = lbm_dataset.an.filter(obsm={"X_test": an.col([0]) > 0.8})
 
         # Verify the filter worked correctly
-        cells_with_high_values = lbm_dataset.obs_names[
-            lbm_dataset.obsm["X_test"][:, 0] > 0.8
-        ]
+        cells_with_high_values = lbm_dataset.obs_names[lbm_dataset.obsm["X_test"][:, 0] > 0.8]
         verify_adata = lbm_dataset[cells_with_high_values]
 
         ath.assert_adata_equal(adata, verify_adata)
@@ -100,9 +90,7 @@ class TestFilterAnnData:
         adata = lbm_dataset.an.filter(varm={"PCs": an.col([0]) < 0.2})
 
         # Verify the filter worked correctly
-        genes_with_low_values = lbm_dataset.var_names[
-            lbm_dataset.varm["PCs"][:, 0] < 0.2
-        ]
+        genes_with_low_values = lbm_dataset.var_names[lbm_dataset.varm["PCs"][:, 0] < 0.2]
         verify_adata = lbm_dataset[:, genes_with_low_values]
 
         ath.assert_adata_equal(adata, verify_adata)
@@ -126,9 +114,7 @@ class TestPipeAnnData:
             return adata[adata.obs["Cell_label"] == cell_type].n_obs
 
         result = lbm_dataset.an.pipe(subset_and_count, cell_type="Lymphomyeloid prog")
-        verify_count = len(
-            lbm_dataset[lbm_dataset.obs["Cell_label"] == "Lymphomyeloid prog"]
-        )
+        verify_count = len(lbm_dataset[lbm_dataset.obs["Cell_label"] == "Lymphomyeloid prog"])
         assert result == verify_count
 
     def test_pipe_with_target(self, lbm_dataset: ad.AnnData):
@@ -137,13 +123,9 @@ class TestPipeAnnData:
         def custom_filter(data_key, cell_type):
             return data_key[data_key.obs["Cell_label"] == cell_type]
 
-        result = lbm_dataset.an.pipe(
-            (custom_filter, "data_key"), cell_type="Lymphomyeloid prog"
-        )
+        result = lbm_dataset.an.pipe((custom_filter, "data_key"), cell_type="Lymphomyeloid prog")
 
-        verify_adata = lbm_dataset[
-            lbm_dataset.obs["Cell_label"] == "Lymphomyeloid prog"
-        ]
+        verify_adata = lbm_dataset[lbm_dataset.obs["Cell_label"] == "Lymphomyeloid prog"]
         ath.assert_adata_equal(result, verify_adata)
 
     def test_pipe_chaining(self, lbm_dataset: ad.AnnData):
@@ -155,13 +137,9 @@ class TestPipeAnnData:
         def get_obs_names(adata):
             return adata.obs_names.tolist()
 
-        result = lbm_dataset.an.pipe(
-            subset_by_cell_type, cell_type="Lymphomyeloid prog"
-        ).an.pipe(get_obs_names)
+        result = lbm_dataset.an.pipe(subset_by_cell_type, cell_type="Lymphomyeloid prog").an.pipe(get_obs_names)
 
-        verify_result = lbm_dataset[
-            lbm_dataset.obs["Cell_label"] == "Lymphomyeloid prog"
-        ].obs_names.tolist()
+        verify_result = lbm_dataset[lbm_dataset.obs["Cell_label"] == "Lymphomyeloid prog"].obs_names.tolist()
         assert result == verify_result
 
     def test_pipe_raises_on_duplicate_target(self, lbm_dataset: ad.AnnData):
@@ -189,9 +167,7 @@ class TestSelectAnnData:
 
     def test_select_with_multiple_predicates(self, lbm_dataset: ad.AnnData):
         """Test selecting observations and variables with multiple predicates."""
-        adata = lbm_dataset.an.select(
-            obs=an.col(["Cell_label"]), var=an.col(["vst.mean", "feature_type"])
-        )
+        adata = lbm_dataset.an.select(obs=an.col(["Cell_label"]), var=an.col(["vst.mean", "feature_type"]))
 
         verify_adata = lbm_dataset.copy()
         verify_adata.obs = verify_adata.obs[["Cell_label"]]
@@ -237,9 +213,7 @@ class TestGroupByAnnData:
         for group in groups:
             # Verify group contains correct data
             feature_type = group.adata.var["feature_type"].iloc[0]
-            verify_adata = lbm_dataset[
-                :, lbm_dataset.var["feature_type"] == feature_type
-            ]
+            verify_adata = lbm_dataset[:, lbm_dataset.var["feature_type"] == feature_type]
             ath.assert_adata_equal(group.adata, verify_adata)
 
             # Verify var_dict contains the expected values
@@ -247,14 +221,10 @@ class TestGroupByAnnData:
 
     def test_group_by_multiple_columns(self, lbm_dataset: ad.AnnData):
         """Test grouping by multiple columns simultaneously."""
-        groups = list(
-            lbm_dataset.an.group_by(obs=an.col(["Cell_label", "sex"]), copy=True)
-        )
+        groups = list(lbm_dataset.an.group_by(obs=an.col(["Cell_label", "sex"]), copy=True))
 
         # Verify number of groups matches unique combinations
-        expected_groups = lbm_dataset.obs.groupby(
-            ["Cell_label", "sex"], observed=True
-        ).ngroups
+        expected_groups = lbm_dataset.obs.groupby(["Cell_label", "sex"], observed=True).ngroups
         assert len(groups) == expected_groups
 
         # Verify each group has the correct columns in obs_dict
@@ -278,11 +248,7 @@ class TestGroupByAnnData:
 
     def test_group_by_obs_and_var(self, lbm_dataset: ad.AnnData):
         """Test grouping by both observations and variables."""
-        groups = list(
-            lbm_dataset.an.group_by(
-                obs=an.col(["Cell_label"]), var=an.col(["feature_type"])
-            )
-        )
+        groups = list(lbm_dataset.an.group_by(obs=an.col(["Cell_label"]), var=an.col(["feature_type"])))
 
         # Verify structure with both obs and var grouping
         for group in groups:
@@ -304,11 +270,7 @@ class TestGroupByAnnData:
     def test_repr_format(self, lbm_dataset: ad.AnnData):
         """Test the tree-like representation of GroupByAnndata."""
         # Test with both obs and var specified
-        group = next(
-            lbm_dataset.an.group_by(
-                obs=an.col(["Cell_label"]), var=an.col(["feature_type"])
-            )
-        )
+        group = next(lbm_dataset.an.group_by(obs=an.col(["Cell_label"]), var=an.col(["feature_type"])))
 
         # Check that the representation is formatted correctly
         repr_str = repr(group)

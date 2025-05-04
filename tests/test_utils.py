@@ -23,9 +23,7 @@ def test_extract_names_from_expr():
 
 def test_get_final_indices():
     indices = [pd.Index([1, 2, 3]), pd.Index([1, 2, 6])]
-    assert _get_final_indices(pd.Index([1, 2, 3, 4, 5, 6]), *indices).equals(
-        pd.Index([1, 2])
-    )
+    assert _get_final_indices(pd.Index([1, 2, 3, 4, 5, 6]), *indices).equals(pd.Index([1, 2]))
 
     assert _get_final_indices(pd.Index([1]), []).equals(pd.Index([]))
 
