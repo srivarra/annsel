@@ -38,6 +38,8 @@ Take a look at the GitHub Projects board for features and future plans: [Annsel 
 
 Please refer to the [documentation][link-docs], in particular, the [API documentation][link-api].
 
+There's also a brief tutorial on how to use all the features of `annsel`: [All of Annsel][link-tutorial].
+
 ## Installation
 
 You need to have Python 3.10 or newer installed on your system. If you don't have
@@ -74,13 +76,28 @@ There are several ways to install `annsel`:
 
 ## Examples
 
+`annsel` comes with a small dataset from Cell X Gene to help you get familiar with the API.
+
 ```python
 import annsel as an
 
-adata=an.datasets.leukemic_bone_marrow_dataset()
+adata = an.datasets.leukemic_bone_marrow_dataset()
+```
+
+The dataset looks like this:
+
+```shell
+AnnData object with n_obs × n_vars = 31586 × 458
+    obs: 'Cluster_ID', 'donor_id', 'Sample_Tag', 'Cell_label', 'is_primary_data', 'organism_ontology_term_id', 'self_reported_ethnicity_ontology_term_id', 'assay_ontology_term_id', 'tissue_ontology_term_id', 'Genotype', 'development_stage_ontology_term_id', 'sex_ontology_term_id', 'disease_ontology_term_id', 'cell_type_ontology_term_id', 'suspension_type', 'tissue_type', 'cell_type', 'assay', 'disease', 'organism', 'sex', 'tissue', 'self_reported_ethnicity', 'development_stage', 'observation_joinid'
+    var: 'vst.mean', 'vst.variance', 'vst.variance.expected', 'vst.variance.standardized', 'vst.variable', 'feature_is_filtered', 'Unnamed: 0', 'feature_name', 'feature_reference', 'feature_biotype', 'feature_length', 'feature_type'
+    uns: 'cell_type_ontology_term_id_colors', 'citation', 'default_embedding', 'schema_reference', 'schema_version', 'title'
+    obsm: 'X_bothumap', 'X_pca', 'X_projected', 'X_projectedmean', 'X_tsneni', 'X_umapni'
+
 ```
 
 ### Filter
+
+You can filter on `obs`, `var`, `var_names`, `obs_names`, `X` and it's layers, as well as `obsm` and `varm` matrices as a key-value pair containing the attribute's key name and the predicate to filter on. *Currently the column names are numerical indices for `obsm` and `varm` matrices.*
 
 ```python
 adata.an.filter(
@@ -89,10 +106,22 @@ adata.an.filter(
         an.col(["sex"]) == "male",
     ),
     var=an.col(["vst.mean"]) >= 3,
+    obsm={"X_pca": an.col([0]) > 0}, # PC1 values greater than 0
+    copy=False, # Whether to return a copy of the AnnData object or just a view of it.
 )
 ```
 
+```shell
+View of AnnData object with n_obs × n_vars = 736 × 67
+    obs: 'Cluster_ID', 'donor_id', 'Sample_Tag', 'Cell_label', 'is_primary_data', 'organism_ontology_term_id', 'self_reported_ethnicity_ontology_term_id', 'assay_ontology_term_id', 'tissue_ontology_term_id', 'Genotype', 'development_stage_ontology_term_id', 'sex_ontology_term_id', 'disease_ontology_term_id', 'cell_type_ontology_term_id', 'suspension_type', 'tissue_type', 'cell_type', 'assay', 'disease', 'organism', 'sex', 'tissue', 'self_reported_ethnicity', 'development_stage', 'observation_joinid'
+    var: 'vst.mean', 'vst.variance', 'vst.variance.expected', 'vst.variance.standardized', 'vst.variable', 'feature_is_filtered', 'Unnamed: 0', 'feature_name', 'feature_reference', 'feature_biotype', 'feature_length', 'feature_type'
+    uns: 'cell_type_ontology_term_id_colors', 'citation', 'default_embedding', 'schema_reference', 'schema_version', 'title'
+    obsm: 'X_bothumap', 'X_pca', 'X_projected', 'X_projectedmean', 'X_tsneni', 'X_umapni'
+```
+
 ### Select
+
+You can select on `obs`, `var`, `var_names`, `obs_names`, `X` and it's layers. Selecting returns a new AnnData object. It's useful if you don't need all the columns in `obs` or `var` and just want to work with a few.
 
 ```python
 adata.an.select(
@@ -103,12 +132,46 @@ adata.an.select(
 
 ### Group By
 
+You can group over `obs` and `var` columns which returns a generator of objects containing the grouped data and the grouping parameters.
+
 ```python
-adata.an.group_by(
+gb_adata_result = adata.an.group_by(
     obs=an.col(["Cell_label"]),
     var=an.col(["feature_type"]),
-    return_group_names=True,
+    copy=False,
 )
+```
+
+Here's what the first group looks like:
+
+```python
+next(adata.an.group_by(
+    obs=an.col(["Cell_label"]),
+    copy=False,
+))
+```
+
+```shell
+GroupByAnnData:
+  ├── Observations:
+  │   └── Cell_label: Lymphomyeloid prog
+  ├── Variables:
+  │   └── (all variables)
+  └── AnnData:
+      View of AnnData object with n_obs × n_vars = 913 × 458
+          obs: 'Cluster_ID', 'donor_id', 'Sample_Tag', 'Cell_label', 'is_primary_data', 'organism_ontology_term_id', 'self_reported_ethnicity_ontology_term_id', 'assay_ontology_term_id', 'tissue_ontology_term_id', 'Genotype', 'development_stage_ontology_term_id', 'sex_ontology_term_id', 'disease_ontology_term_id', 'cell_type_ontology_term_id', 'suspension_type', 'tissue_type', 'cell_type', 'assay', 'disease', 'organism', 'sex', 'tissue', 'self_reported_ethnicity', 'development_stage', 'observation_joinid'
+          var: 'vst.mean', 'vst.variance', 'vst.variance.expected', 'vst.variance.standardized', 'vst.variable', 'feature_is_filtered', 'Unnamed: 0', 'feature_name', 'feature_reference', 'feature_biotype', 'feature_length', 'feature_type'
+          uns: 'cell_type_ontology_term_id_colors', 'citation', 'default_embedding', 'schema_reference', 'schema_version', 'title'
+          obsm: 'X_bothumap', 'X_pca', 'X_projected', 'X_projectedmean', 'X_tsneni', 'X_umapni'
+```
+
+### Pipe
+
+There's also a small utility method which allows you to chain operations together like in `Xarray` and `Pandas` called `pipe`.
+
+```python
+import scanpy as sc
+adata.an.pipe(sc.pl.embedding, basis="X_tsneni", color="Cell_label")
 ```
 
 ## Release notes
@@ -131,6 +194,7 @@ If you found a bug, please use the [issue tracker][issue-tracker].
 [changelog]: https://annsel.readthedocs.io/en/latest/changelog.html
 [link-docs]: https://annsel.readthedocs.io
 [link-api]: https://annsel.readthedocs.io/en/latest/api/index.html
+[link-tutorial]: https://annsel.readthedocs.io/en/latest/notebooks/all_of_annsel.html
 [link-pypi]: https://pypi.org/project/annsel
 [link-codecov]: https://codecov.io/gh/srivarra/annsel
 [link-test]: https://github.com/srivarra/annsel/actions/workflows/test.yml
