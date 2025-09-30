@@ -1,120 +1,34 @@
-name: Publish Python 🐍 distribution 📦 to PyPI and TestPyPI
+name: Release
 
 on:
   release:
     types: [published]
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
-  cancel-in-progress: true
+defaults:
+  run:
+    # to fail on error in multiline statements (-e), in pipes (-o pipefail), and on unset variables (-u).
+    shell: bash -euo pipefail {0}
 
-permissions:
-  contents: read # to fetch code (actions/checkout)
-  id-token: write # This is required for requesting the JWT
-
+# Use "trusted publishing", see https://docs.pypi.org/trusted-publishers/
 jobs:
-  build:
-    name: Build distribution 📦
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.13"]
-
-    steps:
-      - name: Checkout ${{ github.ref }}
-        uses: actions/checkout@v4
-        with:
-          filter: blob:none
-          fetch-depth: 0
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v6
-        with:
-          python-version: ${{ matrix.python-version }}
-          enable-cache: true
-          cache-dependency-glob: "uv.lock"
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build Package
-        run: |
-          uv build
-
-      - name: Store Wheel Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: dist/*
-
-  publish-to-testpypi:
-    name: Publish Python 🐍 distribution 📦 to TestPyPI
-    needs:
-      - build
-    runs-on: ubuntu-latest
-
-    environment:
-      name: testpypi
-      url: https://test.pypi.org/p/annsel
-
-    permissions:
-      id-token: write # IMPORTANT: mandatory for trusted publishing
-
-    steps:
-      - name: Download Build Distributions 📦
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist/
-
-      - name: Publish distribution 📦 to TestPyPI
-        uses: pypa/gh-action-pypi-publish@v1.12.4
-        with:
-          repository-url: https://test.pypi.org/legacy/
-          verbose: true
-
-  publish-to-pypi:
-    name: >-
-      Publish Python 🐍 distribution 📦 to PyPI
-    needs: [build, publish-to-testpypi]
+  release:
+    name: Upload release to PyPI
     runs-on: ubuntu-latest
     environment:
       name: pypi
       url: https://pypi.org/p/annsel
     permissions:
-      id-token: write # IMPORTANT: mandatory for trusted publishing
-
+      id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
     steps:
-      - name: Download Built Distributions 📦
-        uses: actions/download-artifact@v4
+      - uses: actions/checkout@v4
         with:
-          name: dist
-          path: dist/
-
-      - name: Publish Distributions 📦 to PyPI
-        uses: pypa/gh-action-pypi-publish@v1.12.4
+          filter: blob:none
+          fetch-depth: 0
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
-          verbose: true
-
-  github-release:
-    name: >-
-      Sign the Python 🐍 distribution 📦 with Sigstore
-      and upload them to GitHub Release
-    needs: [build, publish-to-testpypi, publish-to-pypi]
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: write # IMPORTANT: mandatory for making GitHub Releases
-      id-token: write # IMPORTANT: mandatory for sigstore
-
-    steps:
-      - name: Download Built Distributions 📦
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist/
-      - name: Sign the dists with Sigstore
-        uses: sigstore/gh-action-sigstore-python@v3.0.0
-        with:
-          inputs: >-
-            ./dist/*.tar.gz
-            ./dist/*.whl
+          cache-dependency-glob: pyproject.toml
+      - name: Build package
+        run: uv build
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

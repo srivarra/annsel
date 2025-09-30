@@ -14,14 +14,8 @@ __pycache__/
 # Tests and coverage
 /data/
 /node_modules/
+/.coverage*
 
 # docs
 /docs/generated/
 /docs/_build/
-/.vscode/*
-
-.coverage*
-
-.python-version
-
-_site/
