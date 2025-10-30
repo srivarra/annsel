@@ -20,7 +20,7 @@
 [badge-ruff]: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json
 [badge-uv]: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json
 [badge-license]: https://img.shields.io/badge/License-MIT-yellow.svg
-[badge-hatch]: https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg
+[badge-hatch]: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/pypa/hatch/master/docs/assets/badge/v0.json
 [badge-pypi]: https://img.shields.io/pypi/v/annsel.svg?logo=pypi&label=PyPI&logoColor=gold
 [badge-python-versions]: https://img.shields.io/pypi/pyversions/annsel.svg?logo=python&label=Python&logoColor=gold
 [badge-pre-commit]: https://results.pre-commit.ci/badge/github/srivarra/annsel/main.svg
@@ -29,8 +29,6 @@
 Annsel is a user-friendly library that brings familiar dataframe-style operations to [`AnnData`](https://anndata.readthedocs.io/en/latest/) objects.
 
 It's built on the [narwhals][link-narwhals] compatibility layer for dataframes.
-
-Take a look at the GitHub Projects board for features and future plans: [Annsel Features][link-gh-project]
 
 <!-- done -->
 
@@ -86,92 +84,62 @@ adata = an.datasets.leukemic_bone_marrow_dataset()
 
 The dataset looks like this:
 
-```shell
-AnnData object with n_obs × n_vars = 31586 × 458
-    obs: 'Cluster_ID', 'donor_id', 'Sample_Tag', 'Cell_label', 'is_primary_data', 'organism_ontology_term_id', 'self_reported_ethnicity_ontology_term_id', 'assay_ontology_term_id', 'tissue_ontology_term_id', 'Genotype', 'development_stage_ontology_term_id', 'sex_ontology_term_id', 'disease_ontology_term_id', 'cell_type_ontology_term_id', 'suspension_type', 'tissue_type', 'cell_type', 'assay', 'disease', 'organism', 'sex', 'tissue', 'self_reported_ethnicity', 'development_stage', 'observation_joinid'
-    var: 'vst.mean', 'vst.variance', 'vst.variance.expected', 'vst.variance.standardized', 'vst.variable', 'feature_is_filtered', 'Unnamed: 0', 'feature_name', 'feature_reference', 'feature_biotype', 'feature_length', 'feature_type'
-    uns: 'cell_type_ontology_term_id_colors', 'citation', 'default_embedding', 'schema_reference', 'schema_version', 'title'
-    obsm: 'X_bothumap', 'X_pca', 'X_projected', 'X_projectedmean', 'X_tsneni', 'X_umapni'
-
+```
+31,586 cells × 458 genes with cell type annotations and QC metrics
 ```
 
-### Filter
-
-You can filter on `obs`, `var`, `var_names`, `obs_names`, `X` and it's layers, as well as `obsm` and `varm` matrices as a key-value pair containing the attribute's key name and the predicate to filter on. *Currently the column names are numerical indices for `obsm` and `varm` matrices.*
+### Filter observations and variables
 
 ```python
-adata.an.filter(
-    obs=(
-        an.col(["Cell_label"]).is_in(["Classical Monocytes", "CD8+CD103+ tissue resident memory T cells"]),
-        an.col(["sex"]) == "male",
-    ),
-    var=an.col(["vst.mean"]) >= 3,
-    obsm={"X_pca": an.col([0]) > 0}, # PC1 values greater than 0
-    copy=False, # Whether to return a copy of the AnnData object or just a view of it.
+# Filter cells and genes simultaneously
+filtered = adata.an.filter(
+    obs=an.col("Cell_label").is_in(["Classical Monocytes", "T cells"]),
+    var=an.col("vst.mean") >= 3,
 )
+# Returns: AnnData with filtered cells and genes
 ```
 
-```shell
-View of AnnData object with n_obs × n_vars = 736 × 67
-    obs: 'Cluster_ID', 'donor_id', 'Sample_Tag', 'Cell_label', 'is_primary_data', 'organism_ontology_term_id', 'self_reported_ethnicity_ontology_term_id', 'assay_ontology_term_id', 'tissue_ontology_term_id', 'Genotype', 'development_stage_ontology_term_id', 'sex_ontology_term_id', 'disease_ontology_term_id', 'cell_type_ontology_term_id', 'suspension_type', 'tissue_type', 'cell_type', 'assay', 'disease', 'organism', 'sex', 'tissue', 'self_reported_ethnicity', 'development_stage', 'observation_joinid'
-    var: 'vst.mean', 'vst.variance', 'vst.variance.expected', 'vst.variance.standardized', 'vst.variable', 'feature_is_filtered', 'Unnamed: 0', 'feature_name', 'feature_reference', 'feature_biotype', 'feature_length', 'feature_type'
-    uns: 'cell_type_ontology_term_id_colors', 'citation', 'default_embedding', 'schema_reference', 'schema_version', 'title'
-    obsm: 'X_bothumap', 'X_pca', 'X_projected', 'X_projectedmean', 'X_tsneni', 'X_umapni'
-```
-
-### Select
-
-You can select on `obs`, `var`, `var_names`, `obs_names`, `X` and it's layers. Selecting returns a new AnnData object. It's useful if you don't need all the columns in `obs` or `var` and just want to work with a few.
+### Select columns
 
 ```python
-adata.an.select(
-    obs=an.col(["Cell_label"]),
-    var=an.col(["vst.mean", "vst.std"]),
+# Select specific metadata columns
+selected = adata.an.select(
+    obs=an.col("Cell_label", "sex"),
+    var=an.col("feature_name"),
 )
+# Returns: AnnData with selected columns
 ```
 
-### Group By
+### Cross-component aggregation
 
-You can group over `obs` and `var` columns which returns a generator of objects containing the grouped data and the grouping parameters.
+Combine cell metadata with gene expression for powerful analysis:
 
 ```python
-gb_adata_result = adata.an.group_by(
-    obs=an.col(["Cell_label"]),
-    var=an.col(["feature_type"]),
-    copy=False,
+# Group by cell type, compute marker gene statistics
+stats = (
+    adata.an.with_obs(
+        "Cell_label",
+        var_names=["ENSG00000204472", "ENSG00000206560"]
+    )
+    .group_by("Cell_label")
+    .agg([
+        nw.col("ENSG00000204472").mean().alias("gene1_mean"),
+        nw.col("ENSG00000206560").mean().alias("gene2_mean"),
+        nw.len().alias("n_cells"),
+    ])
 )
+# Returns: DataFrame with expression statistics per cell type
 ```
 
-Here's what the first group looks like:
+### Chain operations
 
 ```python
-next(adata.an.group_by(
-    obs=an.col(["Cell_label"]),
-    copy=False,
-))
-```
-
-```shell
-GroupByAnnData:
-  ├── Observations:
-  │   └── Cell_label: Lymphomyeloid prog
-  ├── Variables:
-  │   └── (all variables)
-  └── AnnData:
-      View of AnnData object with n_obs × n_vars = 913 × 458
-          obs: 'Cluster_ID', 'donor_id', 'Sample_Tag', 'Cell_label', 'is_primary_data', 'organism_ontology_term_id', 'self_reported_ethnicity_ontology_term_id', 'assay_ontology_term_id', 'tissue_ontology_term_id', 'Genotype', 'development_stage_ontology_term_id', 'sex_ontology_term_id', 'disease_ontology_term_id', 'cell_type_ontology_term_id', 'suspension_type', 'tissue_type', 'cell_type', 'assay', 'disease', 'organism', 'sex', 'tissue', 'self_reported_ethnicity', 'development_stage', 'observation_joinid'
-          var: 'vst.mean', 'vst.variance', 'vst.variance.expected', 'vst.variance.standardized', 'vst.variable', 'feature_is_filtered', 'Unnamed: 0', 'feature_name', 'feature_reference', 'feature_biotype', 'feature_length', 'feature_type'
-          uns: 'cell_type_ontology_term_id_colors', 'citation', 'default_embedding', 'schema_reference', 'schema_version', 'title'
-          obsm: 'X_bothumap', 'X_pca', 'X_projected', 'X_projectedmean', 'X_tsneni', 'X_umapni'
-```
-
-### Pipe
-
-There's also a small utility method which allows you to chain operations together like in `Xarray` and `Pandas` called `pipe`.
-
-```python
-import scanpy as sc
-adata.an.pipe(sc.pl.embedding, basis="X_tsneni", color="Cell_label")
+# Fully chainable API
+result = (
+    adata.an
+    .filter(obs=an.col("sex") == "male")
+    .an.select(var=an.col("feature_name", "vst.mean"))
+)
 ```
 
 ## Release notes
@@ -207,5 +175,4 @@ If you found a bug, please use the [issue tracker][issue-tracker].
 [link-disucssions]: https://github.com/srivarra/annsel/discussions
 [link-pre-commit]: https://results.pre-commit.ci/latest/github/srivarra/annsel/main
 [link-gitmoji]: https://gitmoji.dev/
-[link-gh-project]: https://github.com/users/srivarra/projects/9
 [link-scverse]: https://scverse.org/packages/#ecosystem

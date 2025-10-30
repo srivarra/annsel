@@ -15,7 +15,8 @@ concurrency:
 
 permissions:
   id-token: write # This is required for requesting the JWT
-  contents: read # This is required for actions/checkout
+  contents: write # Required for committing CHANGELOG.md
+  pull-requests: read # Required for PR context
 
 jobs:
   generate-changelog:
@@ -44,12 +45,26 @@ jobs:
 
       - name: Print the changelog
         run: cat "${{ steps.git-cliff.outputs.changelog }}"
-      # - name: Commit the Changelog
-      #   run: |
-      #     git checkout ${{ github.head_ref || github.ref_name }}
-      #     git config user.name 'github-actions[bot]'
-      #     git config user.email 'github-actions[bot]@users.noreply.github.com'
-      #     set +e
-      #     git add CHANGELOG.md
-      #     git commit -m "Update changelog"
-      #     git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+
+      - name: Preview changelog (PR only)
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "## 📝 Changelog Preview" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat CHANGELOG.md | head -50 >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+      - name: Commit changelog (main only)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+
+          # Only commit if changelog changed
+          if git diff --quiet CHANGELOG.md; then
+            echo "No changes to CHANGELOG.md"
+          else
+            git add CHANGELOG.md
+            git commit -m "📝 Update CHANGELOG.md [skip ci]"
+            git push
+          fi

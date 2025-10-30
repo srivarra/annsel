@@ -1,84 +1,98 @@
-from collections.abc import Mapping
+"""Filter operations using narwhals-anndata plugin backend.
 
-import anndata as ad
-import narwhals as nw
-import pandas as pd
-from narwhals.typing import Frame
+This module provides the new implementation of filter operations
+that leverage the narwhals-anndata plugin for better performance
+and maintainability.
+"""
 
-from annsel.core.typing import Predicates
-from annsel.core.utils import _construct_adata_from_indices, _get_final_indices
+from __future__ import annotations
 
+from typing import TYPE_CHECKING
 
-@nw.narwhalify
-def _filter_df(df: Frame, *predicates: Predicates) -> Frame:
-    return df.filter(*predicates)
+if TYPE_CHECKING:
+    import anndata as ad
 
-
-def _filter_obs(adata: ad.AnnData, *predicates: Predicates) -> pd.Index:
-    return _filter_df(adata.obs, *predicates).index
+    from annsel.core.typing import Predicates
 
 
-def _filter_var(adata: ad.AnnData, *predicates: Predicates) -> pd.Index:
-    return _filter_df(adata.var, *predicates).index
-
-
-def _filter_x(adata: ad.AnnData, *predicates: Predicates, layer: str | None = None) -> pd.Index:
-    return _filter_df(adata.to_df(layer=layer), *predicates).index
-
-
-def _filter_obs_names(adata: ad.AnnData, *predicates: Predicates) -> pd.Index:
-    return _filter_df(adata.obs_names.to_frame(name="obs_names"), *predicates).index
-
-
-def _filter_var_names(adata: ad.AnnData, *predicates: Predicates) -> pd.Index:
-    return _filter_df(adata.var_names.to_frame(name="var_names"), *predicates).index
-
-
-def _filter_obsm(adata: ad.AnnData, key: str, *predicates: Predicates) -> pd.Index:
-    return _filter_df(pd.DataFrame(adata.obsm[key], index=adata.obs_names), *predicates).index
-
-
-def _filter_varm(adata: ad.AnnData, key: str, *predicates: Predicates) -> pd.Index:
-    return _filter_df(pd.DataFrame(adata.varm[key], index=adata.var_names), *predicates).index
-
-
-def _filter(
+def _filter_plugin(
     adata: ad.AnnData,
     obs: Predicates | None = None,
     var: Predicates | None = None,
     x: Predicates | None = None,
     obs_names: Predicates | None = None,
     var_names: Predicates | None = None,
-    obsm: Mapping[str, Predicates] | None = None,
-    varm: Mapping[str, Predicates] | None = None,
     layer: str | None = None,
 ) -> ad.AnnData:
-    obs_names_idx = []
-    var_names_idx = []
+    """Filter AnnData using the narwhals-anndata plugin.
 
-    if obs:
-        obs_names_idx.append(_filter_obs(adata, obs))
+    This is the new implementation that uses the narwhals-anndata plugin
+    as the backend, providing better performance and ecosystem integration.
 
-    if obs_names:
-        obs_names_idx.append(_filter_obs_names(adata, obs_names))
+    Parameters
+    ----------
+    adata
+        The AnnData object to filter.
+    obs
+        Predicates to filter observations by.
+    var
+        Predicates to filter variables by.
+    x
+        Predicates to filter by expression values in X matrix.
+    obs_names
+        Predicates to filter by observation names.
+    var_names
+        Predicates to filter by variable names.
+    layer
+        The layer to use for X filtering.
 
-    if var:
-        var_names_idx.append(_filter_var(adata, var))
+    Returns
+    -------
+    ad.AnnData
+        The filtered AnnData object.
+    """
+    import narwhals as nw
+    import pandas as pd
+    from narwhals._utils import Version
 
-    if var_names:
-        var_names_idx.append(_filter_var_names(adata, var_names))
+    from annsel.narwhals_plugin import __narwhals_namespace__
 
-    if x:
-        obs_names_idx.append(_filter_x(adata, x, layer=layer))
+    # Get plugin namespace with current narwhals version
+    namespace = __narwhals_namespace__(Version.MAIN)
+    result_adata = adata
 
-    if obsm:
-        for key, predicates in obsm.items():
-            obs_names_idx.append(_filter_obsm(adata, key, predicates))
+    # Filter observations using plugin
+    if obs is not None:
+        nwdata = namespace.from_native(result_adata)
+        result_adata = nwdata.obs.filter(obs)
 
-    if varm:
-        for key, predicates in varm.items():
-            var_names_idx.append(_filter_varm(adata, key, predicates))
+    # Filter by observation names
+    if obs_names is not None:
+        obs_names_df = pd.DataFrame({"obs_names": result_adata.obs_names}, index=result_adata.obs_names)
+        obs_names_nw = nw.from_native(obs_names_df)
+        filtered_obs_names = obs_names_nw.filter(obs_names)
+        filtered_indices = filtered_obs_names.to_native().index
+        result_adata = result_adata[filtered_indices, :]
 
-    final_obs_idx = adata.obs_names if not obs_names_idx else _get_final_indices(adata.obs_names, *obs_names_idx)
-    final_var_idx = adata.var_names if not var_names_idx else _get_final_indices(adata.var_names, *var_names_idx)
-    return _construct_adata_from_indices(adata, final_obs_idx, final_var_idx)
+    # Filter variables using plugin
+    if var is not None:
+        nwdata = namespace.from_native(result_adata)
+        result_adata = nwdata.var.filter(var)
+
+    # Filter by variable names
+    if var_names is not None:
+        var_names_df = pd.DataFrame({"var_names": result_adata.var_names}, index=result_adata.var_names)
+        var_names_nw = nw.from_native(var_names_df)
+        filtered_var_names = var_names_nw.filter(var_names)
+        filtered_indices = filtered_var_names.to_native().index
+        result_adata = result_adata[:, filtered_indices]
+
+    # Filter by X values (materialize to DataFrame)
+    if x is not None:
+        x_df = result_adata.to_df(layer=layer)
+        x_nw = nw.from_native(x_df)
+        filtered_x = x_nw.filter(x)
+        filtered_indices = filtered_x.to_native().index
+        result_adata = result_adata[filtered_indices, :]
+
+    return result_adata

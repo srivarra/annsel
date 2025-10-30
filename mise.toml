@@ -1,0 +1,96 @@
+# Mise configuration for annsel
+# Replaces hatch for task running, uses uv for everything
+
+[tools]
+python = "3.13"
+
+# Task definitions
+[tasks.install]
+description = "Install all dependencies"
+run = "uv sync --all-groups"
+
+[tasks.test]
+description = "Run test suite"
+run = "uv run pytest tests/ -v"
+
+[tasks."test:cov"]
+description = "Run tests with coverage"
+run = "uv run pytest tests/ --cov=annsel --cov-report=html --cov-report=term-missing"
+
+[tasks."test:fast"]
+description = "Run tests without coverage"
+run = "uv run pytest tests/ -q --no-cov"
+
+[tasks.docs]
+description = "Build documentation"
+run = "uv run sphinx-build -M html docs docs/_build"
+
+[tasks."docs:serve"]
+description = "Build and open documentation"
+run = [
+    "uv run sphinx-build -M html docs docs/_build",
+    "python -m webbrowser -t docs/_build/html/index.html"
+]
+
+[tasks."docs:clean"]
+description = "Clean documentation build artifacts"
+run = "rm -rf docs/_build docs/generated"
+
+[tasks.lint]
+description = "Run ruff linting"
+run = "uvx ruff check src/ tests/"
+
+[tasks."lint:fix"]
+description = "Fix linting issues automatically"
+run = "uvx ruff check --fix src/ tests/"
+
+[tasks.format]
+description = "Format code with ruff"
+run = "uvx ruff format src/ tests/"
+
+[tasks.check]
+description = "Run pre-commit checks"
+run = "uvx prek run --all-files"
+
+[tasks.clean]
+description = "Clean all build artifacts"
+run = [
+    "rm -rf build/ dist/ *.egg-info .pytest_cache",
+    "rm -rf docs/_build docs/generated",
+    "find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true",
+    "find . -type f -name '*.pyc' -delete"
+]
+
+[tasks.build]
+description = "Build package distribution"
+run = "uv build"
+
+[tasks.bench]
+description = "Run performance benchmarks with CodSpeed"
+run = "uv run pytest tests/benchmarks/ --codspeed"
+
+# Changelog generation with git-cliff
+[tasks.changelog]
+description = "Generate changelog with git-cliff"
+run = "uvx git-cliff --output CHANGELOG.md"
+
+[tasks."changelog:unreleased"]
+description = "Preview unreleased changes"
+run = "uvx git-cliff --unreleased"
+
+# Release management with uv-ship (no changelog generation)
+[tasks."release:preview"]
+description = "Preview next release (dry-run)"
+run = "uvx uv-ship next --dry-run"
+
+[tasks."release:patch"]
+description = "Release patch version (0.0.X)"
+run = "uvx uv-ship next patch"
+
+[tasks."release:minor"]
+description = "Release minor version (0.X.0)"
+run = "uvx uv-ship next minor"
+
+[tasks."release:major"]
+description = "Release major version (X.0.0)"
+run = "uvx uv-ship next major"

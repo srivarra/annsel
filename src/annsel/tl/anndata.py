@@ -1,23 +1,26 @@
-from collections.abc import Callable, Generator, Mapping
+from collections.abc import Callable
 from typing import Any, TypeVar
 
 import anndata as ad
+from anndata import register_anndata_namespace
 
-from annsel.core.extensions import register_anndata_accessor
 from annsel.core.typing import Predicates
-from annsel.tl._filter import _filter
-from annsel.tl._group_by import GroupByAnndata, _group_by
-from annsel.tl._select import _select
+from annsel.tl._filter import _filter_plugin
+from annsel.tl._select import _select_plugin
 
 # Define type aliases
 T = TypeVar("T")
 
 
-@register_anndata_accessor("an")
+@register_anndata_namespace("an")
 class AnnselAccessor:
-    """An extension for AnnData."""
+    """An extension for AnnData.
 
-    def __init__(self, adata: ad.AnnData):
+    This accessor provides a convenient API for DataFrame-style operations
+    on AnnData objects, powered by the narwhals-anndata plugin.
+    """
+
+    def __init__(self, adata: ad.AnnData) -> None:
         self._obj: ad.AnnData = adata
 
     def filter(
@@ -27,8 +30,6 @@ class AnnselAccessor:
         x: Predicates | None = None,
         obs_names: Predicates | None = None,
         var_names: Predicates | None = None,
-        obsm: Mapping[str, Predicates] | None = None,
-        varm: Mapping[str, Predicates] | None = None,
         layer: str | None = None,
         copy: bool = False,
     ) -> ad.AnnData:
@@ -46,12 +47,8 @@ class AnnselAccessor:
             Predicates to filter the observation names by.
         var_names
             Predicates to filter the variable names by.
-        obsm
-            A mapping of obsm keys and predicates to filter the obsm matrices by.
-        varm
-            A mapping of varm keys and predicates to filter the varm matrices by.
         layer
-            The layer to filter.
+            The layer to filter (for x filtering).
         copy
             Whether to return a copy of the AnnData object.
 
@@ -77,7 +74,8 @@ class AnnselAccessor:
              obsm: 'X_bothumap', 'X_pca', 'X_projected', 'X_projectedmean', 'X_tsneni', 'X_umapni'
 
         """
-        _adata = _filter(self._obj, obs, var, x, obs_names, var_names, obsm, varm, layer)
+        # Use the new plugin-based filter implementation
+        _adata = _filter_plugin(self._obj, obs, var, x, obs_names, var_names, layer)
         return _adata if not copy else _adata.copy()
 
     def select(
@@ -85,6 +83,7 @@ class AnnselAccessor:
         obs: Predicates | None = None,
         var: Predicates | None = None,
         x: Predicates | None = None,
+        layer: str | None = None,
         copy: bool = False,
     ) -> ad.AnnData:
         """Select the AnnData object by the given predicates.
@@ -121,50 +120,104 @@ class AnnselAccessor:
             uns: 'cell_type_ontology_term_id_colors', 'citation', 'default_embedding', 'schema_reference', 'schema_version', 'title'
             obsm: 'X_bothumap', 'X_pca', 'X_projected', 'X_projectedmean', 'X_tsneni', 'X_umapni'
         """
-        _adata = _select(self._obj, obs, var, x)
+        # Use the new plugin-based select implementation
+        _adata = _select_plugin(self._obj, obs, var, x, layer)
         return _adata if not copy else _adata.copy()
 
-    def group_by(
+    def with_obs(
         self,
-        obs: Predicates | None = None,
-        var: Predicates | None = None,
-        copy: bool = False,
-    ) -> ad.AnnData | Generator[GroupByAnndata, None, None]:
-        """Group the AnnData object by the given predicates.
+        *obs_cols: str,
+        var_names: list[str] | None = None,
+        layer: str | None = None,
+    ):
+        """Combine obs metadata with expression values for cross-component aggregation.
+
+        This method enables powerful workflows like grouping by cell type and
+        computing marker gene expression statistics.
 
         Parameters
         ----------
-        obs
-            Predicates to group the observations by.
-        var
-            Predicates to group the variables by.
-        copy
-            Whether to return a copy of the AnnData object when grouping.
-            If obs and var are both None, returns a copy of the original AnnData object if True, otherwise returns the original object.
+        obs_cols
+            Obs column names to include. If empty, includes all obs columns.
+        var_names
+            Gene names to include from X. If None, includes all genes.
+        layer
+            Layer to use for expression values. If None, uses X.
 
         Returns
         -------
-        The original AnnData object (or a copy) if both `obs` and `var` are `None`.
-        Otherwise, returns a generator that yields `GroupByAnndata` objects for each group.
+        LazyFrame
+            Narwhals LazyFrame ready for group_by().agg() operations.
 
         Examples
         --------
         >>> import annsel as an
-        >>> adata = an.datasets.leukemic_bone_marrow_dataset()
-        >>> groups = adata.an.group_by(
-        ...     obs=an.col(["Cell_label", "sex"]),
-        ...     var=an.col(["feature_name"]),
+        >>> import narwhals as nw
+        >>> # Group by cell type, compute marker expression stats
+        >>> stats = (
+        ...     adata.an.with_obs("cell_type", var_names=["CD3", "CD19", "CD20"], layer="raw")
+        ...     .group_by("cell_type")
+        ...     .agg(
+        ...         [
+        ...             nw.col("CD3").mean().alias("CD3_mean"),
+        ...             nw.col("CD19").mean().alias("CD19_mean"),
+        ...         ]
+        ...     )
         ... )
-        >>> for group in groups:
-        ...     print(group.obs_dict, group.var_dict)
         """
-        # Handle the case where no grouping is requested
-        if obs is None and var is None:
-            return self._obj if not copy else self._obj.copy()
+        from narwhals._utils import Version
 
-        # Otherwise, call the internal generator function
-        gb_adata = _group_by(self._obj, obs, var, copy=copy)
-        return gb_adata
+        from annsel.narwhals_plugin import __narwhals_namespace__
+
+        namespace = __narwhals_namespace__(Version.MAIN)
+        lazy_frame = namespace.from_native(self._obj)
+        return lazy_frame.with_obs(*obs_cols, var_names=var_names, layer=layer)
+
+    def with_var(
+        self,
+        *var_cols: str,
+        obs_names: list[str] | None = None,
+        layer: str | None = None,
+    ):
+        """Combine var metadata with expression values for gene-level aggregation.
+
+        Parameters
+        ----------
+        var_cols
+            Var column names to include. If empty, includes all var columns.
+        obs_names
+            Cell names to include from X. If None, includes all cells.
+        layer
+            Layer to use for expression values. If None, uses X.
+
+        Returns
+        -------
+        LazyFrame
+            Narwhals LazyFrame ready for group_by().agg() operations.
+
+        Examples
+        --------
+        >>> import annsel as an
+        >>> import narwhals as nw
+        >>> # Group genes by type, compute expression stats
+        >>> stats = (
+        ...     adata.an.with_var("gene_type", obs_names=["B_cell_1", "T_cell_1"])
+        ...     .group_by("gene_type")
+        ...     .agg(
+        ...         [
+        ...             nw.col("B_cell_1").mean(),
+        ...             nw.col("T_cell_1").mean(),
+        ...         ]
+        ...     )
+        ... )
+        """
+        from narwhals._utils import Version
+
+        from annsel.narwhals_plugin import __narwhals_namespace__
+
+        namespace = __narwhals_namespace__(Version.MAIN)
+        lazy_frame = namespace.from_native(self._obj)
+        return lazy_frame.with_var(*var_cols, obs_names=obs_names, layer=layer)
 
     def pipe(self, func: Callable[..., T] | tuple[Callable[..., T], str], *args: Any, **kwargs: Any) -> Any:
         """
@@ -226,7 +279,8 @@ class AnnselAccessor:
         if isinstance(func, tuple):
             func, target = func
             if target in kwargs:
-                raise ValueError(f"{target} is both the pipe target and a keyword argument")
+                msg = f"{target} is both the pipe target and a keyword argument"
+                raise ValueError(msg)
             kwargs[target] = self._obj
         else:
             args = (self._obj, *args)

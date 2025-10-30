@@ -1,75 +1,127 @@
 [build-system]
-build-backend = "hatchling.build"
-requires = [ "hatch-vcs", "hatchling" ]
+build-backend = "uv_build"
+requires = [ "uv-build>=0.9.6,<0.10" ]
 
 [project]
 name = "annsel"
+version = "0.2.0"
 description = "A Narwhals powered DataFrame-style selection, filtering and indexing operations on AnnData Objects."
 readme = "README.md"
 license = { file = "LICENSE" }
 maintainers = [
-  { name = "Sricharan Reddy Varra", email = "srivarra@stanford.edu" },
+  { name = "Sricharan Reddy Varra", email = "sricharanvarra@gmail.com" },
 ]
 authors = [ { name = "Sricharan Reddy Varra" } ]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 classifiers = [
-  "License :: OSI Approved :: MIT License",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
-  "Topic :: Scientific/Engineering :: Bio-Informatics",
+  "Programming Language :: Python :: 3.14",
 ]
-dynamic = [ "version" ]
 dependencies = [
-  "anndata",
-  "more-itertools>=10.7",
-  "narwhals[pandas]>=1.37.1",
-  "pooch>=1.8.2",
+  "anndata>=0.12.4",
   # for debug logging (referenced from the issue template)
+  "more-itertools>=10.8",
+  "narwhals>=2.10",
   "session-info2",
-  "tqdm>=4",
-  "universal-pathlib>=0.2",
+  "tqdm>=4.67.1",
 ]
-optional-dependencies.dev = [ "esbonio>=0.16.5", "pre-commit" ]
-optional-dependencies.doc = [
-  "docutils>=0.21.2",
-  "ipykernel",
-  "ipython",
-  "llvmlite>=0.44.0rc2",
-  "matplotlib>=3.10",
-  "myst-nb>=1.1.2",
-  "numba>=0.61.0rc2",
-  "pandas",
-  "polars",
-  "pyarrow",
-  "scanpy>=1.11.0rc1",
-  "scanpydoc>=0.15.2",
-  # Until pybtex >0.23.0 releases: https://bitbucket.org/pybtex-devs/pybtex/issues/169/
-  "setuptools",
-  "sphinx>=8.1.3,<8.2",
-  "sphinx-autodoc-typehints",
-  "sphinx-autosummary-accessors>=2023.4",
-  "sphinx-book-theme>=1.1.3",
-  "sphinx-copybutton",
-  "sphinx-design>=0.6.1",
-  "sphinx-tabs",
-  "sphinx-toolbox",
-  "sphinxcontrib-bibtex>=2.6.3",
-  "sphinxext-opengraph",
-]
-optional-dependencies.nb = [ "jupyterlab>=4.3.4" ]
-optional-dependencies.test = [
-  "coverage",
-  "pytest",
-  "pytest-cov>=6",
-  "pytest-xdist>=3.6.1",
-]
+optional-dependencies.pooch = [ "pooch>=1.8.2", "universal-pathlib>=0.3.4" ]
+
 # https://docs.pypi.org/project_metadata/#project-urls
 urls.Documentation = "https://annsel.readthedocs.io/"
 urls.Homepage = "https://github.com/srivarra/annsel"
 urls.Source = "https://github.com/srivarra/annsel"
+
+entry-points.'narwhals.plugins'.narwhals-anndata = "annsel.narwhals_plugin"
+
+[dependency-groups]
+dev = [
+  "pre-commit",
+  { include-group = "doc" },
+  { include-group = "test" },
+]
+test = [
+  "coverage>=7.10",
+  "pytest",
+  "pytest-codspeed>=4.2",
+  "pytest-cov",           # For VS Code’s coverage functionality
+]
+doc = [
+  "docutils>=0.8,!=0.18.*,!=0.19.*",
+  "ipykernel",
+  "ipython",
+  "myst-nb>=1.1",
+  "pandas",
+  # Until pybtex >0.24.0 releases: https://bitbucket.org/pybtex-devs/pybtex/issues/169/
+  "scanpy>=1.11.5",
+  "scanpydoc>=0.15.4",
+  "setuptools",
+  "sphinx>=8.1",
+  "sphinx-autodoc-typehints",
+  "sphinx-autosummary-accessors>=2025.3.1",
+  "sphinx-book-theme>=1",
+  "sphinx-copybutton",
+  "sphinx-design>=0.6.1",
+  "sphinx-tabs",
+  "sphinxcontrib-bibtex>=1",
+  "sphinxext-opengraph",
+]
+
+[tool.ruff]
+line-length = 120
+src = [ "src" ]
+extend-include = [ "*.ipynb" ]
+
+format.indent-style = "space"
+format.quote-style = "double"
+format.docstring-code-line-length = "dynamic"
+
+format.docstring-code-format = true
+lint.select = [
+  "B",    # flake8-bugbear
+  "BLE",  # flake8-blind-except
+  "C4",   # flake8-comprehensions
+  "D",    # pydocstyle
+  "E",    # Error detected by Pycodestyle
+  "F",    # Errors detected by Pyflakes
+  "I",    # isort
+  "NPY",  # NumPy-specific rules
+  "PD",   # Pandas code
+  "PERF", # Perflint
+  "PT",   # Pytest
+  "PTH",  # pathlib
+  "RUF",  # Ruff-specific rules
+  "TID",  # flake8-tidy-imports
+  "TRY",  # Tryceratops
+  "UP",   # pyupgrade
+  "W",    # Warning detected by Pycodestyle
+]
+lint.ignore = [
+  "B008", # Errors from function calls in argument defaults. These are fine when the result is immutable.
+  "D100", # Missing docstring in public module
+  "D104", # Missing docstring in public package
+  "D105", # __magic__ methods are often self-explanatory, allow missing docstrings
+  "D107", # Missing docstring in __init__
+  # Disable one in each pair of mutually incompatible rules
+  "D203",   # We don't want a blank line before a class docstring
+  "D213",   # <> We want docstrings to start immediately after the opening triple quote
+  "D400",   # first line should end with a period [Bug: doesn't work with single-line docstrings]
+  "D401",   # First line should be in imperative mood; try rephrasing
+  "E501",   # line too long -> we accept long comment lines; formatter gets rid of long code lines
+  "E731",   # Do not assign a lambda expression, use a def -> lambda expression assignments are convenient
+  "E741",   # allow I, O, l as variable names -> I is the identity matrix
+  "PD011",  # Use .to_numpy() instead of .values (in tests, .values is fine)
+  "RUF001", # ambiguous-unicode-character-string
+  "RUF002", # ambiguous-unicode-character-docstring (× symbol is intentional)
+  "RUF003", # ambiguous-unicode-character-comment
+]
+lint.per-file-ignores."*/__init__.py" = [ "F401" ]
+lint.per-file-ignores."docs/*" = [ "I" ]
+lint.per-file-ignores."tests/*" = [ "D" ]
+lint.pydocstyle.convention = "numpy"
 
 [tool.pytest.ini_options]
 testpaths = [ "tests" ]
@@ -77,28 +129,35 @@ xfail_strict = true
 addopts = [
   "--import-mode=importlib", # allow using test files with same name
 ]
-filterwarnings = [
-  "ignore::pytest.PytestUnknownMarkWarning",
-  "ignore::coverage.exceptions.CoverageWarning:",
+markers = [
+  "filter: Tests for filter operations",
+  "select: Tests for select operations",
+  "pipe: Tests for pipe operations",
+  "benchmark: Performance benchmark tests",
 ]
 
 [tool.coverage.run]
 source = [ "annsel" ]
-omit = [ "**/test_*.py" ]
 concurrency = [ "multiprocessing" ]
 parallel = true
-
-[tool.coverage.report]
-exclude_also = [ "raise NotImplementedError", "@(abc\\.)?abstractmethod" ]
+patch = [ "subprocess" ]
+omit = [ "**/test_*.py" ]
 
 [tool.cruft]
 skip = [
   "tests",
   "src/**/__init__.py",
   "src/**/basic.py",
-  "docs/api/index.md",
+  "docs/api.md",
   "docs/changelog.md",
   "docs/references.bib",
   "docs/references.md",
   "docs/notebooks/example.ipynb",
 ]
+
+[tool.uv-ship]
+release-branch = "main"
+tag-prefix = "v"
+allow-dirty = false
+# Changelog managed by git-cliff, not uv-ship
+skip-changelog = true
