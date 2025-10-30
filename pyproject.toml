@@ -25,10 +25,11 @@ dependencies = [
   # for debug logging (referenced from the issue template)
   "more-itertools>=10.8",
   "narwhals>=2.10",
+  "pooch>=1.8.2",
   "session-info2",
   "tqdm>=4.67.1",
+  "universal-pathlib>=0.3.4",
 ]
-optional-dependencies.pooch = [ "pooch>=1.8.2", "universal-pathlib>=0.3.4" ]
 
 # https://docs.pypi.org/project_metadata/#project-urls
 urls.Documentation = "https://annsel.readthedocs.io/"
@@ -39,7 +40,6 @@ entry-points.'narwhals.plugins'.narwhals-anndata = "annsel.narwhals_plugin"
 
 [dependency-groups]
 dev = [
-  "pre-commit",
   { include-group = "doc" },
   { include-group = "test" },
 ]
