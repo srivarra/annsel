@@ -40,17 +40,17 @@ entry-points.'narwhals.plugins'.narwhals-anndata = "annsel.narwhals_plugin"
 
 [dependency-groups]
 dev = [
+  { include-group = "bench" },
   { include-group = "doc" },
   { include-group = "test" },
-  { include-group = "bench" },
 ]
 test = [
   "coverage>=7.10",
   "pytest",
-  "pytest-cov", # For VS Code’s coverage functionality
-  "pytest-xdist>=3.8.0",
+  "pytest-cov",        # For VS Code’s coverage functionality
+  "pytest-xdist>=3.8",
 ]
-bench = ["pytest", "pytest-codspeed>=4.2"]
+bench = [ "pytest", "pytest-codspeed>=4.2" ]
 doc = [
   "docutils>=0.8,!=0.18.*,!=0.19.*",
   "ipykernel",
