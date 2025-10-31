@@ -67,7 +67,7 @@ run = "uv build"
 
 [tasks.bench]
 description = "Run performance benchmarks with CodSpeed"
-run = "uv run pytest tests/benchmarks/ --codspeed"
+run = "uv run pytest tests/benchmarks/bench_*.py --codspeed"
 
 # Changelog generation with git-cliff
 [tasks.changelog]

@@ -1,10 +1,8 @@
 """Benchmark cross-component aggregation operations."""
 
 import narwhals as nw
-import pytest
 
 
-@pytest.mark.benchmark
 def test_with_obs_small_genes(large_adata_sparse, benchmark):
     """Benchmark with_obs with 10 genes on 100K cells."""
     var_names = large_adata_sparse.var_names[:10].tolist()
@@ -18,7 +16,6 @@ def test_with_obs_small_genes(large_adata_sparse, benchmark):
     assert len(result) > 0
 
 
-@pytest.mark.benchmark
 def test_with_obs_many_genes(large_adata_sparse, benchmark):
     """Benchmark with_obs with 100 genes on 100K cells."""
     var_names = large_adata_sparse.var_names[:100].tolist()
@@ -32,7 +29,6 @@ def test_with_obs_many_genes(large_adata_sparse, benchmark):
     assert len(result) > 0
 
 
-@pytest.mark.benchmark
 def test_with_var_aggregation(large_adata_sparse, benchmark):
     """Benchmark with_var gene-level aggregation."""
     obs_names = large_adata_sparse.obs_names[:1000].tolist()

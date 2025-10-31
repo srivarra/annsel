@@ -9,10 +9,10 @@ on:
 jobs:
   benchmarks:
     runs-on: ubuntu-latest
-    environment: codspeed # Use existing environment with CODSPEED_TOKEN
+    environment: codspeed
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup uv
         uses: astral-sh/setup-uv@v7
@@ -30,4 +30,4 @@ jobs:
         with:
           mode: instrumentation
           token: ${{ secrets.CODSPEED_TOKEN }}
-          run: uv run pytest tests/benchmarks/ -n auto --codspeed
+          run: uv run pytest tests/benchmarks/bench_*.py --codspeed
