@@ -13,5 +13,4 @@ build:
       - uv sync --group doc
     build:
       html:
-        - uv run sphinx-build -M html docs docs/_build
-        - mv docs/_build/html $READTHEDOCS_OUTPUT/html
+        - uv run sphinx-build docs $READTHEDOCS_OUTPUT/html
