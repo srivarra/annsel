@@ -31,4 +31,3 @@ jobs:
           mode: instrumentation
           token: ${{ secrets.CODSPEED_TOKEN }}
           run: uv run pytest tests/benchmarks/ -n auto --codspeed
-
