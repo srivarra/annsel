@@ -64,7 +64,7 @@ jobs:
         with:
           use_oidc: true
   check:
-    name: Tests pass in all hatch environments
+    name: All tests pass for all Python versions
     if: always()
     needs:
       - test
