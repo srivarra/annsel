@@ -23,7 +23,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install dependencies
-        run: uv sync --group test
+        run: uv sync --group bench
 
       - name: Run benchmarks with CodSpeed
         uses: CodSpeedHQ/action@v4
