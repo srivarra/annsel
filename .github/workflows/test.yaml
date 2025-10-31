@@ -48,7 +48,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          uv sync --group dev --frozen
+          uv sync --group test --frozen
 
       - name: Test
         env:
