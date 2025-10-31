@@ -4,7 +4,7 @@
 
 |               |                                                                                                                                                                                                              |
 | :-----------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|  **Status**   | [![Build][badge-build]][link-build] [![Tests][badge-test]][link-test] [![Documentation][badge-docs]][link-docs] [![codecov][badge-codecov]][link-codecov] [![pre-commit][badge-pre-commit]][link-pre-commit] |
+|  **Status**   | [![Build][badge-build]][link-build] [![Tests][badge-test]][link-test] [![Documentation][badge-docs]][link-docs] [![codecov][badge-codecov]][link-codecov] [![pre-commit][badge-pre-commit]][link-pre-commit] [![CodSpeed][badge-codspeed]][link-codspeed] |
 |   **Meta**    |         [![Hatch project][badge-hatch]][link-hatch] [![Ruff][badge-ruff]][link-ruff] [![uv][badge-uv]][link-uv] [![License][badge-license]][link-license] [![gitmoji][badge-gitmoji]][link-gitmoji]          |
 |  **Package**  |                                                                 [![PyPI][badge-pypi]][link-pypi] [![PyPI][badge-python-versions]][link-pypi]                                                                 |
 | **Ecosystem** |                                                                                  [![scverse][badge-scverse]][link-scverse]                                                                                   |
@@ -25,6 +25,8 @@
 [badge-python-versions]: https://img.shields.io/pypi/pyversions/annsel.svg?logo=python&label=Python&logoColor=gold
 [badge-pre-commit]: https://results.pre-commit.ci/badge/github/srivarra/annsel/main.svg
 [badge-gitmoji]: https://img.shields.io/badge/gitmoji-😜😍-FFDD67.svg
+[badge-codspeed]: https://img.shields.io/endpoint?url=https://codspeed.io/badge.json
+
 
 Annsel is a user-friendly library that brings familiar dataframe-style operations to [`AnnData`](https://anndata.readthedocs.io/en/latest/) objects.
 
@@ -176,3 +178,4 @@ If you found a bug, please use the [issue tracker][issue-tracker].
 [link-pre-commit]: https://results.pre-commit.ci/latest/github/srivarra/annsel/main
 [link-gitmoji]: https://gitmoji.dev/
 [link-scverse]: https://scverse.org/packages/#ecosystem
+[link-codspeed]: https://codspeed.io/srivarra/annsel
