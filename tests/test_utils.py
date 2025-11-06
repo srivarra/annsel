@@ -3,10 +3,10 @@ import narwhals as nw
 import pandas as pd
 import pytest
 
-from annsel.core.utils import _construct_adata_from_indices, _extract_names_from_expr, _get_final_indices, second
+from annsel.core.utils import _construct_adata_from_indices, _extract_names_from_expr, second
 
 
-def test_extract_names_from_expr():
+def test_extract_names_from_expr() -> None:
     expr = nw.col(["a", "b"])
     assert _extract_names_from_expr(expr) == ("a", "b")
 
@@ -16,14 +16,7 @@ def test_extract_names_from_expr():
         _extract_names_from_expr(1)  # type: ignore
 
 
-def test_get_final_indices():
-    indices = [pd.Index([1, 2, 3]), pd.Index([1, 2, 6])]
-    assert _get_final_indices(pd.Index([1, 2, 3, 4, 5, 6]), *indices).equals(pd.Index([1, 2]))
-
-    assert _get_final_indices(pd.Index([1]), []).equals(pd.Index([]))
-
-
-def test_second():
+def test_second() -> None:
     assert second([1, 2, 3]) == 2
     assert second((1, 2, 3)) == 2
     assert second(pd.Index([1, 2, 3])) == 2
@@ -33,7 +26,7 @@ def test_second():
         second([1])
 
 
-def test_construct_adata_from_indices(rng):
+def test_construct_adata_from_indices(rng) -> None:
     adata = ad.AnnData(X=rng.normal(size=(10, 10)))
     obs_idx = pd.Index([1, 2, 3])
     var_idx = pd.Index([4, 5, 6])

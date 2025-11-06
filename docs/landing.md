@@ -94,10 +94,6 @@ See the [changelog](https://annsel.readthedocs.io/latest/changelog.html).
 For questions and help requests, you can reach out in the [scverse discourse](https://discourse.scverse.org/) or the [discussions](https://github.com/srivarra/annsel/discussions) tab.
 If you found a bug, please use the [issue tracker](https://github.com/srivarra/annsel/issues).
 
-## Other
-
-If you are interested in how `annsel` works, feel free to take a look at the [developer log (offsite)](https://www.srivarra.dev/posts/annsel/devlog-01/).
-
 ## Citation
 
 > Varra, S. R. annsel [Computer software]. https://github.com/srivarra/annsel

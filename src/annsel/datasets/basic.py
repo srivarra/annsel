@@ -64,15 +64,28 @@ class CXRDatasetsRegistry(Enum):
         Returns
         -------
         The absolute path to the dataset.
+
+        Raises
+        ------
+        RuntimeError
+            If the download fails due to network issues or data corruption.
         """
-        p = pooch.create(
-            path=pooch.os_cache(ANNSEL_OS_CACHE),
-            base_url=CZI_DATASETS_BASE_URL,
-            registry={
-                self.fname: self.sha256,
-            },
-        )
-        return UPath(p.fetch(self.fname, progressbar=True))
+        try:
+            p = pooch.create(
+                path=pooch.os_cache(ANNSEL_OS_CACHE),
+                base_url=CZI_DATASETS_BASE_URL,
+                registry={
+                    self.fname: self.sha256,
+                },
+            )
+            return UPath(p.fetch(self.fname, progressbar=True))
+        except Exception as e:
+            msg = (
+                f"Failed to download dataset '{self.fname}'. "
+                f"Please check your internet connection and try again. "
+                f"Error: {e}"
+            )
+            raise RuntimeError(msg) from e
 
 
 def leukemic_bone_marrow_dataset(

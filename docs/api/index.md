@@ -11,7 +11,6 @@ import annsel as an
 
 core
 tools
-extensions
 datasets
 
 ```

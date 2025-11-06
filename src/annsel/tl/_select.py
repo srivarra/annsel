@@ -1,55 +1,65 @@
-import anndata as ad
-import narwhals as nw
-import pandas as pd
-from narwhals.typing import Frame
+"""Select operations using narwhals-anndata plugin backend."""
 
-from annsel.core.typing import Predicates
-from annsel.core.utils import _construct_adata_from_indices, _get_final_indices
+from __future__ import annotations
 
+from typing import TYPE_CHECKING
 
-@nw.narwhalify
-def _select_df(df: Frame, *predicates: Predicates) -> Frame:
-    return df.select(*predicates)
+if TYPE_CHECKING:
+    import anndata as ad
+
+    from annsel.core.typing import Predicates
 
 
-def _select_obs(adata: ad.AnnData, *predicates: Predicates) -> pd.Index:
-    return _select_df(adata.obs, *predicates).columns
-
-
-def _select_var(adata: ad.AnnData, *predicates: Predicates) -> pd.Index:
-    return _select_df(adata.var, *predicates).columns
-
-
-def _select_x(adata: ad.AnnData, *predicates: Predicates, layer: str | None = None) -> pd.Index:
-    return _select_df(adata.to_df(layer=layer), *predicates).columns
-
-
-def _select(
+def _select_plugin(
     adata: ad.AnnData,
     obs: Predicates | None = None,
     var: Predicates | None = None,
     x: Predicates | None = None,
+    layer: str | None = None,
 ) -> ad.AnnData:
-    obs_columns = []
-    var_columns = []
-    var_names = []
+    """Select columns using the narwhals-anndata plugin.
 
-    if obs:
-        obs_columns.append(_select_obs(adata, obs))
+    Parameters
+    ----------
+    adata
+        The AnnData object.
+    obs
+        Column expressions to select from obs.
+    var
+        Column expressions to select from var.
+    x
+        Column expressions to select from X (by gene names).
 
-    if var:
-        var_columns.append(_select_var(adata, var))
+    Returns
+    -------
+    ad.AnnData
+        AnnData with selected columns.
+    """
+    from narwhals._utils import Version
 
-    if x:
-        var_names.append(_select_x(adata, x, layer=None))
+    from annsel.narwhals_plugin import __narwhals_namespace__
 
-    final_obs_cols = _get_final_indices(adata.obs.columns, *obs_columns) if obs_columns else adata.obs.columns
-    final_var_cols = _get_final_indices(adata.var.columns, *var_columns) if var_columns else adata.var.columns
-    final_var_names = _get_final_indices(adata.var_names, *var_names) if var_names else adata.var_names
+    # Get plugin namespace with current narwhals version
+    namespace = __narwhals_namespace__(Version.MAIN)
+    result_adata = adata
 
-    _adata = _construct_adata_from_indices(adata, obs_idx=adata.obs_names, var_idx=final_var_names)
+    # Select obs columns
+    if obs is not None:
+        nwdata = namespace.from_native(result_adata)
+        result_adata = nwdata.obs.select(obs)
 
-    _adata.obs = _adata.obs[final_obs_cols]
-    _adata.var = _adata.var[final_var_cols]
+    # Select var columns
+    if var is not None:
+        nwdata = namespace.from_native(result_adata)
+        result_adata = nwdata.var.select(var)
 
-    return _adata
+    # Select columns from X (variables by var_names/index)
+    if x is not None:
+        # X selection means selecting specific genes by their var_names
+        # Extract gene names and slice AnnData
+        from annsel.core.utils import _extract_names_from_expr
+
+        gene_names = _extract_names_from_expr(x)
+        result_adata = result_adata[:, list(gene_names)]
+
+    return result_adata
