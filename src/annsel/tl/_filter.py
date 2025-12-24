@@ -35,11 +35,11 @@ def _filter_var_names(adata: ad.AnnData, *predicates: Predicates) -> pd.Index:
 
 
 def _filter_obsm(adata: ad.AnnData, key: str, *predicates: Predicates) -> pd.Index:
-    return _filter_df(pd.DataFrame(adata.obsm[key], index=adata.obs_names), *predicates).index
+    return _filter_df(pd.DataFrame(adata.obsm[key], index=adata.obs_names), *predicates).index  # type: ignore
 
 
 def _filter_varm(adata: ad.AnnData, key: str, *predicates: Predicates) -> pd.Index:
-    return _filter_df(pd.DataFrame(adata.varm[key], index=adata.var_names), *predicates).index
+    return _filter_df(pd.DataFrame(adata.varm[key], index=adata.var_names), *predicates).index  # type: ignore
 
 
 def _filter(

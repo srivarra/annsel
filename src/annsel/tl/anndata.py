@@ -166,7 +166,12 @@ class AnnselAccessor:
         gb_adata = _group_by(self._obj, obs, var, copy=copy)
         return gb_adata
 
-    def pipe(self, func: Callable[..., T] | tuple[Callable[..., T], str], *args: Any, **kwargs: Any) -> Any:
+    def pipe(
+        self,
+        func: Callable[..., T] | tuple[Callable[..., T], str],
+        *args: Any,
+        **kwargs: Any,
+    ) -> Any:
         """
         Apply chainable functions ``func(self, *args, **kwargs)`` that expect :class:`~anndata.AnnData`.
 
