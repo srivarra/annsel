@@ -1,4 +1,3 @@
-import inspect
 from collections.abc import Iterable
 from functools import reduce
 from operator import and_
@@ -7,7 +6,8 @@ from typing import TypeVar
 import anndata as ad
 import narwhals as nw
 import pandas as pd
-from more_itertools import collapse, nth
+from more_itertools import nth
+from narwhals._expression_parsing import ExprKind
 
 from annsel.core.typing import Predicates
 
@@ -67,8 +67,11 @@ def _extract_names_from_expr(*predicates: Predicates) -> tuple[str, ...]:
     for p in predicates:
         match p:
             case nw.Expr():
-                to_complian_expr_closure = inspect.getclosurevars(p._to_compliant_expr).nonlocals["to_compliant_expr"]
-                names.extend(collapse(inspect.getclosurevars(to_complian_expr_closure).nonlocals["flat_names"]))
+                # doesn't handle nested expressions. E.g. for
+                # (nw.col('x') > 5) & (nw.col('y') < 10) it gives ('x',)
+                for node in p._nodes:
+                    if node.kind == ExprKind.COL:
+                        names.extend(node.kwargs["names"])
             case str():
                 names.append(p)
             case _:
