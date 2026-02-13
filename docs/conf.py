@@ -117,6 +117,7 @@ intersphinx_mapping = {
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "**.ipynb_checkpoints"]
+suppress_warnings = ["app.add_object"]
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -142,5 +143,5 @@ pygments_style = "default"
 nitpick_ignore = [
     # If building the documentation fails because of a missing link that is outside your control,
     # you can add an exception to this list.
-    #     ("py:class", "igraph.Graph"),
+    ("py:data", "typing.Union"),
 ]
