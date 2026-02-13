@@ -95,7 +95,7 @@ dependency-groups = [ "dev", "test" ]
 # Test the lowest and highest supported Python versions with normal deps
 [[tool.hatch.envs.hatch-test.matrix]]
 deps = [ "stable" ]
-python = [ "3.11", "3.14" ]
+python = [ "3.11", "3.12", "3.13", "3.14" ]
 
 # Test the newest supported Python version also with pre-release deps
 [[tool.hatch.envs.hatch-test.matrix]]
