@@ -34,13 +34,13 @@ def _select(
     var_columns = []
     var_names = []
 
-    if obs:
+    if obs is not None:
         obs_columns.append(_select_obs(adata, obs))
 
-    if var:
+    if var is not None:
         var_columns.append(_select_var(adata, var))
 
-    if x:
+    if x is not None:
         var_names.append(_select_x(adata, x, layer=None))
 
     final_obs_cols = _get_final_indices(adata.obs.columns, *obs_columns) if obs_columns else adata.obs.columns

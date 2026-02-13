@@ -35,11 +35,11 @@ def _filter_var_names(adata: ad.AnnData, *predicates: Predicates) -> pd.Index:
 
 
 def _filter_obsm(adata: ad.AnnData, key: str, *predicates: Predicates) -> pd.Index:
-    return _filter_df(pd.DataFrame(adata.obsm[key], index=adata.obs_names), *predicates).index  # type: ignore
+    return _filter_df(pd.DataFrame(adata.obsm[key], index=adata.obs_names), *predicates).index
 
 
 def _filter_varm(adata: ad.AnnData, key: str, *predicates: Predicates) -> pd.Index:
-    return _filter_df(pd.DataFrame(adata.varm[key], index=adata.var_names), *predicates).index  # type: ignore
+    return _filter_df(pd.DataFrame(adata.varm[key], index=adata.var_names), *predicates).index
 
 
 def _filter(
@@ -56,26 +56,26 @@ def _filter(
     obs_names_idx = []
     var_names_idx = []
 
-    if obs:
+    if obs is not None:
         obs_names_idx.append(_filter_obs(adata, obs))
 
-    if obs_names:
+    if obs_names is not None:
         obs_names_idx.append(_filter_obs_names(adata, obs_names))
 
-    if var:
+    if var is not None:
         var_names_idx.append(_filter_var(adata, var))
 
-    if var_names:
+    if var_names is not None:
         var_names_idx.append(_filter_var_names(adata, var_names))
 
-    if x:
+    if x is not None:
         obs_names_idx.append(_filter_x(adata, x, layer=layer))
 
-    if obsm:
+    if obsm is not None:
         for key, predicates in obsm.items():
             obs_names_idx.append(_filter_obsm(adata, key, predicates))
 
-    if varm:
+    if varm is not None:
         for key, predicates in varm.items():
             var_names_idx.append(_filter_varm(adata, key, predicates))
 

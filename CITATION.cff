@@ -1,0 +1,28 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: annsel
+message: >-
+    If you find this software helpful, please cite it using
+    the metadata from this file.
+type: software
+authors:
+    - given-names: Sricharan Reddy
+      family-names: Varra
+      email: srivarra@stanford.edu
+      affiliation: "Department of Pediatrics, Stanford Medicine"
+      orcid: "https://orcid.org/0009-0000-5757-6818"
+repository-code: "https://github.com/srivarra/annsel"
+repository: "https://annsel.readthedocs.io/en/latest/"
+abstract: >+
+    annsel brings familiar DataFrame-style operations to
+    AnnData objects, making filtering and selection intuitive
+    and straightforward. Built on the narwhals library, it
+    provides a seamless interface for manipulating complex
+    biological datasets stored in AnnData format.
+
+keywords:
+    - AnnData
+    - Data Manipulation
+license: MIT

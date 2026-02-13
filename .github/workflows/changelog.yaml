@@ -23,10 +23,12 @@ jobs:
     defaults:
       run:
         shell: bash -e {0} # -e to fail on error
+    strategy:
+      fail-fast: false
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
