@@ -180,12 +180,16 @@ parallel = true
 
 [tool.cruft]
 skip = [
-  "tests",
-  "src/**/__init__.py",
-  "src/**/basic.py",
-  "docs/api/index.md",
-  "docs/changelog.md",
-  "docs/references.bib",
-  "docs/references.md",
-  "docs/notebooks/example.ipynb",
+  # Source, tests, and docs — always project-specific
+  "src/**",
+  "tests/**",
+  "docs/**",
+  # Project-specific config files
+  "CITATION.cff",
+  "cliff.toml",
+  "uv.lock",
+  ".gitignore",
+  # CI workflows with project-specific logic
+  ".github/workflows/release.yaml",
+  ".github/workflows/changelog.yaml",
 ]
