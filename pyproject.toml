@@ -72,6 +72,7 @@ doc = [
   "sphinx-tabs",
   "sphinx-toolbox",
   "sphinxcontrib-bibtex>=2.6.3",
+  "sphinxcontrib-katex",
   "sphinxext-opengraph",
 ]
 nb = [ "jupyterlab>=4.3.4" ]
