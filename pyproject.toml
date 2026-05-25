@@ -72,25 +72,23 @@ urls.Documentation = "https://annsel.readthedocs.io/"
 urls.Homepage = "https://github.com/srivarra/annsel"
 urls.Source = "https://github.com/srivarra/annsel"
 
-[tool.pytest.ini_options]
-testpaths = [ "tests" ]
-xfail_strict = true
-addopts = [
+[tool.pytest]
+ini_options.testpaths = [ "tests" ]
+ini_options.xfail_strict = true
+ini_options.addopts = [
   "--import-mode=importlib", # allow using test files with same name
 ]
-filterwarnings = [
+ini_options.filterwarnings = [
   "ignore::pytest.PytestUnknownMarkWarning",
   "ignore::coverage.exceptions.CoverageWarning:",
 ]
 
-[tool.coverage.report]
-exclude_also = [ "raise NotImplementedError", "@(abc\\.)?abstractmethod" ]
-
-[tool.coverage.run]
-source = [ "annsel" ]
-omit = [ "**/test_*.py" ]
-concurrency = [ "multiprocessing" ]
-parallel = true
+[tool.coverage]
+run.concurrency = [ "multiprocessing" ]
+run.omit = [ "**/test_*.py" ]
+run.parallel = true
+run.source = [ "annsel" ]
+report.exclude_also = [ "@(abc\\.)?abstractmethod", "raise NotImplementedError" ]
 
 [tool.cruft]
 skip = [
