@@ -74,13 +74,13 @@ urls.Source = "https://github.com/srivarra/annsel"
 
 [tool.pytest]
 ini_options.testpaths = [ "tests" ]
-ini_options.xfail_strict = true
 ini_options.addopts = [
   "--import-mode=importlib", # allow using test files with same name
 ]
+ini_options.xfail_strict = true
 ini_options.filterwarnings = [
-  "ignore::pytest.PytestUnknownMarkWarning",
   "ignore::coverage.exceptions.CoverageWarning:",
+  "ignore::pytest.PytestUnknownMarkWarning",
 ]
 
 [tool.coverage]
