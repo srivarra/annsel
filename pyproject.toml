@@ -11,11 +11,10 @@ maintainers = [
   { name = "Sricharan Reddy Varra", email = "srivarra@stanford.edu" },
 ]
 authors = [ { name = "Sricharan Reddy Varra" } ]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 classifiers = [
   "License :: OSI Approved :: MIT License",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
@@ -33,8 +32,26 @@ dependencies = [
   "tqdm>=4",
   "universal-pathlib>=0.2",
 ]
-optional-dependencies.dev = [ "esbonio>=0.16.5", "pre-commit" ]
-optional-dependencies.doc = [
+# https://docs.pypi.org/project_metadata/#project-urls
+urls.Documentation = "https://annsel.readthedocs.io/"
+urls.Homepage = "https://github.com/srivarra/annsel"
+urls.Source = "https://github.com/srivarra/annsel"
+
+[dependency-groups]
+dev = [
+  "pre-commit",
+  "twine>=4.0.2",
+]
+test = [
+  "coverage",
+  # anndata.tests.helpers (used in tests) needs these; not pulled by core anndata under pre-release resolution
+  "dask[array]",
+  "fast-array-utils",
+  "pytest",
+  "pytest-cov>=6",
+  "pytest-xdist>=3.6.1",
+]
+doc = [
   "docutils>=0.21.2",
   "ipykernel",
   "ipython",
@@ -58,19 +75,76 @@ optional-dependencies.doc = [
   "sphinx-tabs",
   "sphinx-toolbox",
   "sphinxcontrib-bibtex>=2.6.3",
+  "sphinxcontrib-katex",
   "sphinxext-opengraph",
 ]
-optional-dependencies.nb = [ "jupyterlab>=4.3.4" ]
-optional-dependencies.test = [
-  "coverage",
-  "pytest",
-  "pytest-cov>=6",
-  "pytest-xdist>=3.6.1",
+nb = [ "jupyterlab>=4.3.4" ]
+
+[tool.hatch]
+version.source = "vcs"
+build.targets.wheel.packages = [ "src/annsel" ]
+envs.default.installer = "uv"
+envs.default.dependency-groups = [ "dev" ]
+envs.docs.scripts.build = "sphinx-build -M html docs docs/_build -W {args}"
+envs.docs.scripts.clean = "git clean -fdX -- {args:docs}"
+envs.docs.scripts.open = "python -m webbrowser -t docs/_build/html/index.html"
+envs.docs.dependency-groups = [ "doc" ]
+envs.hatch-test.matrix = [
+  # Test the lowest and highest supported Python versions with normal deps
+  { deps = [ "stable" ], python = [ "3.11", "3.12", "3.13", "3.14" ] },
+  # Test the newest supported Python version also with pre-release deps
+  { deps = [ "pre" ], python = [ "3.14" ] },
 ]
-# https://docs.pypi.org/project_metadata/#project-urls
-urls.Documentation = "https://annsel.readthedocs.io/"
-urls.Homepage = "https://github.com/srivarra/annsel"
-urls.Source = "https://github.com/srivarra/annsel"
+# If the matrix variable `deps` is set to "pre",
+# set the environment variable `UV_PRERELEASE` to "allow".
+envs.hatch-test.overrides.matrix.deps.env-vars = [
+  { value = "allow", key = "UV_PRERELEASE", if = [ "pre" ] },
+]
+envs.hatch-test.dependency-groups = [ "dev", "test" ]
+
+[tool.ruff]
+line-length = 120
+src = [ "src" ]
+extend-include = [ "*.ipynb" ]
+format.docstring-code-format = true
+lint.select = [
+  "B",    # flake8-bugbear
+  "BLE",  # flake8-blind-except
+  "C4",   # flake8-comprehensions
+  "D",    # pydocstyle
+  "E",    # Error detected by Pycodestyle
+  "F",    # Errors detected by Pyflakes
+  "I",    # isort
+  "NPY",  # NumPy-specific rules
+  "PD",   # Pandas code
+  "PERF", # Perflint
+  "PT",   # Pytest
+  "PTH",  # pathlib
+  "RUF",  # Ruff-specific rules
+  "TID",  # flake8-tidy-imports
+  "UP",   # pyupgrade
+  "W",    # Warning detected by Pycodestyle
+]
+lint.ignore = [
+  "B008",   # Errors from function calls in argument defaults. These are fine when the result is immutable.
+  "D100",   # Missing docstring in public module
+  "D104",   # Missing docstring in public package
+  "D105",   # __magic__ methods are often self-explanatory, allow missing docstrings
+  "D107",   # Missing docstring in __init__
+  # Disable one in each pair of mutually incompatible rules
+  "D203",   # We don't want a blank line before a class docstring
+  "D213",   # <> We want docstrings to start immediately after the opening triple quote
+  "D400",   # first line should end with a period [Bug: doesn't work with single-line docstrings]
+  "D401",   # First line should be in imperative mood; try rephrasing
+  "E501",   # line too long -> we accept long comment lines; formatter gets rid of long code lines
+  "E731",   # Do not assign a lambda expression, use a def -> lambda expression assignments are convenient
+  "E741",   # allow I, O, l as variable names -> I is the identity matrix
+  "RUF002", # Allow ambiguous characters in docstrings
+]
+lint.per-file-ignores."*/__init__.py" = [ "F401" ]
+lint.per-file-ignores."docs/*" = [ "I" ]
+lint.per-file-ignores."tests/*" = [ "D" ]
+lint.pydocstyle.convention = "numpy"
 
 [tool.pytest]
 ini_options.testpaths = [ "tests" ]
@@ -92,12 +166,16 @@ report.exclude_also = [ "@(abc\\.)?abstractmethod", "raise NotImplementedError" 
 
 [tool.cruft]
 skip = [
-  "tests",
-  "src/**/__init__.py",
-  "src/**/basic.py",
-  "docs/api/index.md",
-  "docs/changelog.md",
-  "docs/references.bib",
-  "docs/references.md",
-  "docs/notebooks/example.ipynb",
+  # Source, tests, and docs — always project-specific
+  "src/**",
+  "tests/**",
+  "docs/**",
+  # Project-specific config files
+  "CITATION.cff",
+  "cliff.toml",
+  "uv.lock",
+  ".gitignore",
+  # CI workflows with project-specific logic
+  ".github/workflows/release.yaml",
+  ".github/workflows/changelog.yaml",
 ]
