@@ -30,3 +30,7 @@ rules:
   # Requiring an explicit name on every job/step is stylistic noise for this repo.
   anonymous-definition:
     disable: true
+  # changelog.yaml intentionally persists credentials to push the regenerated changelog to main.
+  artipacked:
+    ignore:
+      - changelog.yaml

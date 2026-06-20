@@ -1,57 +1,48 @@
-name: Changelog ⛰️
+name: Changelog
 
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
-  schedule:
-    - cron: "0 5 1,15 * *"
   workflow_dispatch:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
-  cancel-in-progress: true
+permissions: {}
 
-permissions:
-  contents: read # This is required for actions/checkout
+concurrency:
+  # Serialize runs so concurrent merges don't race on the push.
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
 
 jobs:
-  generate-changelog:
+  changelog:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -e {0} # -e to fail on error
-    strategy:
-      fail-fast: false
-
+    permissions:
+      contents: write # commit the regenerated changelog back to main
     steps:
       - name: Check out repository
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
+          ref: ${{ github.ref_name }} # checkout the branch (not detached HEAD) so we can push
           fetch-depth: 0
-          persist-credentials: false
+          persist-credentials: true # needed to push the regenerated changelog
 
       - name: Generate the changelog
         uses: orhun/git-cliff-action@f50e11560dce63f7c33227798f90b924471a88b5 # v4.8.0
-        id: git-cliff
         with:
           config: cliff.toml
-          args: --verbose --latest --no-exec
+          args: --verbose
         env:
           OUTPUT: CHANGELOG.md
           GITHUB_REPO: ${{ github.repository }}
 
-      - name: Print the changelog
-        env:
-          CHANGELOG: ${{ steps.git-cliff.outputs.changelog }}
-        run: cat "$CHANGELOG"
-      # - name: Commit the Changelog
-      #   run: |
-      #     git checkout ${{ github.head_ref || github.ref_name }}
-      #     git config user.name 'github-actions[bot]'
-      #     git config user.email 'github-actions[bot]@users.noreply.github.com'
-      #     set +e
-      #     git add CHANGELOG.md
-      #     git commit -m "Update changelog"
-      #     git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+      - name: Commit and push if changed
+        run: |
+          if [ -z "$(git status --porcelain CHANGELOG.md)" ]; then
+            echo "Changelog unchanged; nothing to commit."
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add CHANGELOG.md
+          git commit -m 'chore: update changelog'
+          git pull --rebase
+          git push
