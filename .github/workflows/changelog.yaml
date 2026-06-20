@@ -14,7 +14,6 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  id-token: write # This is required for requesting the JWT
   contents: read # This is required for actions/checkout
 
 jobs:
@@ -28,12 +27,13 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Generate the changelog
-        uses: orhun/git-cliff-action@v4
+        uses: orhun/git-cliff-action@f50e11560dce63f7c33227798f90b924471a88b5 # v4
         id: git-cliff
         with:
           config: cliff.toml
@@ -43,7 +43,9 @@ jobs:
           GITHUB_REPO: ${{ github.repository }}
 
       - name: Print the changelog
-        run: cat "${{ steps.git-cliff.outputs.changelog }}"
+        env:
+          CHANGELOG: ${{ steps.git-cliff.outputs.changelog }}
+        run: cat "$CHANGELOG"
       # - name: Commit the Changelog
       #   run: |
       #     git checkout ${{ github.head_ref || github.ref_name }}
