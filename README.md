@@ -203,5 +203,6 @@ If you found a bug, please use the [issue tracker][issue-tracker].
 [link-hatch]: https://github.com/pypa/hatch
 [link-narwhals]: https://github.com/narwhals-dev/narwhals
 [link-disucssions]: https://github.com/srivarra/annsel/discussions
-[link-prek]: https://github.com/j178/prek[link-gh-project]: https://github.com/users/srivarra/projects/9
+[link-prek]: https://github.com/j178/prek
+[link-gh-project]: https://github.com/users/srivarra/projects/9
 [link-scverse]: https://scverse.org/packages/#ecosystem
