@@ -26,7 +26,7 @@ jobs:
     outputs:
       envs: ${{ steps.get-envs.outputs.envs }}
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           filter: blob:none
           fetch-depth: 0
@@ -65,7 +65,7 @@ jobs:
     continue-on-error: ${{ contains(matrix.env.name, 'pre') }}  # make "all-green" pass even if pre-release job fails
 
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           filter: blob:none
           fetch-depth: 0
@@ -89,7 +89,7 @@ jobs:
           uvx hatch run ${{ matrix.env.name }}:cov-report   # report visibly
           uvx hatch run ${{ matrix.env.name }}:coverage xml # create report for upload
       - name: Upload coverage
-        uses: codecov/codecov-action@0fb7174895f61a3b6b78fc075e0cd60383518dac # v5
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           fail_ci_if_error: true
           use_oidc: true
@@ -104,6 +104,6 @@ jobs:
       - test
     runs-on: ubuntu-latest
     steps:
-        - uses: re-actors/alls-green@05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe # release/v1
+        - uses: re-actors/alls-green@05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe # v1.2.2
           with:
             jobs: ${{ toJSON(needs) }}
