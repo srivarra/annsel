@@ -38,7 +38,7 @@ urls.Source = "https://github.com/srivarra/annsel"
 
 [dependency-groups]
 dev = [
-  "pre-commit",
+  "prek",
   "twine>=4.0.2",
 ]
 test = [

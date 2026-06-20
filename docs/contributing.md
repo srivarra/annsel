@@ -135,20 +135,20 @@ The `.venv` directory is typically automatically discovered by IDEs such as VS C
 
 ## Code-style
 
-This package uses [pre-commit][] to enforce consistent code-styles.
-On every commit, pre-commit checks will either automatically fix issues with the code, or raise an error message.
+This package uses [prek][] (a fast drop-in replacement for [pre-commit][]) to enforce consistent code-styles.
+On every commit, the hooks will either automatically fix issues with the code, or raise an error message.
 
-To enable pre-commit locally, simply run
+To enable the hooks locally, simply run
 
 ```bash
-pre-commit install
+prek install
 ```
 
 in the root of the repository.
-Pre-commit will automatically download all dependencies when it is run for the first time.
+prek will automatically download all dependencies when it is run for the first time.
 
 Alternatively, you can rely on the [pre-commit.ci][] service enabled on GitHub.
-If you didn’t run `pre-commit` before pushing changes to GitHub it will automatically commit fixes to your pull request, or show an error message.
+If you didn’t run the hooks before pushing changes to GitHub it will automatically commit fixes to your pull request, or show an error message.
 
 If pre-commit.ci added a commit on a branch you still have been working on locally, simply use
 
@@ -157,11 +157,12 @@ git pull --rebase
 ```
 
 to integrate the changes into yours.
-While the [pre-commit.ci][] is useful, we strongly encourage installing and running pre-commit locally first to understand its usage.
+While the [pre-commit.ci][] is useful, we strongly encourage installing and running the hooks locally first to understand its usage.
 
 Finally, most editors have an _autoformat on save_ feature.
 Consider enabling this option for [ruff][ruff-editors] and [biome][biome-editors].
 
+[prek]: https://github.com/j178/prek
 [pre-commit]: https://pre-commit.com/
 [pre-commit.ci]: https://pre-commit.ci/
 [ruff-editors]: https://docs.astral.sh/ruff/integrations/
