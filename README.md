@@ -42,7 +42,7 @@ There's also a brief tutorial on how to use all the features of `annsel`: [All o
 
 ## Installation
 
-You need to have Python 3.10 or newer installed on your system. If you don't have
+You need to have Python 3.12 or newer installed on your system. If you don't have
 Python installed, we recommend installing [uv][link-uv].
 There are several ways to install `annsel`:
 
