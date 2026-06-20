@@ -54,7 +54,7 @@ def _construct_adata_from_indices(
     return _adata
 
 
-def second(i: Iterable[T]) -> T:
+def second[T](i: Iterable[T]) -> T:
     """Get the second element from an iterable."""
     snd = nth(i, 1)
     if snd is None:
