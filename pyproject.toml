@@ -44,6 +44,9 @@ dev = [
 ]
 test = [
   "coverage",
+  # anndata.tests.helpers (used in tests) needs these; not pulled by core anndata under pre-release resolution
+  "dask[array]",
+  "fast-array-utils",
   "pytest",
   "pytest-cov>=6",
   "pytest-xdist>=3.6.1",
