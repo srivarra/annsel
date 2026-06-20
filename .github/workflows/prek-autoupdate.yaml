@@ -1,0 +1,30 @@
+name: prek auto-update
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  auto-update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+      - name: Run prek auto-update
+        run: uvx prek auto-update
+      - uses: peter-evans/create-pull-request@v8
+        with:
+          commit-message: "chore: prek auto-update hooks"
+          title: "chore: prek auto-update hooks"
+          body: Automated update of `.pre-commit-config.yaml` hook revisions via `prek auto-update`.
+          branch: prek/auto-update
+          delete-branch: true

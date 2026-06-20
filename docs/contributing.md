@@ -141,30 +141,20 @@ On every commit, the hooks will either automatically fix issues with the code, o
 To enable the hooks locally, simply run
 
 ```bash
-prek install
+prek install --install-hooks
 ```
 
 in the root of the repository.
-prek will automatically download all dependencies when it is run for the first time.
+The `--install-hooks` flag pre-stages all hook environments up front, so your first commit isn't slowed down by setup.
 
-Alternatively, you can rely on the [pre-commit.ci][] service enabled on GitHub.
-If you didn’t run the hooks before pushing changes to GitHub it will automatically commit fixes to your pull request, or show an error message.
-
-If pre-commit.ci added a commit on a branch you still have been working on locally, simply use
-
-```bash
-git pull --rebase
-```
-
-to integrate the changes into yours.
-While the [pre-commit.ci][] is useful, we strongly encourage installing and running the hooks locally first to understand its usage.
+The hooks also run in CI on every pull request via the `prek` workflow.
+If CI reports an issue you didn't catch locally, run `prek run --all-files`, commit the fixes, and push.
 
 Finally, most editors have an _autoformat on save_ feature.
 Consider enabling this option for [ruff][ruff-editors] and [biome][biome-editors].
 
 [prek]: https://github.com/j178/prek
 [pre-commit]: https://pre-commit.com/
-[pre-commit.ci]: https://pre-commit.ci/
 [ruff-editors]: https://docs.astral.sh/ruff/integrations/
 [biome-editors]: https://biomejs.dev/guides/integrate-in-editor/
 
