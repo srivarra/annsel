@@ -1,0 +1,32 @@
+rules:
+  # Require every action to be pinned to a full commit SHA.
+  unpinned-uses:
+    config:
+      policies:
+        "*": hash-pin
+  # Only allow actions from these trusted owners; add new owners deliberately.
+  forbidden-uses:
+    config:
+      allow:
+        - actions/*
+        - astral-sh/*
+        - pypa/*
+        - codecov/*
+        - sigstore/*
+        - re-actors/*
+        - release-drafter/*
+        - orhun/*
+        - j178/*
+        - peter-evans/*
+        - zizmorcore/*
+  # test.yaml only interpolates the trusted hatch matrix from pyproject, not external input.
+  template-injection:
+    ignore:
+      - test.yaml
+  # create-pull-request manages branch creation and diff detection that `gh pr create` does not.
+  superfluous-actions:
+    ignore:
+      - prek-autoupdate.yaml
+  # Requiring an explicit name on every job/step is stylistic noise for this repo.
+  anonymous-definition:
+    disable: true

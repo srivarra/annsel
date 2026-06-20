@@ -62,7 +62,7 @@ This will list “Standalone” environments and a table of “Matrix” environ
 +------------+---------+--------------------------+----------+---------------------------------+-------------+
 | Name       | Type    | Envs                     | Features | Dependencies                    | Scripts     |
 +------------+---------+--------------------------+----------+---------------------------------+-------------+
-| hatch-test | virtual | hatch-test.py3.11-stable | dev      | coverage-enable-subprocess==1.0 | cov-combine |
+| hatch-test | virtual | hatch-test.py3.12-stable | dev      | coverage-enable-subprocess==1.0 | cov-combine |
 |            |         | hatch-test.py3.14-stable | test     | coverage[toml]~=7.4             | cov-report  |
 |            |         | hatch-test.py3.14-pre    |          | pytest-mock~=3.12               | run         |
 |            |         |                          |          | pytest-randomly~=3.15           | run-cov     |
@@ -135,35 +135,26 @@ The `.venv` directory is typically automatically discovered by IDEs such as VS C
 
 ## Code-style
 
-This package uses [pre-commit][] to enforce consistent code-styles.
-On every commit, pre-commit checks will either automatically fix issues with the code, or raise an error message.
+This package uses [prek][] (a fast drop-in replacement for [pre-commit][]) to enforce consistent code-styles.
+On every commit, the hooks will either automatically fix issues with the code, or raise an error message.
 
-To enable pre-commit locally, simply run
+To enable the hooks locally, simply run
 
 ```bash
-pre-commit install
+prek install --install-hooks
 ```
 
 in the root of the repository.
-Pre-commit will automatically download all dependencies when it is run for the first time.
+The `--install-hooks` flag pre-stages all hook environments up front, so your first commit isn't slowed down by setup.
 
-Alternatively, you can rely on the [pre-commit.ci][] service enabled on GitHub.
-If you didn’t run `pre-commit` before pushing changes to GitHub it will automatically commit fixes to your pull request, or show an error message.
-
-If pre-commit.ci added a commit on a branch you still have been working on locally, simply use
-
-```bash
-git pull --rebase
-```
-
-to integrate the changes into yours.
-While the [pre-commit.ci][] is useful, we strongly encourage installing and running pre-commit locally first to understand its usage.
+The hooks also run in CI on every pull request via the `prek` workflow.
+If CI reports an issue you didn't catch locally, run `prek run --all-files`, commit the fixes, and push.
 
 Finally, most editors have an _autoformat on save_ feature.
 Consider enabling this option for [ruff][ruff-editors] and [biome][biome-editors].
 
+[prek]: https://github.com/j178/prek
 [pre-commit]: https://pre-commit.com/
-[pre-commit.ci]: https://pre-commit.ci/
 [ruff-editors]: https://docs.astral.sh/ruff/integrations/
 [biome-editors]: https://biomejs.dev/guides/integrate-in-editor/
 
