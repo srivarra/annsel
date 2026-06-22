@@ -49,7 +49,7 @@ def _construct_adata_from_indices(
     obs_idx: pd.Index,
     var_idx: pd.Index,
 ) -> ad.AnnData:
-    _adata = adata[obs_idx.to_series(), var_idx.to_series()]
+    _adata = adata[obs_idx, var_idx]
 
     return _adata
 
