@@ -89,8 +89,8 @@ envs.docs.scripts.clean = "git clean -fdX -- {args:docs}"
 envs.docs.scripts.open = "python -m webbrowser -t docs/_build/html/index.html"
 envs.docs.dependency-groups = [ "doc" ]
 envs.hatch-test.matrix = [
-  # Test the lowest and highest supported Python versions with normal deps
-  { deps = [ "stable" ], python = [ "3.12", "3.13", "3.14" ] },
+  # Test all supported Python versions against both the pandas 2.x and 3.x lines.
+  { deps = [ "stable" ], pandas = [ "pandas2", "pandas3" ], python = [ "3.12", "3.13", "3.14" ] },
   # Test the newest supported Python version also with pre-release deps
   { deps = [ "pre" ], python = [ "3.14" ] },
 ]
@@ -98,6 +98,11 @@ envs.hatch-test.matrix = [
 # set the environment variable `UV_PRERELEASE` to "allow".
 envs.hatch-test.overrides.matrix.deps.env-vars = [
   { value = "allow", key = "UV_PRERELEASE", if = [ "pre" ] },
+]
+# Pin the pandas major version per matrix cell so both lines are exercised (#77).
+envs.hatch-test.overrides.matrix.pandas.dependencies = [
+  { value = "pandas>=2,<3", if = [ "pandas2" ] },
+  { value = "pandas>=3", if = [ "pandas3" ] },
 ]
 envs.hatch-test.dependency-groups = [ "dev", "test" ]
 
